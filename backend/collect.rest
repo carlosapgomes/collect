@@ -1,0 +1,16 @@
+// Vim rest console
+
+# host
+http://localhost:3030
+--
+# get all procedures
+--
+GET /procedures
+
+# add procedure
+--
+POST /procedures
+{
+    "name":"surgery 1",
+    "code":"3232341234" 
+}
