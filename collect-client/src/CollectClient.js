@@ -61,29 +61,15 @@ export class CollectClient extends LitElement {
   render() {
     return html`
       <main>
-        <div class="logo">${openWcLogo}</div>
-        <h1>${this.title}</h1>
-
-        <p>Edit <code>src/CollectClient.js</code> and save to reload.</p>
-        <a
-          class="app-link"
-          href="https://open-wc.org/guides/developing-components/code-examples/"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Code examples
-        </a>
+        <p>Hello</p>
       </main>
 
-      <p class="app-footer">
-        🚽 Made with love by
-        <a
-          target="_blank"
-          rel="noopener noreferrer"
-          href="https://github.com/open-wc"
-          >open-wc</a
-        >.
-      </p>
-    `;
+      <footer
+        class="navbar is-fixed-bottom
+    is-dark has-text-centered is-vcentered"
+      >
+        <div class="column">&copy; <small>CG 2021</small></div>
+      </footer>    
+      `;
   }
 }
