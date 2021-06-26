@@ -14,3 +14,19 @@ POST /procedures
     "name":"surgery 1",
     "code":"3232341234" 
 }
+
+# get all users
+--
+GET /users
+
+# add user
+--
+POST /users
+{
+    "login":"user.admin",
+    "email":"admin@email.domain",
+    "password":"1234",
+    "isAdmin":"true",
+    "isDoctor":"true",
+    "isEnabled":"true"
+}

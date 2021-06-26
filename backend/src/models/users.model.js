@@ -6,7 +6,12 @@ const DataTypes = Sequelize.DataTypes;
 module.exports = function (app) {
   const sequelizeClient = app.get('sequelizeClient');
   const users = sequelizeClient.define('users', {
-  
+
+    login: {
+      type: DataTypes.STRING,
+      allowNull: false,
+      unique: true
+    },
     email: {
       type: DataTypes.STRING,
       allowNull: false,
@@ -16,8 +21,15 @@ module.exports = function (app) {
       type: DataTypes.STRING,
       allowNull: false
     },
-  
-  
+    isAdmin: {
+      type: DataTypes.BOOLEAN,
+    },
+    isDoctor: {
+      type: DataTypes.BOOLEAN,
+    },
+    isEnabled: {
+      type: DataTypes.BOOLEAN,
+    },
   }, {
     hooks: {
       beforeCount(options) {
