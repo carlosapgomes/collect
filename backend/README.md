@@ -23,6 +23,14 @@ Getting up and running is as easy as 1, 2, 3.
     ```
     npm start
     ```
+## Seeding Data
+
+This project uses sqlite3 as a database engine.
+
+To create an initial admin user with password '1234' after running the server
+once, run the bellow command on the `backend` root folder:
+
+`cat createAdmin.sql | sqlite3 collect.sqlite`
 
 ## Testing
 
