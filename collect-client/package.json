@@ -1,19 +1,19 @@
 {
   "devDependencies": {
-    "eslint": "^7.29.0",
+    "@open-wc/building-rollup": "^1.10.0",
     "@open-wc/eslint-config": "^4.3.0",
-    "prettier": "^2.2.1",
+    "@open-wc/testing": "^2.5.33",
+    "@web/dev-server": "^0.1.17",
+    "@web/dev-server-storybook": "^0.3.5",
+    "@web/test-runner": "^0.12.20",
+    "deepmerge": "^4.2.2",
+    "eslint": "^7.29.0",
     "eslint-config-prettier": "^7.2.0",
     "husky": "^4.3.8",
     "lint-staged": "^10.5.4",
-    "@web/test-runner": "^0.12.20",
-    "@open-wc/testing": "^2.5.33",
-    "@web/dev-server-storybook": "^0.3.5",
-    "@open-wc/building-rollup": "^1.10.0",
-    "deepmerge": "^4.2.2",
+    "prettier": "^2.2.1",
     "rimraf": "^3.0.2",
-    "rollup": "^2.52.2",
-    "@web/dev-server": "^0.1.17"
+    "rollup": "^2.52.2"
   },
   "scripts": {
     "lint": "eslint --ext .js,.html . --ignore-path .gitignore && prettier \"**/*.js\" --check --ignore-path .gitignore",
@@ -32,8 +32,11 @@
   "author": "collect-client",
   "license": "MIT",
   "dependencies": {
+    "@feathersjs/feathers": "^4.5.11",
+    "@feathersjs/rest-client": "^4.5.11",
+    "lit-element": "^2.5.1",
     "lit-html": "^1.4.1",
-    "lit-element": "^2.5.1"
+    "superagent": "^6.1.0"
   },
   "eslintConfig": {
     "extends": [
