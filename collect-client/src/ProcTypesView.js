@@ -1,46 +1,53 @@
-import { installRouter } from 'pwa-helpers/router.js';
-import { LitElement, html } from 'lit-element';
-import { classMap } from 'lit-html/directives/class-map.js';
-import { templateLogin } from './templateLogin.js';
+import { html, LitElement } from 'lit-element';
+import './btn-fab.js';
 
-export class CollectClient extends LitElement {
-  
-  // use lightDOM
-  createRenderRoot(){
+export class ProcTypesView extends LitElement {
+  createRenderRoot() {
     return this;
   }
 
   static get properties() {
     return {
-      title: { type: String },
-      proceduresList: { type: Array },
+      procedures: { type: Array },
     };
   }
 
   constructor() {
     super();
-    this.title = 'My app';
-    this.app = {};
-    this.restClient = {};
-    this.proceduresList = [];
+    /** @type {object[]} */
+    this.procedures = [];
   }
 
-  firstUpdated(){
-    // grab the global feathers object imported on index.html
-    this.app = window.feathers();
-    this.restClient = window.feathers.rest('http://localhost:3030');
-    this.app.configure(this.restClient.superagent(window.superagent));
-    const proceduresSvc = this.app.service('procedures');
-    proceduresSvc.find().then((res)=>{
-      if (typeof res.data !== 'undefined'){
-        this.proceduresList = [...res.data];
-      }
-    });
+  firstUpdated() {
+    this.dispatchEvent(
+      new CustomEvent('update-procedures-types-list', {
+        bubbles: true,
+        composed: true,
+      })
+    );
+  }
+
+  _edit(d) {
+    // eslint-disable-next-line no-console
+    // console.log(u);
+    this.dispatchEvent(
+      new CustomEvent('edit-procedure-type', {
+        detail: d,
+        bubbles: true,
+        composed: true,
+      })
+    );
+  }
+
+  _addProcType() {
+    this.dispatchEvent(
+      new CustomEvent('add-procedure-type', { bubbles: true, composed: true })
+    );
   }
 
   render() {
     return html`
-       <style>
+      <style>
         .procedure-type-card {
           margin-bottom: 0.3em;
         }
@@ -49,9 +56,6 @@ export class CollectClient extends LitElement {
           overflow: visible;
         }
       </style>
-      <main>
-        <p>Hello</p>
-      </main>
       <section id="procedures-types" class="section">
         <div class="column is-6 is-offset-3">
           <div class="container">
@@ -59,13 +63,13 @@ export class CollectClient extends LitElement {
               Tipos de Procedimentos
             </h1>
             <br />
-            ${this.proceduresList
-              ? this.proceduresList.map(
+            ${this.procedures
+              ? this.procedures.map(
                   p => html`
                     <div class="card procedure-type-card">
                       <div class="card-content">
                         <div class="content">
-                          <strong>${p.name}</strong><br />
+                          <strong>${p.procedure}</strong><br />
                           <div
                             class="button is-white is-pulled-right"
                             @click="${() => {
@@ -104,14 +108,12 @@ export class CollectClient extends LitElement {
               : html`</p>`}
           </div>
         </div>
+        <btn-fab
+          @click="${() => {
+            this._addProcType();
+          }}"
+        ></btn-fab>
       </section>
-
-      <footer
-        class="navbar is-fixed-bottom
-    is-dark has-text-centered is-vcentered"
-      >
-        <div class="column">&copy; <small>CG 2021</small></div>
-      </footer>    
-      `;
+    `;
   }
 }

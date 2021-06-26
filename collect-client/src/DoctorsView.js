@@ -1,47 +1,51 @@
-import { installRouter } from 'pwa-helpers/router.js';
-import { LitElement, html } from 'lit-element';
-import { classMap } from 'lit-html/directives/class-map.js';
-import { templateLogin } from './templateLogin.js';
+import { html, LitElement } from 'lit-element';
+import './btn-fab.js';
 
-export class CollectClient extends LitElement {
-  
-  // use lightDOM
-  createRenderRoot(){
+export class DoctorsView extends LitElement {
+  createRenderRoot() {
     return this;
   }
 
   static get properties() {
     return {
-      title: { type: String },
-      proceduresList: { type: Array },
+      doctors: { type: Array },
     };
   }
 
   constructor() {
     super();
-    this.title = 'My app';
-    this.app = {};
-    this.restClient = {};
-    this.proceduresList = [];
+    /** @type {object[]} */
+    this.doctors = [];
   }
 
-  firstUpdated(){
-    // grab the global feathers object imported on index.html
-    this.app = window.feathers();
-    this.restClient = window.feathers.rest('http://localhost:3030');
-    this.app.configure(this.restClient.superagent(window.superagent));
-    const proceduresSvc = this.app.service('procedures');
-    proceduresSvc.find().then((res)=>{
-      if (typeof res.data !== 'undefined'){
-        this.proceduresList = [...res.data];
-      }
-    });
+  firstUpdated() {
+    this.dispatchEvent(
+      new CustomEvent('update-doctors-list', { bubbles: true, composed: true })
+    );
+  }
+
+  _edit(d) {
+    // eslint-disable-next-line no-console
+    // console.log(u);
+    this.dispatchEvent(
+      new CustomEvent('edit-doctor', {
+        detail: d,
+        bubbles: true,
+        composed: true,
+      })
+    );
+  }
+
+  _addDoctor() {
+    this.dispatchEvent(
+      new CustomEvent('add-doctor', { bubbles: true, composed: true })
+    );
   }
 
   render() {
     return html`
-       <style>
-        .procedure-type-card {
+      <style>
+        .doctor-card {
           margin-bottom: 0.3em;
         }
         svg {
@@ -49,30 +53,25 @@ export class CollectClient extends LitElement {
           overflow: visible;
         }
       </style>
-      <main>
-        <p>Hello</p>
-      </main>
-      <section id="procedures-types" class="section">
+      <section id="procedures" class="section">
         <div class="column is-6 is-offset-3">
           <div class="container">
-            <h1 class="subtitle has-text-centered is-3">
-              Tipos de Procedimentos
-            </h1>
+            <h1 class="subtitle has-text-centered is-3">Médicos</h1>
             <br />
-            ${this.proceduresList
-              ? this.proceduresList.map(
-                  p => html`
-                    <div class="card procedure-type-card">
+            ${this.doctors
+              ? this.doctors.map(
+                  d => html`
+                    <div class="card user-card">
                       <div class="card-content">
                         <div class="content">
-                          <strong>${p.name}</strong><br />
+                          <strong>${d.name}</strong><br />
                           <div
                             class="button is-white is-pulled-right"
                             @click="${() => {
-                              this._edit(p);
+                              this._edit(d);
                             }}"
                             @keydown="${() => {
-                              this._edit(p);
+                              this._edit(d);
                             }}"
                           >
                             <span class="icon is-small is-right">
@@ -94,7 +93,7 @@ export class CollectClient extends LitElement {
                               </svg>
                             </span>
                           </div>
-                          ${p.code}
+                          ${d.crm}
                           <br />
                         </div>
                       </div>
@@ -104,14 +103,12 @@ export class CollectClient extends LitElement {
               : html`</p>`}
           </div>
         </div>
+        <btn-fab
+          @click="${() => {
+            this._addDoctor();
+          }}"
+        ></btn-fab>
       </section>
-
-      <footer
-        class="navbar is-fixed-bottom
-    is-dark has-text-centered is-vcentered"
-      >
-        <div class="column">&copy; <small>CG 2021</small></div>
-      </footer>    
-      `;
+    `;
   }
 }
