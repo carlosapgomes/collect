@@ -36,6 +36,7 @@
     "@feathersjs/rest-client": "^4.5.11",
     "lit-element": "^2.5.1",
     "lit-html": "^1.4.1",
+    "pwa-helpers": "^0.9.1",
     "superagent": "^6.1.0"
   },
   "eslintConfig": {
