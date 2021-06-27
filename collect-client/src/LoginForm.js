@@ -16,7 +16,7 @@ export class LoginForm extends LitElement {
   constructor() {
     super();
     this._username = '';
-    this.password = '';
+    this._password = '';
   }
 
   _login(e) {
