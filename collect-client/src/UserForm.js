@@ -93,9 +93,8 @@ export class UserForm extends LitElement {
     // @ts-ignore
     this._isDoctor = document.getElementById('user-is-doctor').checked;
     // @ts-ignore
-    this._docLicenceNumber = document.getElementById(
-      'doc-licence-number'
-    ).value;
+    this._docLicenceNumber =
+      document.getElementById('doc-licence-number').value;
 
     const u = {
       displayName: this._name,
