@@ -40,8 +40,8 @@ export class CollectClient extends LitElement {
 
   constructor() {
     super();
-    this.app = {};
-    this.restClient = {};
+    this.client = {};
+    this.rest = {};
     this.proceduresList = [];
     this._page = 'home';
     this._burgerActive = false;
@@ -71,10 +71,15 @@ export class CollectClient extends LitElement {
   firstUpdated() {
     installRouter(location => this._locationChanged(location));
     // grab the global feathers object imported on index.html
-    this.app = window.feathers();
-    this.restClient = window.feathers.rest('http://localhost:3030');
-    this.app.configure(this.restClient.superagent(window.superagent));
-    const proceduresSvc = this.app.service('procedures');
+    this.client = window.feathers();
+    this.rest = window.feathers.rest('http://localhost:3030');
+    this.client.configure(this.rest.superagent(window.superagent));
+    this.client.configure(
+      window.feathers.authentication({
+        storage: window.storage,
+      })
+    );
+    const proceduresSvc = this.client.service('procedures');
     proceduresSvc.find().then(res => {
       if (typeof res.data !== 'undefined') {
         this.proceduresList = [...res.data];
@@ -82,6 +87,22 @@ export class CollectClient extends LitElement {
     });
 
     // add event listeners
+    this.addEventListener('login', this._handleLoginEvent);
+
+    // add spinner event listeners
+    // dynamically load otw-spinner if neccessary
+    this.addEventListener('show-spinner', () => {
+      if (typeof customElements.get('spinner-loader') === 'undefined') {
+        import('./spinner-loader.js').then(() => {
+          this._spinnerHidden = false;
+        });
+      } else {
+        this._spinnerHidden = false;
+      }
+    });
+    this.addEventListener('hide-spinner', () => {
+      this._spinnerHidden = true;
+    });
     // document.getElementById('loginactionbtn').addEventListener('click', e => {
     // e.preventDefault();
     // @ts-ignore
@@ -89,6 +110,38 @@ export class CollectClient extends LitElement {
     // this._handleSignIn();
     // }
     // });
+  }
+
+  async _handleLoginEvent(e) {
+    this.dispatchEvent(new CustomEvent('show-spinner'));
+    const data = { ...e.detail };
+    const auth = await this._login(data.username, data.password);
+    if (typeof auth !== 'undefined') {
+      this._user = { ...auth.user };
+      if (!this._user.isEnabled) {
+        // show msg and call logout
+      }
+      this._isAdmin = this._user.isAdmin === 1;
+      this._loggedIn = true;
+      window.history.pushState({}, '', '/home');
+      this._locationChanged('/home');
+    } else {
+      // user unkown or server side error
+    }
+    // eslint-disable-next-line no-console
+    console.log(auth);
+  }
+
+  async _login(username, password) {
+    try {
+      return await this.client.authenticate({
+        strategy: 'local',
+        username,
+        password,
+      });
+    } catch (e) {
+      return e.message;
+    }
   }
 
   _locationChanged(location) {

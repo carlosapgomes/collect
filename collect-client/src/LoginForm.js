@@ -19,15 +19,15 @@ export class LoginForm extends LitElement {
     this._password = '';
   }
 
-  _login(e) {
+  _handleLogin(e) {
     e.preventDefault();
     // @ts-ignore
-    if (document.getElementById('loginform').reportValidity()) {
-      this._handleSaveForm();
+    if (document.getElementById('login-form').reportValidity()) {
+      this._emitLoginEvent();
     }
   }
 
-  _handleSaveForm() {
+  _emitLoginEvent() {
     // @ts-ignore
     this._username = document.getElementById('username').value;
     // @ts-ignore
@@ -54,7 +54,7 @@ export class LoginForm extends LitElement {
     this._username = '';
     this._password = '';
     // @ts-ignore
-    document.getElementById('loginform').reset();
+    document.getElementById('login-form').reset();
   }
 
   render() {
@@ -64,9 +64,11 @@ export class LoginForm extends LitElement {
           <h1 class="title">Faça o login:</h1>
           <br />
           <br />
-          <form id="loginform">
+          <form id="login-form">
             <div class="field">
-              <label class="label has-text-left" for="email">Username:</label>
+              <label class="label has-text-left" for="username"
+                >Username:</label
+              >
               <p class="control has-icons-left has-icons-right">
                 <input
                   class="input"
@@ -148,9 +150,9 @@ export class LoginForm extends LitElement {
                 <button
                   id="loginactionbtn"
                   class="button is-success has-text-black"
-                  @click="${this._login}"
+                  @click="${this._handleLogin}"
                 >
-                  Login
+                  Acessar
                 </button>
                 <button
                   id="clearbtn"
