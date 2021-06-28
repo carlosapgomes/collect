@@ -7,7 +7,7 @@ module.exports = function (app) {
   const sequelizeClient = app.get('sequelizeClient');
   const users = sequelizeClient.define('users', {
 
-    login: {
+    username: {
       type: DataTypes.STRING,
       allowNull: false,
       unique: true
