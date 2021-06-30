@@ -378,14 +378,14 @@ export class CollectClient extends LitElement {
           id="usersview"
           .users="${this._users}"
           class="${classMap({
-            'is-hidden': this._page !== 'usersview',
+            'is-hidden': ((this._page !== 'usersview') && this._isAdmin),
           })}"
         ></users-view>
         <doctors-view
           id="doctorsview"
           .doctors="${this._doctors}"
           class="${classMap({
-            'is-hidden': this._page !== 'doctorsview',
+            'is-hidden': ((this._page !== 'doctorsview') && this._isAdmin),
           })}"
         >
         </doctors-view>
@@ -393,7 +393,7 @@ export class CollectClient extends LitElement {
           id="procedurestypesview"
           .procedures="${this._proceduresTypes}"
           class="${classMap({
-            'is-hidden': this._page !== 'procedurestypesview',
+            'is-hidden': ((this._page !== 'procedurestypesview') && this._isAdmin),
           })}"
         ></proctypes-view>
       </main> 
