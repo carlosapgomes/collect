@@ -124,7 +124,7 @@ export class CollectClient extends LitElement {
       this._isAdmin = this._user.isAdmin === 1;
       this._loggedIn = true;
       window.history.pushState({}, '', '/home');
-      this._locationChanged('/home');
+      this._locationChanged(window.location);
     } else {
       // user unkown or server side error
     }
@@ -302,10 +302,10 @@ export class CollectClient extends LitElement {
                 <a
                   class="navbar-item"
                   href="/procedurestypesview"
-                  @click="${() => {
+                  @click=${() => {
                     this._adminDropDownOpen = false;
                     this._burgerActive = false;
-                  }}"
+                  }}
                 >
                   Tipos de Procedimentos
                 </a>
@@ -364,7 +364,7 @@ export class CollectClient extends LitElement {
           class="${classMap({
             'is-hidden': this._page !== 'loginform',
           })}"
-        ></loginform>
+        ></login-form>
 
         <procs-view
           id="procsview"
