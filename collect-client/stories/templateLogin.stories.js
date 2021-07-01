@@ -1,15 +1,17 @@
 import { html } from 'lit-html';
-import { templateLogin } from '../src/templateLogin.js';
+import '../src/login-form.js';
 
 export default {
   title: 'Login',
-  component: 'main',
+  component: 'login-form',
   argTypes: {},
 };
 
 function Template() {
-  return html`<section>${templateLogin}</section>`;
+  return html`<login-form></login-form>`;
 }
 
 export const App = Template.bind({});
-App.args = {};
+App.args = {
+  title: 'LoginForm',
+};
