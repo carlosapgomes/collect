@@ -10,14 +10,17 @@ export class UserForm extends LitElement {
   static get properties() {
     return {
       user: { type: Object },
-      activate: { type: Boolean },
-      _name: { type: String },
-      _email: { type: String },
-      _phone: { type: String },
-      _isEnabled: { type: Boolean },
-      _isAdmin: { type: Boolean },
-      _isDoctor: { type: Boolean },
-      _docLicenceNumber: { type: String },
+      activate: { type: Boolean, state: true },
+      _name: { type: String, state: true },
+      _email: { type: String, state: true },
+      _phone: { type: String, state: true },
+      _username: { type: String, state: true },
+      _password: { type: String, state: true },
+      _isEnabled: { type: Boolean, state: true },
+      _isAdmin: { type: Boolean, state: true },
+      _changePassword: { type: Boolean, state: true },
+      _isDoctor: { type: Boolean, state: true },
+      _docLicenceNumber: { type: String, state: true },
     };
   }
 
@@ -28,8 +31,11 @@ export class UserForm extends LitElement {
     this._name = '';
     this._email = '';
     this._phone = '';
+    this._username = '';
+    this._password = '';
     this._isEnabled = false;
     this._isAdmin = false;
+    this._changePassword = false;
     this._isDoctor = false;
     this._docLicenceNumber = '';
   }
@@ -37,9 +43,13 @@ export class UserForm extends LitElement {
   updated(changedProperties) {
     if (changedProperties.has('user')) {
       if (this.user) {
-        this._name = this.user.displayName ? this.user.displayName : '';
+        this._name = this.user.name ? this.user.name : '';
         this._email = this.user.email ? this.user.email : '';
         this._phone = this.user.phoneNumber ? this.user.phoneNumber : '';
+        this._username = this.user.username ? this.user.username : '';
+        this._changePassword = this.user._changePassword
+          ? this.user._changePassword
+          : false;
         this._isEnabled = this.user.isEnabled ? this.user.isEnabled : false;
         this._isAdmin = this.user.isAdmin ? this.user.isAdmin : false;
         this._isDoctor = this.user._isDoctor ? this.user._isDoctor : false;
@@ -65,8 +75,11 @@ export class UserForm extends LitElement {
     this._name = '';
     this._email = '';
     this._phone = '';
+    this._username = '';
+    this._password = '';
     this._isEnabled = false;
     this._isAdmin = false;
+    this._changePassword = false;
     this._isDoctor = false;
     this._docLicenceNumber = '';
   }
@@ -81,12 +94,14 @@ export class UserForm extends LitElement {
 
   _handleSaveForm() {
     // @ts-ignore
-    this._name = document.getElementById('user-name').value;
+    this._name = document.getElementById('name').value;
     // @ts-ignore
     this._email = document.getElementById('user-email-address').value;
     // @ts-ignore
     this._phone = document.getElementById('user-phone').value;
     // @ts-ignore
+    // @ts-ignore
+    this._username = document.getElementById('username').value;
     this._isEnabled = document.getElementById('user-is-enabled').checked;
     // @ts-ignore
     this._isAdmin = document.getElementById('user-is-admin').checked;
@@ -95,13 +110,18 @@ export class UserForm extends LitElement {
     // @ts-ignore
     this._docLicenceNumber =
       document.getElementById('doc-licence-number').value;
+    // @ts-ignore
+    this._changePassword = document.getElementById('change-password'.checked);
 
     const u = {
-      displayName: this._name,
+      name: this._name,
       email: this._email,
       phoneNumber: this._phone,
+      username: this._username,
+      password: this._password,
       isEnabled: this._isEnabled,
       isAdmin: this._isAdmin,
+      changePassword: this._changePassword,
       isDoctor: this._isDoctor,
       docLicenceNumber: this._docLicenceNumber,
     };
@@ -139,7 +159,7 @@ export class UserForm extends LitElement {
               <div class="field">
                 <input
                   class="input"
-                  id="user-name"
+                  id="name"
                   type="text"
                   placeholder="Nome"
                   .value="${this._name}"
@@ -165,33 +185,66 @@ export class UserForm extends LitElement {
                   placeholder="Telefone"
                 />
               </div>
-              <label class="checkbox">
+              <div class="field">
                 <input
-                  id="user-is-enabled"
-                  type="checkbox"
-                  ?checked="${this._isEnabled}"
+                  class="input"
+                  id="username"
+                  type="text"
+                  placeholder="Username"
+                  .value="${this._username}"
+                  required
                 />
-                Habilitado</label
-              >
-              <label class="checkbox">
+              </div>
+              <div class="field">
                 <input
-                  id="user-is-admin"
-                  type="checkbox"
-                  ?checked="${this._isAdmin}"
+                  class="input"
+                  id="password"
+                  type="password"
+                  placeholder="Senha"
+                  .value="${this._password}"
                 />
-                Admin</label
+              </div>
+              <div
+                class="is-flex 
+                is-flex-direction-row 
+                is-justify-content-space-evenly"
               >
-              <label class="checkbox">
-                <input
-                  id="user-is-doctor"
-                  type="checkbox"
-                  @click="${() => {
-                    this._isDoctor = !this._isDoctor;
-                  }}"
-                  ?checked="${this._isDoctor}"
-                />
-                Médico</label
-              >
+                <label class="checkbox">
+                  <input
+                    id="change-password"
+                    type="checkbox"
+                    ?checked="${this._changePassword}"
+                  />
+                  Forçar atualização da senha</label
+                >
+                <label class="checkbox">
+                  <input
+                    id="user-is-enabled"
+                    type="checkbox"
+                    ?checked="${this._isEnabled}"
+                  />
+                  Habilitado</label
+                >
+                <label class="checkbox">
+                  <input
+                    id="user-is-admin"
+                    type="checkbox"
+                    ?checked="${this._isAdmin}"
+                  />
+                  Admin</label
+                >
+                <label class="checkbox">
+                  <input
+                    id="user-is-doctor"
+                    type="checkbox"
+                    @click="${() => {
+                      this._isDoctor = !this._isDoctor;
+                    }}"
+                    ?checked="${this._isDoctor}"
+                  />
+                  Médico</label
+                >
+              </div>
               <div class="field">
                 <input
                   class="input"

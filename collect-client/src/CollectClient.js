@@ -31,6 +31,7 @@ export class CollectClient extends LitElement {
       _currentEditDoctor: { type: Object, state: true },
       _proceduresTypes: { type: Array, state: true },
       _currentEditProcType: { type: Object, state: true },
+      _showUserForm: { type: Boolean, state: true },
     };
   }
 
@@ -58,6 +59,7 @@ export class CollectClient extends LitElement {
     this._currentEditDoctor = {};
     this._proceduresTypes = [];
     this._currentEditProcType = {};
+    this._showUserForm = false;
   }
 
   firstUpdated() {
@@ -80,6 +82,16 @@ export class CollectClient extends LitElement {
 
     // add event listeners
     this.addEventListener('login', this._handleLoginEvent);
+
+    // Users
+    this.addEventListener('update-users-list', this._updateUsersList);
+    this.addEventListener('edit-user', this._editUser);
+    this.addEventListener('add-user', this._loadShowUserForm);
+    this.addEventListener('save-user-form', this._saveUser);
+    this.addEventListener('close-user-form', () => {
+      this._currentEditUser = null;
+      this._showUserForm = false;
+    });
 
     // add spinner event listeners
     // dynamically load otw-spinner if neccessary
@@ -212,6 +224,19 @@ export class CollectClient extends LitElement {
         p = '/';
     }
     this._page = p;
+  }
+
+  //
+  // Users
+  _loadShowUserForm() {
+    // dynamically load user-form if neccessary
+    if (typeof customElements.get('user-form') === 'undefined') {
+      import('./user-form.js').then(() => {
+        this._showUserForm = true;
+      });
+    } else {
+      this._showUserForm = true;
+    }
   }
 
   render() {
@@ -410,6 +435,11 @@ export class CollectClient extends LitElement {
       >
         <div class="column">&copy; <small>CG 2021</small></div>
       </footer>
+      <user-form
+        class="${classMap({ 'is-hidden': !this._showUserForm })}"
+        ?activate="${this._showUserForm}"
+        .user="${this._currentEditUser}"
+      ></user-form>
     `;
   }
 }
