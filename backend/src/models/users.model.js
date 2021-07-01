@@ -30,6 +30,9 @@ module.exports = function (app) {
     isEnabled: {
       type: DataTypes.BOOLEAN,
     },
+    changePassword: {
+      type: DataTypes.BOOLEAN,
+    },
   }, {
     hooks: {
       beforeCount(options) {
