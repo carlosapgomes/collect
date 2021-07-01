@@ -12,29 +12,25 @@ export class CollectClient extends LitElement {
   static get properties() {
     return {
       proceduresList: { type: Array },
-      _page: { type: String },
-      _burgerActive: { type: Boolean },
+      _page: { type: String, state: true },
+      _burgerActive: { type: Boolean, state: true },
       _user: { type: Object },
-      _loggedIn: { type: Boolean },
-      _isAdmin: { type: Boolean },
-      _toggleModal: { type: Boolean },
-      _modalMsg: { type: String },
-      _spinnerHidden: { type: Boolean },
-      _procedures: { type: Array },
-      _showProcedureForm: { type: Boolean },
-      _currentProcedure: { type: Object },
-      _currentProceduresDate: { type: String },
-      _adminDropDownOpen: { type: Boolean },
-      _users: { type: Array },
-      _showUserForm: { type: Boolean },
-      _currentEditUser: { type: Object },
-      _toggleResetPwModal: { type: Boolean },
-      _doctors: { type: Array },
-      _showDoctorForm: { type: Boolean },
-      _currentEditDoctor: { type: Object },
-      _proceduresTypes: { type: Array },
-      _showProcTypeForm: { type: Boolean },
-      _currentEditProcType: { type: Object },
+      _loggedIn: { type: Boolean, state: true },
+      _isAdmin: { type: Boolean, state: true },
+      _toggleModal: { type: Boolean, state: true },
+      _modalMsg: { type: String, state: true },
+      _spinnerHidden: { type: Boolean, state: true },
+      _procedures: { type: Array, state: true },
+      _currentProcedure: { type: Object, state: true },
+      _currentProceduresDate: { type: String, state: true },
+      _adminDropDownOpen: { type: Boolean, state: true },
+      _users: { type: Array, state: true },
+      _currentEditUser: { type: Object, state: true },
+      _toggleResetPwModal: { type: Boolean, state: true },
+      _doctors: { type: Array, state: true },
+      _currentEditDoctor: { type: Object, state: true },
+      _proceduresTypes: { type: Array, state: true },
+      _currentEditProcType: { type: Object, state: true },
     };
   }
 
@@ -52,19 +48,15 @@ export class CollectClient extends LitElement {
     this._modalMsg = '';
     this._procedures = null;
     this._spinnerHidden = true;
-    this._showProcedureForm = false;
     this._currentProcedure = {};
     this._currentProceduresDate = '';
     this._adminDropDownOpen = false;
     this._users = [];
     this._currentEditUser = {};
-    this._showUserForm = false;
     this._toggleResetPwModal = false;
     this._doctors = [];
-    this._showDoctorForm = false;
     this._currentEditDoctor = {};
     this._proceduresTypes = [];
-    this._showProcTypeForm = false;
     this._currentEditProcType = {};
   }
 
@@ -141,6 +133,21 @@ export class CollectClient extends LitElement {
       });
     } catch (e) {
       return e.message;
+    }
+  }
+
+  async _logoutClicked() {
+    try {
+      await this.client.logout();
+      this._user = null;
+      this._loggedIn = false;
+      this._isAdmin = false;
+      this.requestUpdate();
+      window.history.pushState({}, '', '/');
+      this._locationChanged(window.location);
+    } catch (e) {
+      // eslint-disable-next-line no-console
+      console.log(e);
     }
   }
 
@@ -347,7 +354,7 @@ export class CollectClient extends LitElement {
         <section
           id="home"
           class="section container has-text-centered ${classMap({
-            'is-hidden': this._page !== 'home',
+            'is-hidden': this._page !== '/',
           })}"
         >
           <div>
@@ -355,7 +362,7 @@ export class CollectClient extends LitElement {
             <br />
             <br />
             <br />
-            <h1 class="title">Cirurgia Vascular: Procedimentos Realizados</h1>
+            <h1 class="title">Coleta de Procedimentos</h1>
           </div>
         </section>
 
@@ -378,14 +385,14 @@ export class CollectClient extends LitElement {
           id="usersview"
           .users="${this._users}"
           class="${classMap({
-            'is-hidden': ((this._page !== 'usersview') && this._isAdmin),
+            'is-hidden': this._page !== 'usersview' || !this._isAdmin,
           })}"
         ></users-view>
         <doctors-view
           id="doctorsview"
           .doctors="${this._doctors}"
           class="${classMap({
-            'is-hidden': ((this._page !== 'doctorsview') && this._isAdmin),
+            'is-hidden': this._page !== 'doctorsview' || !this._isAdmin,
           })}"
         >
         </doctors-view>
@@ -393,16 +400,16 @@ export class CollectClient extends LitElement {
           id="procedurestypesview"
           .procedures="${this._proceduresTypes}"
           class="${classMap({
-            'is-hidden': ((this._page !== 'procedurestypesview') && this._isAdmin),
+            'is-hidden': this._page !== 'procedurestypesview' || !this._isAdmin,
           })}"
         ></proctypes-view>
-      </main> 
+      </main>
       <footer
         class="navbar is-fixed-bottom
     is-dark has-text-centered is-vcentered"
       >
         <div class="column">&copy; <small>CG 2021</small></div>
-      </footer>    
-      `;
+      </footer>
+    `;
   }
 }
