@@ -405,8 +405,8 @@ export class CollectClient extends LitElement {
         ></proctypes-view>
       </main>
       <footer
-        class="navbar is-fixed-bottom
-    is-dark has-text-centered is-vcentered"
+        class="navbar is-fixed-bottom has-background-light
+     has-text-centered is-vcentered"
       >
         <div class="column">&copy; <small>CG 2021</small></div>
       </footer>
