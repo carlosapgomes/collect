@@ -13,12 +13,11 @@ module.exports = function (app) {
     },
     email: {
       type: DataTypes.STRING,
-      allowNull: false,
-      unique: true
+      allowNull: true,
     },
     phone: {
       type: DataTypes.STRING,
-      allowNull: false,
+      allowNull: true,
     },
     username: {
       type: DataTypes.STRING,
