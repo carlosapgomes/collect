@@ -45,7 +45,7 @@ export class UserForm extends LitElement {
       if (this.user) {
         this._name = this.user.name ? this.user.name : '';
         this._email = this.user.email ? this.user.email : '';
-        this._phone = this.user.phoneNumber ? this.user.phoneNumber : '';
+        this._phone = this.user.phone ? this.user.phone : '';
         this._username = this.user.username ? this.user.username : '';
         this._changePassword = this.user.changePassword
           ? this.user.changePassword
@@ -106,9 +106,34 @@ export class UserForm extends LitElement {
       isDoctor: this._isDoctor,
       docLicenceNumber: this._docLicenceNumber,
     };
+    if (this.user.id) {
+      u.id = this.user.id;
+    }
+
+    if (u.password === '' && typeof u.id === 'undefined') {
+      // we need a temporary password to create a new user
+      u.password = '1234abcd.';
+    }
+    if (u.password === '' && typeof u.id !== 'undefined') {
+      // we are updating user data but not its pw
+      delete u.password;
+    }
+
+    // remove non required and empty fields
+    if (u.phone === '') {
+      delete u.phone;
+    }
+
+    if (this._email === '') {
+      delete u.email;
+    }
+    if (this._docLicenceNumber === '') {
+      delete u.docLicenceNumber;
+    }
+
     // eslint-disable-next-line no-console
     console.log(u);
-    // fire event to save/update procedure
+    // fire event to save/update user
     this.dispatchEvent(
       new CustomEvent('save-user-form', {
         detail: { ...u },
@@ -158,19 +183,18 @@ export class UserForm extends LitElement {
                   @input="${e => {
                     this._email = e.target.value;
                   }}"
-                  required
                 />
               </div>
               <div class="field">
                 <input
                   class="input"
                   id="user-phone"
-                  type="tel"
+                  type="text"
                   placeholder="Telefone"
+                  .value="${this._phone}"
                   @input="${e => {
                     this._phone = e.target.value;
                   }}"
-                  .value="${this._phone}"
                 />
               </div>
               <div class="field">

@@ -231,6 +231,16 @@ export class CollectClient extends LitElement {
 
   //
   // Users
+
+  _editUser(e) {
+    // eslint-disable-next-line no-console
+    console.log(JSON.stringify(e.detail, null, 2));
+    this._currentEditUser = { ...e.detail };
+    // eslint-disable-next-line no-console
+    // console.log(this._currentEditUser);
+    this._loadShowUserForm();
+  }
+
   async _updateUsersList() {
     if (this._isAdmin && this._user.isEnabled) {
       // clear users list
@@ -280,24 +290,40 @@ export class CollectClient extends LitElement {
       const u = { ...e.detail };
       if (u.id) {
         try {
-          const res = await this.client.service('users').update({ ...u });
+          // eslint-disable-next-line no-console
+          console.log('updating user');
+          const res = await this.client.service('users').update(u.id, { ...u });
           this._spinnerHidden = true;
           this._modalMsg = 'Usuário gravado com sucesso!';
           this._toggleModal = true;
           // eslint-disable-next-line no-console
-          console.log(`User updated: ${res}`);
+          console.log(`User updated: ${JSON.stringify(res, null, 2)}`);
+          this.dispatchEvent(
+            new CustomEvent('update-users-list', {
+              bubbles: true,
+              composed: true,
+            })
+          );
         } catch (err) {
           // eslint-disable-next-line no-console
           console.log(`could not update user: ${err}`);
         }
       } else {
         try {
+          // eslint-disable-next-line no-console
+          console.log('creating user');
           const res = await this.client.service('users').create({ ...u });
           this._spinnerHidden = true;
           this._modalMsg = 'Usuário gravado com sucesso!';
           this._toggleModal = true;
           // eslint-disable-next-line no-console
           console.log(JSON.stringify(res, null, 2));
+          this.dispatchEvent(
+            new CustomEvent('update-users-list', {
+              bubbles: true,
+              composed: true,
+            })
+          );
         } catch (err) {
           // eslint-disable-next-line no-console
           console.log(`could not create user: ${err}`);
