@@ -61,7 +61,7 @@ export class UsersView extends LitElement {
                     <div class="card user-card">
                       <div class="card-content">
                         <div class="content">
-                          <strong>${u.name}</strong><br />
+                          <strong>${u.name}</strong> - ${u.email}<br />
                           <div
                             class="button is-white is-pulled-right"
                             @click="${() => {
@@ -90,8 +90,7 @@ export class UsersView extends LitElement {
                               </svg>
                             </span>
                           </div>
-                          ${u.email}
-                          <br />
+
                           <label class="checkbox">
                             <input
                               type="checkbox"
@@ -107,6 +106,22 @@ export class UsersView extends LitElement {
                               disabled
                             />
                             Admin
+                          </label>
+                          <label class="checkbox">
+                            <input
+                              type="checkbox"
+                              ?checked="${u.isDoctor}"
+                              disabled
+                            />
+                            Médico
+                          </label>
+                          <label class="checkbox">
+                            <input
+                              type="checkbox"
+                              ?checked="${u.changePassword}"
+                              disabled
+                            />
+                            Atualizar senha
                           </label>
                         </div>
                       </div>
