@@ -119,8 +119,10 @@ export class CollectClient extends LitElement {
   async _handleLoginEvent(e) {
     this.dispatchEvent(new CustomEvent('show-spinner'));
     const data = { ...e.detail };
-    const auth = await this._login(data.username, data.password);
-    if (typeof auth !== 'undefined') {
+    try {
+      const auth = await this._login(data.username, data.password);
+      // eslint-disable-next-line no-console
+      console.log(auth);
       this._user = { ...auth.user };
       if (!this._user.isEnabled) {
         // show msg and call logout
@@ -129,23 +131,18 @@ export class CollectClient extends LitElement {
       this._loggedIn = true;
       window.history.pushState({}, '', '/home');
       this._locationChanged(window.location);
-    } else {
-      // user unkown or server side error
+    } catch (err) {
+      // eslint-disable-next-line no-console
+      console.log(err.message);
     }
-    // eslint-disable-next-line no-console
-    console.log(auth);
   }
 
-  async _login(username, password) {
-    try {
-      return await this.client.authenticate({
-        strategy: 'local',
-        username,
-        password,
-      });
-    } catch (e) {
-      return e.message;
-    }
+  _login(username, password) {
+    return this.client.authenticate({
+      strategy: 'local',
+      username,
+      password,
+    });
   }
 
   async _logoutClicked() {
