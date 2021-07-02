@@ -37,7 +37,7 @@ export class UserForm extends LitElement {
     this._isAdmin = false;
     this._changePassword = false;
     this._isDoctor = false;
-    this._docLicenceNumber = '';
+    this._docLicenceNumber = 'teste';
   }
 
   updated(changedProperties) {
@@ -53,8 +53,9 @@ export class UserForm extends LitElement {
         this._isEnabled = this.user.isEnabled ? this.user.isEnabled : false;
         this._isAdmin = this.user.isAdmin ? this.user.isAdmin : false;
         this._isDoctor = this.user.isDoctor ? this.user.isDoctor : false;
-        this._docLicenceNumber =
-          this.user.docLicenceNumber !== '' ? this.user.docLicenceNumber : '';
+        this._docLicenceNumber = this.user.docLicenceNumber
+          ? this.user.docLicenceNumber
+          : '';
       }
     }
   }
@@ -93,37 +94,6 @@ export class UserForm extends LitElement {
   }
 
   _handleSaveForm() {
-    // @ts-ignore
-    this._name = document.getElementById('name').value;
-    // @ts-ignore
-    this._email = document.getElementById('user-email-address').value;
-    // @ts-ignore
-    this._phone = document.getElementById('user-phone').value;
-    // @ts-ignore
-    this._username = document.getElementById('login-username').value;
-    // eslint-disable-next-line no-console
-    console.log(this._username);
-    // eslint-disable-next-line no-console
-    console.log(document.getElementById('login-username').value);
-    // @ts-ignore
-    this._password = document.getElementById('login-password').value;
-    // eslint-disable-next-line no-console
-    console.log(this._password);
-    // @ts-ignore
-    this._changePassword = document.getElementById('force-pw-change'.checked);
-    // eslint-disable-next-line no-console
-    console.log(this._changePassword);
-    // @ts-ignore
-    this._isEnabled = document.getElementById('user-is-enabled').checked;
-    // @ts-ignore
-    this._isAdmin = document.getElementById('user-is-admin').checked;
-    // @ts-ignore
-    this._isDoctor = document.getElementById('user-is-doctor').checked;
-    // @ts-ignore
-    this._docLicenceNumber = document.getElementById(
-      'doctor-licence-number'
-    ).value;
-
     const u = {
       name: this._name,
       email: this._email,
@@ -172,6 +142,9 @@ export class UserForm extends LitElement {
                   type="text"
                   placeholder="Nome"
                   .value="${this._name}"
+                  @input="${e => {
+                    this._name = e.target.value;
+                  }}"
                   required
                 />
               </div>
@@ -182,6 +155,9 @@ export class UserForm extends LitElement {
                   type="email"
                   placeholder="Email"
                   .value="${this._email}"
+                  @input="${e => {
+                    this._email = e.target.value;
+                  }}"
                   required
                 />
               </div>
@@ -191,6 +167,9 @@ export class UserForm extends LitElement {
                   id="user-phone"
                   type="tel"
                   placeholder="Telefone"
+                  @input="${e => {
+                    this._phone = e.target.value;
+                  }}"
                   .value="${this._phone}"
                 />
               </div>
@@ -200,6 +179,9 @@ export class UserForm extends LitElement {
                   id="login-username"
                   type="text"
                   placeholder="Username"
+                  @input="${e => {
+                    this._username = e.target.value;
+                  }}"
                   .value="${this._username}"
                   required
                 />
@@ -211,6 +193,9 @@ export class UserForm extends LitElement {
                   type="password"
                   placeholder="Senha"
                   .value="${this._password}"
+                  @input="${e => {
+                    this._password = e.target.value;
+                  }}"
                 />
               </div>
               <div
@@ -223,6 +208,9 @@ export class UserForm extends LitElement {
                     id="force-pw-change"
                     type="checkbox"
                     ?checked="${this._changePassword}"
+                    @input="${e => {
+                      this._changePassword = e.target.checked;
+                    }}"
                   />
                   Atualizar senha</label
                 >
@@ -231,6 +219,9 @@ export class UserForm extends LitElement {
                     id="user-is-enabled"
                     type="checkbox"
                     ?checked="${this._isEnabled}"
+                    @input="${e => {
+                      this._isEnabled = e.target.checked;
+                    }}"
                   />
                   Habilitado</label
                 >
@@ -239,6 +230,9 @@ export class UserForm extends LitElement {
                     id="user-is-admin"
                     type="checkbox"
                     ?checked="${this._isAdmin}"
+                    @input="${e => {
+                      this._isAdmin = e.target.checked;
+                    }}"
                   />
                   Admin</label
                 >
@@ -246,21 +240,26 @@ export class UserForm extends LitElement {
                   <input
                     id="user-is-doctor"
                     type="checkbox"
-                    @click="${() => {
-                      this._isDoctor = !this._isDoctor;
-                    }}"
                     ?checked="${this._isDoctor}"
+                    @input="${e => {
+                      this._isDoctor = e.target.checked;
+                    }}"
                   />
                   Médico</label
                 >
               </div>
               <div class="field">
                 <input
-                  class="input"
+                  class="input ${classMap({
+                    'is-hidden': !this._isDoctor,
+                  })}"
                   id="doctor-licence-number"
                   type="text"
                   placeholder="CRM"
-                  ?disabled="${!this._isDoctor}"
+                  .value="${this._docLicenceNumber}"
+                  @input="${e => {
+                    this._docLicenceNumber = e.target.value;
+                  }}"
                 />
               </div>
             </form>
