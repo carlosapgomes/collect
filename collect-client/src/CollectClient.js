@@ -293,7 +293,7 @@ export class CollectClient extends LitElement {
         try {
           // eslint-disable-next-line no-console
           console.log('updating user');
-          const res = await this.client.service('users').update(u.id, { ...u });
+          const res = await this.client.service('users').patch(u.id, { ...u });
           this._spinnerHidden = true;
           this._modalMsg = 'Usuário gravado com sucesso!';
           this._toggleModal = true;
