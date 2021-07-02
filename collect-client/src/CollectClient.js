@@ -126,6 +126,8 @@ export class CollectClient extends LitElement {
       this._user = { ...auth.user };
       if (!this._user.isEnabled) {
         // show msg and call logout
+        this._modalMsg = 'Este usuário não está autorizado!';
+        this._toggleModal = true;
       }
       this._spinnerHidden = true;
       this._isAdmin = this._user.isAdmin === 1;
@@ -136,6 +138,8 @@ export class CollectClient extends LitElement {
       this._spinnerHidden = true;
       // eslint-disable-next-line no-console
       console.log(err.message);
+      this._modalMsg = `Ocorreu um erro: ${err.message}`;
+      this._toggleModal = true;
     }
   }
 
@@ -484,6 +488,34 @@ export class CollectClient extends LitElement {
       >
         <div class="column">&copy; <small>CG 2021</small></div>
       </footer>
+
+      <!-- dynamic modal dialog -->
+      <div
+        id="modalmsg"
+        class="modal ${classMap({ 'is-active': this._toggleModal })}"
+      >
+        <div
+          class="modal-background"
+          @click="${() => {
+            this._toggleModal = false;
+          }}"
+          @keydown="${() => {
+            this._toggleModal = false;
+          }}"
+        ></div>
+        <div class="modal-content">
+          <div class="box container has-text-centered">${this._modalMsg}</div>
+        </div>
+        <button
+          class="modal-close is-large"
+          @click="${() => {
+            this._toggleModal = false;
+          }}"
+          aria-label="close"
+        ></button>
+      </div>
+
+      <!-- dynamic elements -->
       <user-form
         class="${classMap({ 'is-hidden': !this._showUserForm })}"
         ?activate="${this._showUserForm}"
