@@ -4,11 +4,25 @@ import '../src/users-view.js';
 export default {
   title: 'UsersView',
   component: 'users-view',
-  argTypes: {},
+  argTypes: {
+    users: {
+      type: 'array',
+    },
+  },
 };
 
 function Template() {
-  return html`<users-view></users-view>`;
+  const users = [
+    {
+      name: 'user1',
+      email: 'user1@test',
+    },
+    {
+      name: 'user',
+      email: 'user1@test',
+    },
+  ];
+  return html`<users-view .users="${users}"></users-view>`;
 }
 
 export const App = Template.bind({});

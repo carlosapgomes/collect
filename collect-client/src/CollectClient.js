@@ -231,6 +231,36 @@ export class CollectClient extends LitElement {
 
   //
   // Users
+  async _updateUsersList() {
+    if (this._isAdmin && this._user.isEnabled) {
+      // clear users list
+      this._users = [];
+      // eslint-disable-next-line no-console
+      console.log('updating users list ...');
+      this._spinnerHidden = false;
+      // this.dispatchEvent(new CustomEvent('show-spinner'));
+      try {
+        const usersList = await this.client.service('users').find({
+          query: {
+            $sort: {
+              name: 1,
+            },
+          },
+        });
+        // eslint-disable-next-line no-console
+        console.log(usersList.data);
+        if (usersList.data.length > 0) {
+          this._users = [...usersList.data];
+        }
+        this._spinnerHidden = true;
+      } catch (e) {
+        this._spinnerHidden = true;
+        this._modalMsg = 'Erro ao buscar lista de usuários';
+        this._toggleModal = true;
+      }
+    }
+  }
+
   _loadShowUserForm() {
     // dynamically load user-form if neccessary
     if (typeof customElements.get('user-form') === 'undefined') {

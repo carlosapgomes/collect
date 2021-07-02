@@ -9,7 +9,7 @@ export class UsersView extends LitElement {
 
   static get properties() {
     return {
-      users: { type: Array },
+      users: { type: Array, attribute: true },
     };
   }
 
@@ -50,7 +50,7 @@ export class UsersView extends LitElement {
           overflow: visible;
         }
       </style>
-      <section id="procedures" class="section">
+      <section id="users" class="section">
         <div class="column is-6 is-offset-3">
           <div class="container">
             <h1 class="subtitle has-text-centered is-3">Usuários</h1>
@@ -61,7 +61,7 @@ export class UsersView extends LitElement {
                     <div class="card user-card">
                       <div class="card-content">
                         <div class="content">
-                          <strong>${u.displayName}</strong><br />
+                          <strong>${u.name}</strong><br />
                           <div
                             class="button is-white is-pulled-right"
                             @click="${() => {
