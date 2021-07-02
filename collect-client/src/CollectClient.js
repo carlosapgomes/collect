@@ -127,11 +127,13 @@ export class CollectClient extends LitElement {
       if (!this._user.isEnabled) {
         // show msg and call logout
       }
+      this._spinnerHidden = true;
       this._isAdmin = this._user.isAdmin === 1;
       this._loggedIn = true;
       window.history.pushState({}, '', '/home');
       this._locationChanged(window.location);
     } catch (err) {
+      this._spinnerHidden = true;
       // eslint-disable-next-line no-console
       console.log(err.message);
     }
@@ -487,6 +489,9 @@ export class CollectClient extends LitElement {
         ?activate="${this._showUserForm}"
         .user="${this._currentEditUser}"
       ></user-form>
+      <spinner-loader
+        class="${classMap({ 'is-hidden': this._spinnerHidden })}"
+      ></spinner-loader>
     `;
   }
 }
