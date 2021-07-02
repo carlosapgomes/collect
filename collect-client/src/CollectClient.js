@@ -73,12 +73,12 @@ export class CollectClient extends LitElement {
         storage: window.storage,
       })
     );
-    const proceduresSvc = this.client.service('procedures');
-    proceduresSvc.find().then(res => {
-      if (typeof res.data !== 'undefined') {
-        this.proceduresList = [...res.data];
-      }
-    });
+    // const proceduresSvc = this.client.service('procedures');
+    // proceduresSvc.find().then(res => {
+    // if (typeof res.data !== 'undefined') {
+    // this.proceduresList = [...res.data];
+    // }
+    // });
 
     // add event listeners
     this.addEventListener('login', this._handleLoginEvent);
