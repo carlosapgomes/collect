@@ -128,6 +128,7 @@ export class CollectClient extends LitElement {
         // show msg and call logout
         this._modalMsg = 'Este usuário não está autorizado!';
         this._toggleModal = true;
+        this._logoutClicked();
       }
       this._spinnerHidden = true;
       this._isAdmin = this._user.isAdmin === 1;
