@@ -89,7 +89,7 @@ export class CollectClient extends LitElement {
     this.addEventListener('add-user', this._loadShowUserForm);
     this.addEventListener('save-user-form', this._saveUser);
     this.addEventListener('close-user-form', () => {
-      this._currentEditUser = null;
+      this._currentEditUser = {};
       this._showUserForm = false;
     });
 
@@ -236,6 +236,56 @@ export class CollectClient extends LitElement {
       });
     } else {
       this._showUserForm = true;
+    }
+  }
+
+  async _saveUser(e) {
+    if (this._isAdmin && this._user.isEnabled) {
+      // eslint-disable-next-line no-console
+      console.log(JSON.stringify(e.detail, null, 2));
+      this.dispatchEvent(new CustomEvent('show-spinner'));
+      const u = { ...e.detail };
+      if (u.id) {
+        try {
+          const res = await this.client.service('users').update({ ...u });
+          this._spinnerHidden = true;
+          this._modalMsg = 'Usuário gravado com sucesso!';
+          this._toggleModal = true;
+          // eslint-disable-next-line no-console
+          console.log(`User updated: ${res}`);
+        } catch (err) {
+          // eslint-disable-next-line no-console
+          console.log(`could not update user: ${err}`);
+        }
+      } else {
+        try {
+          const res = await this.client.service('users').create({ ...u });
+          this._spinnerHidden = true;
+          this._modalMsg = 'Usuário gravado com sucesso!';
+          this._toggleModal = true;
+          // eslint-disable-next-line no-console
+          console.log(JSON.stringify(res, null, 2));
+        } catch (err) {
+          // eslint-disable-next-line no-console
+          console.log(`could not create user: ${err}`);
+        }
+      }
+      if (u.isDoctor) {
+        const d = {
+          name: u.displayName,
+          crm: u.doctorLicenceNumber,
+        };
+        // eslint-disable-next-line no-console
+        // console.log(d);
+        // fire event to save/update doctor
+        this.dispatchEvent(
+          new CustomEvent('save-doctor-form', {
+            detail: d,
+            bubbles: true,
+            composed: true,
+          })
+        );
+      }
     }
   }
 

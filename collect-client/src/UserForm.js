@@ -47,14 +47,14 @@ export class UserForm extends LitElement {
         this._email = this.user.email ? this.user.email : '';
         this._phone = this.user.phoneNumber ? this.user.phoneNumber : '';
         this._username = this.user.username ? this.user.username : '';
-        this._changePassword = this.user._changePassword
-          ? this.user._changePassword
+        this._changePassword = this.user.changePassword
+          ? this.user.changePassword
           : false;
         this._isEnabled = this.user.isEnabled ? this.user.isEnabled : false;
         this._isAdmin = this.user.isAdmin ? this.user.isAdmin : false;
-        this._isDoctor = this.user._isDoctor ? this.user._isDoctor : false;
+        this._isDoctor = this.user.isDoctor ? this.user.isDoctor : false;
         this._docLicenceNumber =
-          this.user._docLicenceNumber !== '' ? this.user._docLicenceNumber : '';
+          this.user.docLicenceNumber !== '' ? this.user.docLicenceNumber : '';
       }
     }
   }
@@ -100,23 +100,34 @@ export class UserForm extends LitElement {
     // @ts-ignore
     this._phone = document.getElementById('user-phone').value;
     // @ts-ignore
+    this._username = document.getElementById('login-username').value;
+    // eslint-disable-next-line no-console
+    console.log(this._username);
+    // eslint-disable-next-line no-console
+    console.log(document.getElementById('login-username').value);
     // @ts-ignore
-    this._username = document.getElementById('username').value;
+    this._password = document.getElementById('login-password').value;
+    // eslint-disable-next-line no-console
+    console.log(this._password);
+    // @ts-ignore
+    this._changePassword = document.getElementById('force-pw-change'.checked);
+    // eslint-disable-next-line no-console
+    console.log(this._changePassword);
+    // @ts-ignore
     this._isEnabled = document.getElementById('user-is-enabled').checked;
     // @ts-ignore
     this._isAdmin = document.getElementById('user-is-admin').checked;
     // @ts-ignore
     this._isDoctor = document.getElementById('user-is-doctor').checked;
     // @ts-ignore
-    this._docLicenceNumber =
-      document.getElementById('doc-licence-number').value;
-    // @ts-ignore
-    this._changePassword = document.getElementById('change-password'.checked);
+    this._docLicenceNumber = document.getElementById(
+      'doctor-licence-number'
+    ).value;
 
     const u = {
       name: this._name,
       email: this._email,
-      phoneNumber: this._phone,
+      phone: this._phone,
       username: this._username,
       password: this._password,
       isEnabled: this._isEnabled,
@@ -125,14 +136,12 @@ export class UserForm extends LitElement {
       isDoctor: this._isDoctor,
       docLicenceNumber: this._docLicenceNumber,
     };
-    if (this.user && this.user.key) {
-      u.key = this.user.key;
-    }
-    // console.log(u);
+    // eslint-disable-next-line no-console
+    console.log(u);
     // fire event to save/update procedure
     this.dispatchEvent(
       new CustomEvent('save-user-form', {
-        detail: u,
+        detail: { ...u },
         bubbles: true,
         composed: true,
       })
@@ -181,14 +190,14 @@ export class UserForm extends LitElement {
                   class="input"
                   id="user-phone"
                   type="tel"
-                  .value="${this._phone}"
                   placeholder="Telefone"
+                  .value="${this._phone}"
                 />
               </div>
               <div class="field">
                 <input
                   class="input"
-                  id="username"
+                  id="login-username"
                   type="text"
                   placeholder="Username"
                   .value="${this._username}"
@@ -198,7 +207,7 @@ export class UserForm extends LitElement {
               <div class="field">
                 <input
                   class="input"
-                  id="password"
+                  id="login-password"
                   type="password"
                   placeholder="Senha"
                   .value="${this._password}"
@@ -211,11 +220,11 @@ export class UserForm extends LitElement {
               >
                 <label class="checkbox">
                   <input
-                    id="change-password"
+                    id="force-pw-change"
                     type="checkbox"
                     ?checked="${this._changePassword}"
                   />
-                  Forçar atualização da senha</label
+                  Atualizar senha</label
                 >
                 <label class="checkbox">
                   <input
