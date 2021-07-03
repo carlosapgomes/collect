@@ -5,7 +5,7 @@ const isAdmin = require('../../hooks/is-admin');
 
 module.exports = {
   before: {
-    all: [ authenticate('jwt'),isEnabled() ],
+    all: [ authenticate('jwt'),isEnabled()],
     find: [],
     get: [],
     create: [isAdmin()],
