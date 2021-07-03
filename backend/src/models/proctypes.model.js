@@ -1,16 +1,22 @@
 // See http://docs.sequelizejs.com/en/latest/docs/models-definition/
 // for more of what you can do here.
+// Procedures Types
 const Sequelize = require('sequelize');
 const DataTypes = Sequelize.DataTypes;
 
 module.exports = function (app) {
   const sequelizeClient = app.get('sequelizeClient');
   const proctypes = sequelizeClient.define('proctypes', {
-    text: {
+    // description
+    descr: {
       type: DataTypes.STRING,
       allowNull: false
-    }
-  }, {
+    },
+    // procedure code 
+    code: {
+      type: DataTypes.STRING,
+      allowNull: false
+    }}, {
     hooks: {
       beforeCount(options) {
         options.raw = true;
