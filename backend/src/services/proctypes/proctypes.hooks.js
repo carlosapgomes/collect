@@ -1,10 +1,11 @@
 const { authenticate } = require('@feathersjs/authentication').hooks;
 
+const isEnabled = require('../../hooks/is-enabled');
 const isAdmin = require('../../hooks/is-admin');
 
 module.exports = {
   before: {
-    all: [ authenticate('jwt') ],
+    all: [ authenticate('jwt'),isEnabled() ],
     find: [],
     get: [],
     create: [isAdmin()],

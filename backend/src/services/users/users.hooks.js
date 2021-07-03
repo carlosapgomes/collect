@@ -1,6 +1,7 @@
 const {authenticate} = require('@feathersjs/authentication').hooks;
 const isAdmin = require('../../hooks/is-admin');
 const isSameUserOrAdmin = require('../../hooks/is-same-user-or-admin');
+const isEnabled = require('../../hooks/is-enabled');
 
 const {
   hashPassword, protect
@@ -11,10 +12,10 @@ module.exports = {
     all: [],
     find: [authenticate('jwt')],
     get: [authenticate('jwt')],
-    create: [hashPassword('password'), authenticate('jwt'), isAdmin()],
-    update: [hashPassword('password'), authenticate('jwt'), isSameUserOrAdmin()],
-    patch: [hashPassword('password'), authenticate('jwt'), isSameUserOrAdmin()],
-    remove: [authenticate('jwt'), isAdmin()]
+    create: [hashPassword('password'), authenticate('jwt'),isEnabled(), isAdmin()],
+    update: [hashPassword('password'), authenticate('jwt'),isEnabled(), isSameUserOrAdmin()],
+    patch: [hashPassword('password'), authenticate('jwt'),isEnabled(), isSameUserOrAdmin()],
+    remove: [authenticate('jwt'),isEnabled(), isAdmin()]
   },
 
   after: {
