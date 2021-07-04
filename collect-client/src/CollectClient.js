@@ -33,6 +33,10 @@ export class CollectClient extends LitElement {
       _currentEditProcType: { type: Object, state: true },
       _showUserForm: { type: Boolean, state: true },
       _showProcTypeForm: { type: Boolean, state: true },
+      _toggleConfirmationModal: { type: Boolean, state: true },
+      _confirmationModalMsg: { type: String, state: true },
+      _confirmModalObject: { type: Object, state: true },
+      _confirmModalFunction: { type: Function },
     };
   }
 
@@ -62,6 +66,10 @@ export class CollectClient extends LitElement {
     this._currentEditProcType = {};
     this._showUserForm = false;
     this._showProcTypeForm = false;
+    this._toggleConfirmationModal = false;
+    this._confirmationModalMsg = '';
+    this._confirmModalObject = {};
+    this._confirmModalFunction = () => {};
   }
 
   firstUpdated() {
@@ -75,10 +83,10 @@ export class CollectClient extends LitElement {
         storage: window.storage,
       })
     );
-    // const proceduresSvc = this.client.service('procedures');
-    // proceduresSvc.find().then(res => {
+    // const proceduressvc = this.client.service('procedures');
+    // proceduressvc.find().then(res => {
     // if (typeof res.data !== 'undefined') {
-    // this.proceduresList = [...res.data];
+    // this.procedureslist = [...res.data];
     // }
     // });
 
@@ -101,6 +109,7 @@ export class CollectClient extends LitElement {
       this._updateProcTypesList
     );
     this.addEventListener('edit-procedure-type', this._editProcType);
+    this.addEventListener('remove-procedure-type', this._removeProcType);
     this.addEventListener('add-procedure-type', this._loadShowProcTypeForm);
     this.addEventListener('save-procedure-type-form', this._saveProcType);
     this.addEventListener('close-procedure-type-form', () => {
@@ -418,6 +427,64 @@ export class CollectClient extends LitElement {
     this._loadShowProcTypeForm();
   }
 
+  _removeProcType(e) {
+    // eslint-disable-next-line no-console
+    console.log(`entering removeProcType for ${e.detail}`);
+
+    this._confirmModalObject = { ...e.detail };
+    this._confirmModalFunction = this._removeCurrentProctype;
+    this._confirmationModalMsg = `Confirma a remoção do tipo de procedimento: ${e.detail.descr}`;
+    this._toggleConfirmationModal = true;
+  }
+
+  _confirmModalAction() {
+    this._confirmModalFunction(this._confirmModalObject);
+  }
+
+  async _removeCurrentProctype(p) {
+    if (this._isAdmin && this._user.isEnabled) {
+      // eslint-disable-next-line no-console
+      console.log(JSON.stringify(p.detail, null, 2));
+      this.dispatchEvent(new CustomEvent('show-spinner'));
+      if (p.id) {
+        // it is an update
+        try {
+          // eslint-disable-next-line no-console
+          console.log('removing procedure type');
+          const res = await this.client.service('proctypes').remove(p.id);
+          this._spinnerHidden = true;
+          this._modalMsg = 'Tipo de procedimento removido com sucesso!';
+          this._toggleModal = true;
+          // eslint-disable-next-line no-console
+          console.log(
+            `Procedure type removed: ${JSON.stringify(res, null, 2)}`
+          );
+          this.dispatchEvent(
+            new CustomEvent('update-procedures-types-list', {
+              bubbles: true,
+              composed: true,
+            })
+          );
+        } catch (err) {
+          // eslint-disable-next-line no-console
+          console.log(`could not remove procedure type: ${err}`);
+        }
+      } else {
+        this._spinnerHidden = true;
+        this._modalMsg = 'Erro ao remover o tipo de procedimento';
+        this._toggleModal = true;
+        this.dispatchEvent(
+          new CustomEvent('update-procedures-types-list', {
+            bubbles: true,
+            composed: true,
+          })
+        );
+        // eslint-disable-next-line no-console
+        console.log(`could not remove procedure type: missing id`);
+      }
+    }
+  }
+
   async _saveProcType(e) {
     if (this._isAdmin && this._user.isEnabled) {
       // eslint-disable-next-line no-console
@@ -687,6 +754,54 @@ export class CollectClient extends LitElement {
         ></div>
         <div class="modal-content">
           <div class="box container has-text-centered">${this._modalMsg}</div>
+        </div>
+        <button
+          class="modal-close is-large"
+          @click="${() => {
+            this._toggleModal = false;
+          }}"
+          aria-label="close"
+        ></button>
+      </div>
+
+      <div
+        id="confirmationmodal"
+        class="modal ${classMap({
+          'is-active': this._toggleConfirmationModal,
+        })}"
+      >
+        <div
+          class="modal-background"
+          @click="${() => {
+            this._toggleConfirmationModal = false;
+          }}"
+          @keydown="${() => {
+            this._toggleConfirmationModal = false;
+          }}"
+        ></div>
+        <div class="modal-card">
+          <section class="modal-card-body">
+            ${this._confirmationModalMsg}
+          </section>
+          <footer class="modal-card-foot">
+            <button
+              class="button is-danger"
+              @click="${() => {
+                this._toggleConfirmationModal = false;
+                this._confirmModalAction();
+              }}"
+            >
+              Sim
+            </button>
+            <button
+              class="button is-success"
+              @click="${() => {
+                this._toggleConfirmationModal = false;
+              }}"
+            >
+              Não
+            </button>
+          </footer>
         </div>
         <button
           class="modal-close is-large"

@@ -27,9 +27,7 @@ export class ProcTypeForm extends LitElement {
   updated(changedProperties) {
     if (changedProperties.has('proceduretype')) {
       if (this.proceduretype) {
-        this._descr = this.proceduretype.descr
-          ? this.proceduretype.descr
-          : '';
+        this._descr = this.proceduretype.descr ? this.proceduretype.descr : '';
         this._code = this.proceduretype.code ? this.proceduretype.code : '';
       }
     }
@@ -131,7 +129,9 @@ export class ProcTypeForm extends LitElement {
             <button class="button is-success" @click="${this._saveForm}">
               Gravar
             </button>
-            <button class="button" @click="${this._closeForm}">Cancelar</button>
+            <button class="button is-warning" @click="${this._closeForm}">
+              Cancelar
+            </button>
           </footer>
         </div>
       </div>

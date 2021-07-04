@@ -27,12 +27,24 @@ export class ProcTypesView extends LitElement {
     );
   }
 
-  _edit(d) {
+  _edit(p) {
     // eslint-disable-next-line no-console
     // console.log(u);
     this.dispatchEvent(
       new CustomEvent('edit-procedure-type', {
-        detail: d,
+        detail: p,
+        bubbles: true,
+        composed: true,
+      })
+    );
+  }
+
+  _remove(p) {
+    // eslint - disable - next - line no - console
+    console.log(p);
+    this.dispatchEvent(
+      new CustomEvent('remove-procedure-type', {
+        detail: p,
         bubbles: true,
         composed: true,
       })
@@ -68,38 +80,84 @@ export class ProcTypesView extends LitElement {
                   p => html`
                     <div class="card procedure-type-card">
                       <div class="card-content">
-                        <div class="content">
-                          <strong>${p.descr}</strong><br />
-                          <div
-                            class="button is-white is-pulled-right"
-                            @click="${() => {
-                              this._edit(p);
-                            }}"
-                            @keydown="${() => {
-                              this._edit(p);
-                            }}"
-                          >
-                            <span class="icon is-small is-right">
-                              <svg
-                                id="i-edit"
-                                xmlns="http://www.w3.org/2000/svg"
-                                viewBox="0 0 32 32"
-                                width="16"
-                                height="16"
-                                fill="none"
-                                stroke="currentcolor"
-                                stroke-linecap="round"
-                                stroke-linejoin="round"
-                                stroke-width="2"
-                              >
-                                <path
-                                  d="M30 7 L25 2 5 22 3 29 10 27 Z M21 6 L26 11 Z M5 22 L10 27 Z"
-                                />
-                              </svg>
-                            </span>
+                        <div class="content is-flex is-flex-direction-row">
+                          <div class="is-align-self-flex-start is-flex-grow-4">
+                            <strong>${p.descr}</strong><br />
+                            Cód. SUS: ${p.code}
                           </div>
-                          ${p.code}
-                          <br />
+                          <div
+                            class="is-flex 
+                            is-align-self-flex-end
+                            is-flex-grow-1
+                            is-flex-direction-column"
+                          >
+                            <div
+                              class="button
+                              is-white
+                              is-align-self-flex-end
+                              has-tooltip-arrow
+                              has-tooltip-right"
+                              data-tooltip="Editar"
+                              @click="${() => {
+                                this._edit(p);
+                              }}"
+                              @keydown="${() => {
+                                this._edit(p);
+                              }}"
+                            >
+                              <span class="icon is-small is-right">
+                                <svg
+                                  id="i-edit"
+                                  xmlns="http://www.w3.org/2000/svg"
+                                  viewBox="0 0 32 32"
+                                  width="16"
+                                  height="16"
+                                  fill="none"
+                                  stroke="currentcolor"
+                                  stroke-linecap="round"
+                                  stroke-linejoin="round"
+                                  stroke-width="2"
+                                >
+                                  <path
+                                    d="M30 7 L25 2 5 22 3 29 10 27 Z M21 6 L26 11 Z M5 22 L10 27 Z"
+                                  />
+                                </svg>
+                              </span>
+                            </div>
+                            <div
+                              class="button 
+                            is-white
+                            is-align-self-flex-end
+                            has-tooltip-arrow
+                            has-tooltip-right"
+                              data-tooltip="Remover"
+                              @click="${() => {
+                                this._remove(p);
+                              }}"
+                              @keydown="${() => {
+                                this._remove(p);
+                              }}"
+                            >
+                              <span class="icon is small is-right">
+                                <svg
+                                  id="i-trash"
+                                  xmlns="http://www.w3.org/2000/svg"
+                                  viewBox="0 0 32 32"
+                                  width="16"
+                                  height="16"
+                                  fill="none"
+                                  stroke="currentcolor"
+                                  stroke-linecap="round"
+                                  stroke-linejoin="round"
+                                  stroke-width="2"
+                                >
+                                  <path
+                                    d="M28 6 L6 6 8 30 24 30 26 6 4 6 M16 12 L16 24 M21 12 L20 24 M11 12 L12 24 M12 6 L13 2 19 2 20 6"
+                                  />
+                                </svg>
+                              </span>
+                            </div>
+                          </div>
                         </div>
                       </div>
                     </div>
