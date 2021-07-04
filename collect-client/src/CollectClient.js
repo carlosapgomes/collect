@@ -33,6 +33,7 @@ export class CollectClient extends LitElement {
       _currentEditProcType: { type: Object, state: true },
       _showUserForm: { type: Boolean, state: true },
       _showProcTypeForm: { type: Boolean, state: true },
+      _showDoctorForm: { type: Boolean, state: true },
       _toggleConfirmationModal: { type: Boolean, state: true },
       _confirmationModalMsg: { type: String, state: true },
       _confirmModalObject: { type: Object, state: true },
@@ -66,6 +67,7 @@ export class CollectClient extends LitElement {
     this._currentEditProcType = {};
     this._showUserForm = false;
     this._showProcTypeForm = false;
+    this._showDoctorForm = false;
     this._toggleConfirmationModal = false;
     this._confirmationModalMsg = '';
     this._confirmModalObject = {};
@@ -101,6 +103,17 @@ export class CollectClient extends LitElement {
     this.addEventListener('close-user-form', () => {
       this._currentEditUser = {};
       this._showUserForm = false;
+    });
+
+    // doctors
+    this.addEventListener('update-doctors-list', this._updateDoctorsList);
+    this.addEventListener('remove-doctor', this._removeDoctor);
+    this.addEventListener('edit-doctor', this._editDoctor);
+    this.addEventListener('add-doctor', this._loadShowDoctorForm);
+    this.addEventListener('save-doctor-form', this._saveDoctor);
+    this.addEventListener('close-doctor-form', () => {
+      this._currentEditDoctor = null;
+      this._showDoctorForm = false;
     });
 
     // procedures types
@@ -315,7 +328,7 @@ export class CollectClient extends LitElement {
     if (this._isAdmin && this._user.isEnabled) {
       // eslint-disable-next-line no-console
       console.log(JSON.stringify(e.detail, null, 2));
-      this.dispatchEvent(new CustomEvent('show-spinner'));
+      this._spinnerHidden = false;
       const u = { ...e.detail };
       if (u.id) {
         try {
@@ -360,8 +373,8 @@ export class CollectClient extends LitElement {
       }
       if (u.isDoctor) {
         const d = {
-          name: u.displayName,
-          crm: u.doctorLicenceNumber,
+          name: u.name,
+          licenceNumber: u.docLicenceNumber,
         };
         // eslint-disable-next-line no-console
         // console.log(d);
@@ -373,6 +386,162 @@ export class CollectClient extends LitElement {
             composed: true,
           })
         );
+      }
+    }
+  }
+
+  // Doctors
+  _loadShowDoctorForm() {
+    // dynamically load doctor-form if neccessary
+    if (typeof customElements.get('doctor-form') === 'undefined') {
+      import('./doctor-form.js').then(() => {
+        this._showDoctorForm = true;
+      });
+    } else {
+      this._showDoctorForm = true;
+    }
+  }
+
+  async _updateDoctorsList() {
+    if (this._isAdmin && this._user.isEnabled) {
+      // clear doctors list
+      this._doctors = [];
+      // eslint-disable-next-line no-console
+      console.log('updating doctors list ...');
+      this._spinnerHidden = false;
+      try {
+        const doctorsList = await this.client.service('doctors').find({
+          query: {
+            $sort: {
+              name: 1,
+            },
+          },
+        });
+        // eslint-disable-next-line no-console
+        console.log(doctorsList.data);
+        if (doctorsList.data.length > 0) {
+          this._doctors = [...doctorsList.data];
+        }
+        this._spinnerHidden = true;
+      } catch (e) {
+        this._spinnerHidden = true;
+        this._modalMsg = 'Erro ao buscar lista de médicos';
+        this._toggleModal = true;
+      }
+    }
+  }
+
+  _editDoctor(e) {
+    // eslint-disable-next-line no-console
+    // console.log(JSON.stringify(e.detail, null, 2));
+    this._currentEditDoctor = { ...e.detail };
+    // eslint-disable-next-line no-console
+    // console.log(this._currentEditDoctor);
+    this._loadShowDoctorForm();
+  }
+
+  _removeDoctor(e) {
+    // eslint-disable-next-line no-console
+    console.log(`entering removeDoctor for ${e.detail}`);
+
+    this._confirmModalObject = { ...e.detail };
+    this._confirmModalFunction = this._removeCurrentDoctor;
+    this._confirmationModalMsg = `Confirma a remoção do médico: ${e.detail.nome}`;
+    this._toggleConfirmationModal = true;
+  }
+
+  async _removeCurrentDoctor(d) {
+    if (this._isAdmin && this._user.isEnabled) {
+      // eslint-disable-next-line no-console
+      console.log(JSON.stringify(d.detail, null, 2));
+      this.dispatchEvent(new CustomEvent('show-spinner'));
+      if (d.id) {
+        // it is an update
+        try {
+          // eslint-disable-next-line no-console
+          console.log('removing doctor type');
+          const res = await this.client.service('doctors').remove(d.id);
+          this._spinnerHidden = true;
+          this._modalMsg = 'Médico removido com sucesso!';
+          this._toggleModal = true;
+          // eslint-disable-next-line no-console
+          console.log(
+            `Procedure type removed: ${JSON.stringify(res, null, 2)}`
+          );
+          this.dispatchEvent(
+            new CustomEvent('update-doctors-list', {
+              bubbles: true,
+              composed: true,
+            })
+          );
+        } catch (err) {
+          // eslint-disable-next-line no-console
+          console.log(`could not remove doctor: ${err}`);
+        }
+      } else {
+        this._spinnerHidden = true;
+        this._modalMsg = 'Erro ao remover médico';
+        this._toggleModal = true;
+        this.dispatchEvent(
+          new CustomEvent('update-doctors-list', {
+            bubbles: true,
+            composed: true,
+          })
+        );
+        // eslint-disable-next-line no-console
+        console.log(`could not remove doctor: missing id`);
+      }
+    }
+  }
+
+  async _saveDoctor(e) {
+    if (this._isAdmin && this._user.isEnabled) {
+      // eslint-disable-next-line no-console
+      console.log(JSON.stringify(e.detail, null, 2));
+      this._spinnerHidden = false;
+      const d = { ...e.detail };
+      if (d.id) {
+        try {
+          // eslint-disable-next-line no-console
+          console.log('updating doctor');
+          const res = await this.client
+            .service('doctors')
+            .patch(d.id, { ...d });
+          this._spinnerHidden = true;
+          this._modalMsg = 'Médico gravado com sucesso!';
+          this._toggleModal = true;
+          // eslint-disable-next-line no-console
+          console.log(`Doctor updated: ${JSON.stringify(res, null, 2)}`);
+          this.dispatchEvent(
+            new CustomEvent('update-doctors-list', {
+              bubbles: true,
+              composed: true,
+            })
+          );
+        } catch (err) {
+          // eslint-disable-next-line no-console
+          console.log(`could not update doctor: ${err}`);
+        }
+      } else {
+        try {
+          // eslint-disable-next-line no-console
+          console.log('creating doctor');
+          const res = await this.client.service('doctors').create({ ...d });
+          this._spinnerHidden = true;
+          this._modalMsg = 'Médico gravado com sucesso!';
+          this._toggleModal = true;
+          // eslint-disable-next-line no-console
+          console.log(JSON.stringify(res, null, 2));
+          this.dispatchEvent(
+            new CustomEvent('update-doctors-list', {
+              bubbles: true,
+              composed: true,
+            })
+          );
+        } catch (err) {
+          // eslint-disable-next-line no-console
+          console.log(`could not create doctor: ${err}`);
+        }
       }
     }
   }
@@ -818,6 +987,11 @@ export class CollectClient extends LitElement {
         ?activate="${this._showUserForm}"
         .user="${this._currentEditUser}"
       ></user-form>
+      <doctor-form
+        class="${classMap({ 'is-hidden': !this._showDoctorForm })}"
+        ?activate="${this._showDoctorForm}"
+        .doctor="${this._currentEditDoctor}"
+      ></doctor-form>
       <proctype-form
         class="${classMap({ 'is-hidden': !this._showProcTypeForm })}"
         ?activate="${this._showProcTypeForm}"

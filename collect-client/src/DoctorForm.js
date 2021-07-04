@@ -12,7 +12,7 @@ export class DoctorForm extends LitElement {
       doctor: { type: Object },
       activate: { type: Boolean },
       _name: { type: String },
-      _crm: { type: String },
+      _licenceNumber: { type: String },
     };
   }
 
@@ -21,14 +21,16 @@ export class DoctorForm extends LitElement {
     this.doctor = {};
     this.activate = false;
     this._name = '';
-    this._crm = '';
+    this._licenceNumber = '';
   }
 
   updated(changedProperties) {
     if (changedProperties.has('doctor')) {
       if (this.doctor) {
         this._name = this.doctor.name ? this.doctor.name : '';
-        this._crm = this.doctor.crm ? this.doctor.crm : '';
+        this._licenceNumber = this.doctor.licenceNumber
+          ? this.doctor.licenceNumber
+          : '';
       }
     }
   }
@@ -47,7 +49,7 @@ export class DoctorForm extends LitElement {
     // @ts-ignore
     document.getElementById('doctor-form').reset();
     this._name = '';
-    this._crm = '';
+    this._licenceNumber = '';
   }
 
   _saveForm(e) {
@@ -59,17 +61,12 @@ export class DoctorForm extends LitElement {
   }
 
   _handleSaveForm() {
-    // @ts-ignore
-    this._name = document.getElementById('doctor-name').value;
-    // @ts-ignore
-    this._crm = document.getElementById('crm').value;
-
     const d = {
       name: this._name,
-      crm: this._crm,
+      licenceNumber: this._licenceNumber,
     };
-    if (this.doctor && this.doctor.key) {
-      d.key = this.doctor.key;
+    if (this.doctor && this.doctor.id) {
+      d.key = this.doctor.id;
     }
     // eslint-disable-next-line no-console
     // console.log(d);
@@ -107,16 +104,22 @@ export class DoctorForm extends LitElement {
                   type="text"
                   placeholder="Nome"
                   .value="${this._name}"
+                  @input="${e => {
+                    this._name = e.target.value;
+                  }}"
                   required
                 />
               </div>
               <div class="field">
                 <input
                   class="input"
-                  id="crm"
+                  id="licenceNumber"
                   type="text"
                   placeholder="CRM"
-                  .value="${this._crm}"
+                  .value="${this._licenceNumber}"
+                  @input="${e => {
+                    this._licenceNumber = e.target.value;
+                  }}"
                 />
               </div>
             </form>
