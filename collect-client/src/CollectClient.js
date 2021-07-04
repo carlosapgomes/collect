@@ -32,6 +32,7 @@ export class CollectClient extends LitElement {
       _proceduresTypes: { type: Array, state: true },
       _currentEditProcType: { type: Object, state: true },
       _showUserForm: { type: Boolean, state: true },
+      _showProcTypeForm: { type: Boolean, state: true },
     };
   }
 
@@ -60,6 +61,7 @@ export class CollectClient extends LitElement {
     this._proceduresTypes = [];
     this._currentEditProcType = {};
     this._showUserForm = false;
+    this._showProcTypeForm = false;
   }
 
   firstUpdated() {
@@ -91,6 +93,19 @@ export class CollectClient extends LitElement {
     this.addEventListener('close-user-form', () => {
       this._currentEditUser = {};
       this._showUserForm = false;
+    });
+
+    // procedures types
+    this.addEventListener(
+      'update-procedures-types-list',
+      this._updateProcTypesList
+    );
+    this.addEventListener('edit-procedure-type', this._editProcType);
+    this.addEventListener('add-procedure-type', this._loadShowProcTypeForm);
+    this.addEventListener('save-procedure-type-form', this._saveProcType);
+    this.addEventListener('close-procedure-type-form', () => {
+      this._currentEditProcType = null;
+      this._showProcTypeForm = false;
     });
 
     // add spinner event listeners
@@ -349,6 +364,109 @@ export class CollectClient extends LitElement {
     }
   }
 
+  // Procedures Types
+  _loadShowProcTypeForm() {
+    // dynamically load procedure-type-form if neccessary
+    if (typeof customElements.get('proctype-form') === 'undefined') {
+      import('./proctype-form.js').then(() => {
+        this._showProcTypeForm = true;
+      });
+    } else {
+      this._showProcTypeForm = true;
+    }
+  }
+
+async  _updateProcTypesList() {
+    if (this._user.isEnabled) {
+      // clear users list
+      this._proceduresTypes = [];
+      // eslint-disable-next-line no-console
+      console.log('updating procedures types list ...');
+      this._spinnerHidden = false;
+      try {
+        const procTypesList = await this.client.service('proctypes').find({
+          query: {
+            $sort: {
+              descr: 1,
+            },
+          },
+        });
+        // eslint-disable-next-line no-console
+        console.log(procTypesList.data);
+        if (procTypesList.data.length > 0) {
+          this._proceduresTypes = [...procTypesList.data];
+        }
+        this._spinnerHidden = true;
+      } catch (e) {
+        this._spinnerHidden = true;
+        this._modalMsg = 'Erro ao buscar lista de tipos de procedimentos';
+        this._toggleModal = true;
+      }
+    } 
+}
+
+  _editProcType(e) {
+    // eslint-disable-next-line no-console
+    // console.log(JSON.stringify(e.detail, null, 2));
+    this._currentEditProcType = { ...e.detail };
+    // eslint-disable-next-line no-console
+    // console.log(this._currentEditProcType);
+    this._loadShowProcTypeForm();
+  }
+
+async  _saveProcType(e) {
+      if (this._isAdmin && this._user.isEnabled) {
+      // eslint-disable-next-line no-console
+      console.log(JSON.stringify(e.detail, null, 2));
+      this.dispatchEvent(new CustomEvent('show-spinner'));
+      const p = { ...e.detail };
+      if (p.id) {
+        // it is an update
+        try {
+          // eslint-disable-next-line no-console
+          console.log('updating procedure type');
+          const res = await this.client.service('proctypes').patch(p.id, { ...p });
+          this._spinnerHidden = true;
+          this._modalMsg = 'Tipo de procedimento gravado com sucesso!';
+          this._toggleModal = true;
+          // eslint-disable-next-line no-console
+          console.log(`Procedure type updated: ${JSON.stringify(res, null, 2)}`);
+          this.dispatchEvent(
+            new CustomEvent('update-procedures-types-list', {
+              bubbles: true,
+              composed: true,
+            })
+          );
+        } catch (err) {
+          // eslint-disable-next-line no-console
+          console.log(`could not update procedure type: ${err}`);
+        }
+      } else {
+        // it is a new procedure type
+        try {
+          // eslint-disable-next-line no-console
+          console.log('creating procedure type');
+          const res = await this.client.service('proctypes').create({ ...p });
+          this._spinnerHidden = true;
+          this._modalMsg = 'Tipo de procedimento gravado com sucesso!';
+          this._toggleModal = true;
+          // eslint-disable-next-line no-console
+          console.log(JSON.stringify(res, null, 2));
+          this.dispatchEvent(
+            new CustomEvent('update-procedures-types-list', {
+              bubbles: true,
+              composed: true,
+            })
+          );
+        } catch (err) {
+          // eslint-disable-next-line no-console
+          console.log(`could not create procedure type: ${err}`);
+        }
+      }
+    }
+  }
+
+
   render() {
     return html`
       <nav
@@ -578,6 +696,11 @@ export class CollectClient extends LitElement {
         ?activate="${this._showUserForm}"
         .user="${this._currentEditUser}"
       ></user-form>
+      <proctype-form
+        class="${classMap({ 'is-hidden': !this._showProcTypeForm })}"
+        ?activate="${this._showProcTypeForm}"
+        .proceduretype="${this._currentEditProcType}"
+      ></proctype-form>
       <spinner-loader
         class="${classMap({ 'is-hidden': this._spinnerHidden })}"
       ></spinner-loader>

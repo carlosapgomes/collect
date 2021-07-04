@@ -11,8 +11,8 @@ export class ProcTypeForm extends LitElement {
     return {
       proceduretype: { type: Object },
       activate: { type: Boolean },
-      _procedure: { type: String },
-      _code: { type: String },
+      _descr: { type: String, state: true },
+      _code: { type: String, state: true },
     };
   }
 
@@ -20,15 +20,15 @@ export class ProcTypeForm extends LitElement {
     super();
     this.proceduretype = {};
     this.activate = false;
-    this._procedure = '';
+    this._descr = '';
     this._code = '';
   }
 
   updated(changedProperties) {
     if (changedProperties.has('proceduretype')) {
       if (this.proceduretype) {
-        this._procedure = this.proceduretype.procedure
-          ? this.proceduretype.procedure
+        this._descr = this.proceduretype.descr
+          ? this.proceduretype.descr
           : '';
         this._code = this.proceduretype.code ? this.proceduretype.code : '';
       }
@@ -51,7 +51,7 @@ export class ProcTypeForm extends LitElement {
     this.proceduretype = {};
     // @ts-ignore
     document.getElementById('proctype-form').reset();
-    this._procedure = '';
+    this._descr = '';
     this._code = '';
   }
 
@@ -64,17 +64,12 @@ export class ProcTypeForm extends LitElement {
   }
 
   _handleSaveForm() {
-    // @ts-ignore
-    this._procedure = document.getElementById('proctype').value;
-    // @ts-ignore
-    this._code = document.getElementById('code').value;
-
     const p = {
-      procedure: this._procedure,
+      descr: this._descr,
       code: this._code,
     };
-    if (this.proceduretype && this.proceduretype.key) {
-      p.key = this.proceduretype.key;
+    if (this.proceduretype && this.proceduretype.id) {
+      p.id = this.proceduretype.id;
     }
     // eslint-disable-next-line no-console
     // console.log(p);
@@ -111,8 +106,11 @@ export class ProcTypeForm extends LitElement {
                   id="proctype"
                   type="text"
                   placeholder="Procedimento"
-                  .value="${this._procedure}"
+                  .value="${this._descr}"
                   required
+                  @input="${e => {
+                    this._descr = e.target.value;
+                  }}"
                 />
               </div>
               <div class="field">
@@ -122,6 +120,9 @@ export class ProcTypeForm extends LitElement {
                   type="text"
                   placeholder="código SUS (xx.xx.xx.xxx-x)"
                   .value="${this._code}"
+                  @input="${e => {
+                    this._code = e.target.value;
+                  }}"
                 />
               </div>
             </form>

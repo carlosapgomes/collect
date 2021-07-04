@@ -69,7 +69,7 @@ export class ProcTypesView extends LitElement {
                     <div class="card procedure-type-card">
                       <div class="card-content">
                         <div class="content">
-                          <strong>${p.procedure}</strong><br />
+                          <strong>${p.descr}</strong><br />
                           <div
                             class="button is-white is-pulled-right"
                             @click="${() => {
