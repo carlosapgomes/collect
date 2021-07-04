@@ -245,6 +245,10 @@ export class CollectClient extends LitElement {
     this._page = p;
   }
 
+  _navBarBurgerClicked() {
+    this._burgerActive = !this._burgerActive;
+  }
+
   //
   // Users
 
@@ -376,7 +380,7 @@ export class CollectClient extends LitElement {
     }
   }
 
-async  _updateProcTypesList() {
+  async _updateProcTypesList() {
     if (this._user.isEnabled) {
       // clear users list
       this._proceduresTypes = [];
@@ -402,8 +406,8 @@ async  _updateProcTypesList() {
         this._modalMsg = 'Erro ao buscar lista de tipos de procedimentos';
         this._toggleModal = true;
       }
-    } 
-}
+    }
+  }
 
   _editProcType(e) {
     // eslint-disable-next-line no-console
@@ -414,8 +418,8 @@ async  _updateProcTypesList() {
     this._loadShowProcTypeForm();
   }
 
-async  _saveProcType(e) {
-      if (this._isAdmin && this._user.isEnabled) {
+  async _saveProcType(e) {
+    if (this._isAdmin && this._user.isEnabled) {
       // eslint-disable-next-line no-console
       console.log(JSON.stringify(e.detail, null, 2));
       this.dispatchEvent(new CustomEvent('show-spinner'));
@@ -425,12 +429,16 @@ async  _saveProcType(e) {
         try {
           // eslint-disable-next-line no-console
           console.log('updating procedure type');
-          const res = await this.client.service('proctypes').patch(p.id, { ...p });
+          const res = await this.client
+            .service('proctypes')
+            .patch(p.id, { ...p });
           this._spinnerHidden = true;
           this._modalMsg = 'Tipo de procedimento gravado com sucesso!';
           this._toggleModal = true;
           // eslint-disable-next-line no-console
-          console.log(`Procedure type updated: ${JSON.stringify(res, null, 2)}`);
+          console.log(
+            `Procedure type updated: ${JSON.stringify(res, null, 2)}`
+          );
           this.dispatchEvent(
             new CustomEvent('update-procedures-types-list', {
               bubbles: true,
@@ -465,7 +473,6 @@ async  _saveProcType(e) {
       }
     }
   }
-
 
   render() {
     return html`
