@@ -32,6 +32,7 @@ export class CollectClient extends LitElement {
       _proceduresTypes: { type: Array, state: true },
       _currentEditProcType: { type: Object, state: true },
       _showUserForm: { type: Boolean, state: true },
+      _showUserProfileForm: { type: Boolean, state: true },
       _showProcTypeForm: { type: Boolean, state: true },
       _showDoctorForm: { type: Boolean, state: true },
       _toggleConfirmationModal: { type: Boolean, state: true },
@@ -66,6 +67,7 @@ export class CollectClient extends LitElement {
     this._proceduresTypes = [];
     this._currentEditProcType = {};
     this._showUserForm = false;
+    this._showUserProfileForm = false;
     this._showProcTypeForm = false;
     this._showDoctorForm = false;
     this._toggleConfirmationModal = false;
@@ -98,11 +100,16 @@ export class CollectClient extends LitElement {
     // Users
     this.addEventListener('update-users-list', this._updateUsersList);
     this.addEventListener('edit-user', this._editUser);
+    this.addEventListener('save-user-profile', this._saveUserProfile);
     this.addEventListener('add-user', this._loadShowUserForm);
     this.addEventListener('save-user-form', this._saveUser);
     this.addEventListener('close-user-form', () => {
       this._currentEditUser = {};
       this._showUserForm = false;
+    });
+    this.addEventListener('close-user-profile-form', () => {
+      this._currentEditUser = {};
+      this._showUserProfileForm = false;
     });
 
     // doctors
@@ -172,6 +179,12 @@ export class CollectClient extends LitElement {
       this._loggedIn = true;
       window.history.pushState({}, '', '/home');
       this._locationChanged(window.location);
+      if (this._user.changePassword) {
+        this._confirmModalObject = {};
+        this._confirmModalFunction = this._editCurrentUser;
+        this._toggleConfirmationModal = true;
+        this._confirmationModalMsg = 'Quer atualizar sua senha agora?';
+      }
     } catch (err) {
       this._spinnerHidden = true;
       // eslint-disable-next-line no-console
@@ -179,6 +192,11 @@ export class CollectClient extends LitElement {
       this._modalMsg = `Ocorreu um erro: ${err.message}`;
       this._toggleModal = true;
     }
+  }
+
+  _editCurrentUser() {
+    this._currentEditUser = { ...this._user };
+    this._loadEditUserProfile();
   }
 
   _login(username, password) {
@@ -324,6 +342,47 @@ export class CollectClient extends LitElement {
     }
   }
 
+  _loadEditUserProfile() {
+    // dynamically load user-form if neccessary
+    if (typeof customElements.get('user-profile-form') === 'undefined') {
+      import('./uprofile-form.js').then(() => {
+        this._showUserProfileForm = true;
+      });
+    } else {
+      this._showUserProfileForm = true;
+    }
+  }
+
+  async _saveUserProfile(e) {
+    this._spinnerHidden = false;
+    const u = { ...e.detail };
+    if (u.id) {
+      try {
+        // eslint-disable-next-line no-console
+        console.log('updating user');
+        const res = await this.client.service('users').patch(u.id, { ...u });
+        this._spinnerHidden = true;
+        this._modalMsg = 'Perfil atualizado com sucesso!';
+        this._toggleModal = true;
+        // eslint-disable-next-line no-console
+        console.log(`User updated: ${JSON.stringify(res, null, 2)}`);
+        this.dispatchEvent(
+          new CustomEvent('update-users-list', {
+            bubbles: true,
+            composed: true,
+          })
+        );
+        // if it is a regular user updating its profile
+        // go to homepage
+        window.history.pushState({}, '', '/home');
+        this._locationChanged(window.location);
+      } catch (err) {
+        // eslint-disable-next-line no-console
+        console.log(`could not update user: ${err}`);
+      }
+    }
+  }
+
   async _saveUser(e) {
     if (this._isAdmin && this._user.isEnabled) {
       // eslint-disable-next-line no-console
@@ -366,26 +425,26 @@ export class CollectClient extends LitElement {
               composed: true,
             })
           );
+          if (u.isDoctor) {
+            const d = {
+              name: u.name,
+              licenceNumber: u.docLicenceNumber,
+            };
+            // eslint-disable-next-line no-console
+            // console.log(d);
+            // fire event to save/update doctor
+            this.dispatchEvent(
+              new CustomEvent('save-doctor-form', {
+                detail: d,
+                bubbles: true,
+                composed: true,
+              })
+            );
+          }
         } catch (err) {
           // eslint-disable-next-line no-console
           console.log(`could not create user: ${err}`);
         }
-      }
-      if (u.isDoctor) {
-        const d = {
-          name: u.name,
-          licenceNumber: u.docLicenceNumber,
-        };
-        // eslint-disable-next-line no-console
-        // console.log(d);
-        // fire event to save/update doctor
-        this.dispatchEvent(
-          new CustomEvent('save-doctor-form', {
-            detail: d,
-            bubbles: true,
-            composed: true,
-          })
-        );
       }
     }
   }
@@ -987,6 +1046,11 @@ export class CollectClient extends LitElement {
         ?activate="${this._showUserForm}"
         .user="${this._currentEditUser}"
       ></user-form>
+      <uprofile-form
+        class="${classMap({ 'is-hidden': !this._showUserProfileForm })}"
+        ?activate="${this._showUserProfileForm}"
+        .user="${this._currentEditUser}"
+      ></uprofile-form>
       <doctor-form
         class="${classMap({ 'is-hidden': !this._showDoctorForm })}"
         ?activate="${this._showDoctorForm}"
