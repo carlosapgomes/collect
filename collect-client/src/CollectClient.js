@@ -123,6 +123,17 @@ export class CollectClient extends LitElement {
       this._showDoctorForm = false;
     });
 
+    // patients
+    this.addEventListener('update-patients-list', this._updatePatientsList);
+    this.addEventListener('remove-patient', this._removePatient);
+    this.addEventListener('edit-patient', this._editPatient);
+    this.addEventListener('add-patient', this._loadShowPatientForm);
+    this.addEventListener('save-patient-form', this._savePatient);
+    this.addEventListener('close-patient-form', () => {
+      this._currentEditPatient = null;
+      this._showPatientForm = false;
+    });
+
     // procedures types
     this.addEventListener(
       'update-procedures-types-list',

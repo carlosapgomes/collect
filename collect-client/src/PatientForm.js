@@ -44,7 +44,7 @@ export class PatientForm extends LitElement {
     this._clearFields();
     // fire event to hide procedure form from parent's view
     this.dispatchEvent(
-      new CustomEvent('close.patient-form', { bubbles: true, composed: true })
+      new CustomEvent('close-patient-form', { bubbles: true, composed: true })
     );
   }
 
