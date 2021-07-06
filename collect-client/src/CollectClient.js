@@ -11,30 +11,39 @@ export class CollectClient extends LitElement {
 
   static get properties() {
     return {
+      // procedures
       proceduresList: { type: Array },
-      _page: { type: String, state: true },
-      _burgerActive: { type: Boolean, state: true },
-      _user: { type: Object },
-      _loggedIn: { type: Boolean, state: true },
-      _isAdmin: { type: Boolean, state: true },
-      _toggleModal: { type: Boolean, state: true },
-      _modalMsg: { type: String, state: true },
-      _spinnerHidden: { type: Boolean, state: true },
       _procedures: { type: Array, state: true },
       _currentProcedure: { type: Object, state: true },
       _currentProceduresDate: { type: String, state: true },
-      _adminDropDownOpen: { type: Boolean, state: true },
-      _users: { type: Array, state: true },
-      _currentEditUser: { type: Object, state: true },
-      _toggleResetPwModal: { type: Boolean, state: true },
-      _doctors: { type: Array, state: true },
-      _currentEditDoctor: { type: Object, state: true },
+      // procedures types
       _proceduresTypes: { type: Array, state: true },
       _currentEditProcType: { type: Object, state: true },
+      _showProcTypeForm: { type: Boolean, state: true },
+      // users
+      _user: { type: Object },
+      _users: { type: Array, state: true },
       _showUserForm: { type: Boolean, state: true },
       _showUserProfileForm: { type: Boolean, state: true },
-      _showProcTypeForm: { type: Boolean, state: true },
+      _currentEditUser: { type: Object, state: true },
+      _loggedIn: { type: Boolean, state: true },
+      _isAdmin: { type: Boolean, state: true },
+      // patients
+      _patients: { type: Array, state: true },
+      _currentEditPatient: { type: Object, state: true },
+      _showPatientForm: { type: Boolean, state: true },
+      // doctors
+      _doctors: { type: Array, state: true },
+      _currentEditDoctor: { type: Object, state: true },
       _showDoctorForm: { type: Boolean, state: true },
+      // controls
+      _page: { type: String, state: true },
+      _burgerActive: { type: Boolean, state: true },
+      _toggleModal: { type: Boolean, state: true },
+      _modalMsg: { type: String, state: true },
+      _spinnerHidden: { type: Boolean, state: true },
+      _adminDropDownOpen: { type: Boolean, state: true },
+      _toggleResetPwModal: { type: Boolean, state: true },
       _toggleConfirmationModal: { type: Boolean, state: true },
       _confirmationModalMsg: { type: String, state: true },
       _confirmModalObject: { type: Object, state: true },
@@ -516,7 +525,7 @@ export class CollectClient extends LitElement {
 
     this._confirmModalObject = { ...e.detail };
     this._confirmModalFunction = this._removeCurrentDoctor;
-    this._confirmationModalMsg = `Confirma a remoção do médico: ${e.detail.nome}`;
+    this._confirmationModalMsg = `Confirma a remoção do médico: ${e.detail.nome}?`;
     this._toggleConfirmationModal = true;
   }
 
@@ -611,6 +620,161 @@ export class CollectClient extends LitElement {
         } catch (err) {
           // eslint-disable-next-line no-console
           console.log(`could not create doctor: ${err}`);
+        }
+      }
+    }
+  }
+
+  // patients
+
+  _loadShowPatientForm() {
+    // dynamically load doctor-form if neccessary
+    if (typeof customElements.get('patient-form') === 'undefined') {
+      import('./patient-form.js').then(() => {
+        this._showPatientForm = true;
+      });
+    } else {
+      this._showPatientForm = true;
+    }
+  }
+
+  async _updatePatientsList() {
+    if (this._user.isEnabled) {
+      // clear doctors list
+      this._patients = [];
+      // eslint-disable-next-line no-console
+      console.log('updating patients list ...');
+      this._spinnerHidden = false;
+      try {
+        const patientsList = await this.client.service('patients').find({
+          query: {
+            $sort: {
+              name: 1,
+            },
+          },
+        });
+        // eslint-disable-next-line no-console
+        console.log(patientsList.data);
+        if (patientsList.data.length > 0) {
+          this._patients = [...patientsList.data];
+        }
+        this._spinnerHidden = true;
+      } catch (e) {
+        this._spinnerHidden = true;
+        this._modalMsg = 'Erro ao buscar lista de pacientes';
+        this._toggleModal = true;
+      }
+    }
+  }
+
+  _editPatient(e) {
+    // eslint-disable-next-line no-console
+    // console.log(JSON.stringify(e.detail, null, 2));
+    this._currentEditPatient = { ...e.detail };
+    // eslint-disable-next-line no-console
+    // console.log(this._currentEditDoctor);
+    this._loadShowPatientForm();
+  }
+
+  _removePatient(e) {
+    // eslint-disable-next-line no-console
+    console.log(`entering removePatient for ${e.detail}`);
+
+    this._confirmModalObject = { ...e.detail };
+    this._confirmModalFunction = this._removeCurrentPatient;
+    this._confirmationModalMsg = `Confirma a remoção do paciente: ${e.detail.nome}?`;
+    this._toggleConfirmationModal = true;
+  }
+
+  async _removeCurrentPatient(p) {
+    if (this._user.isEnabled) {
+      // eslint-disable-next-line no-console
+      console.log(JSON.stringify(p.detail, null, 2));
+      this.dispatchEvent(new CustomEvent('show-spinner'));
+      if (p.id) {
+        // it is an update
+        try {
+          // eslint-disable-next-line no-console
+          console.log('removing patient');
+          const res = await this.client.service('patients').remove(p.id);
+          this._spinnerHidden = true;
+          this._modalMsg = 'Paciente removido com sucesso!';
+          this._toggleModal = true;
+          // eslint-disable-next-line no-console
+          console.log(`Patient removed: ${JSON.stringify(res, null, 2)}`);
+          this.dispatchEvent(
+            new CustomEvent('update-patients-list', {
+              bubbles: true,
+              composed: true,
+            })
+          );
+        } catch (err) {
+          // eslint-disable-next-line no-console
+          console.log(`could not remove patient: ${err}`);
+        }
+      } else {
+        this._spinnerHidden = true;
+        this._modalMsg = 'Erro ao remover paciente';
+        this._toggleModal = true;
+        this.dispatchEvent(
+          new CustomEvent('update-patients-list', {
+            bubbles: true,
+            composed: true,
+          })
+        );
+        // eslint-disable-next-line no-console
+        console.log(`could not remove paciente: missing id`);
+      }
+    }
+  }
+
+  async _savePatient(e) {
+    if (this._user.isEnabled) {
+      // eslint-disable-next-line no-console
+      console.log(JSON.stringify(e.detail, null, 2));
+      this._spinnerHidden = false;
+      const p = { ...e.detail };
+      if (p.id) {
+        try {
+          // eslint-disable-next-line no-console
+          console.log('updating patient');
+          const res = await this.client
+            .service('patients')
+            .patch(p.id, { ...p });
+          this._spinnerHidden = true;
+          this._modalMsg = 'Paciente gravado com sucesso!';
+          this._toggleModal = true;
+          // eslint-disable-next-line no-console
+          console.log(`Patient updated: ${JSON.stringify(res, null, 2)}`);
+          this.dispatchEvent(
+            new CustomEvent('update-patients-list', {
+              bubbles: true,
+              composed: true,
+            })
+          );
+        } catch (err) {
+          // eslint-disable-next-line no-console
+          console.log(`could not update patient: ${err}`);
+        }
+      } else {
+        try {
+          // eslint-disable-next-line no-console
+          console.log('creating patient');
+          const res = await this.client.service('patients').create({ ...p });
+          this._spinnerHidden = true;
+          this._modalMsg = 'Paciente gravado com sucesso!';
+          this._toggleModal = true;
+          // eslint-disable-next-line no-console
+          console.log(JSON.stringify(res, null, 2));
+          this.dispatchEvent(
+            new CustomEvent('update-patients-list', {
+              bubbles: true,
+              composed: true,
+            })
+          );
+        } catch (err) {
+          // eslint-disable-next-line no-console
+          console.log(`could not create patient: ${err}`);
         }
       }
     }
