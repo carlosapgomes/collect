@@ -34,6 +34,10 @@ module.exports = function (app) {
     isDoctor: {
       type: DataTypes.BOOLEAN,
     },
+    docLicenceNumber: {
+      type: DataTypes.STRING,
+      allowNull: true,
+    },
     isEnabled: {
       type: DataTypes.BOOLEAN,
     },
