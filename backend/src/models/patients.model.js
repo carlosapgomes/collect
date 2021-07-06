@@ -6,10 +6,22 @@ const DataTypes = Sequelize.DataTypes;
 module.exports = function (app) {
   const sequelizeClient = app.get('sequelizeClient');
   const patients = sequelizeClient.define('patients', {
-    text: {
+    name: {
       type: DataTypes.STRING,
       allowNull: false
-    }
+    },
+    gender: {
+      type: DataTypes.ENUM('M','F'),
+      allowNull: false
+    },
+    dateOfBirth: {
+      type: DataTypes.DATE,
+      allowNull: false
+    },
+    recordNumber: {
+      type: DataTypes.STRING,
+      allowNull: false
+    },
   }, {
     hooks: {
       beforeCount(options) {
