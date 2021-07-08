@@ -269,6 +269,16 @@ export class CollectClient extends LitElement {
           this.dispatchEvent(new CustomEvent('update-procedures-list'));
         }
         break;
+      case 'ptsview':
+        if (typeof customElements.get('patients-view') === 'undefined') {
+          import('./patients-view.js').catch(e => {
+            // eslint-disable-next-line no-console
+            console.log(e);
+          });
+        } else {
+          this.dispatchEvent(new CustomEvent('update-procedures-list'));
+        }
+        break;
       case 'usersview':
         if (typeof customElements.get('users-view') === 'undefined') {
           import('./users-view.js').catch(e => {
@@ -628,6 +638,8 @@ export class CollectClient extends LitElement {
   // patients
 
   _loadShowPatientForm() {
+    // eslint-disable-next-line no-console
+    console.log('loadShowPatientForm');
     // dynamically load doctor-form if neccessary
     if (typeof customElements.get('patient-form') === 'undefined') {
       import('./patient-form.js').then(() => {
@@ -669,7 +681,7 @@ export class CollectClient extends LitElement {
 
   _editPatient(e) {
     // eslint-disable-next-line no-console
-    // console.log(JSON.stringify(e.detail, null, 2));
+    console.log(JSON.stringify(e.detail, null, 2));
     this._currentEditPatient = { ...e.detail };
     // eslint-disable-next-line no-console
     // console.log(this._currentEditDoctor);
@@ -995,6 +1007,15 @@ export class CollectClient extends LitElement {
             >
               Procedimentos
             </a>
+            <a
+              class="navbar-item"
+              href="/ptsview"
+              @click="${() => {
+                this._burgerActive = false;
+              }}"
+            >
+              Pacientes
+            </a>
 
             <div
               id="adminmenu"
@@ -1111,6 +1132,14 @@ export class CollectClient extends LitElement {
           .procedures="${this._procedures}"
           .date="${this._currentProceduresDate}"
         ></procs-view>
+        <patients-view
+          id="ptsview"
+          class="${classMap({
+            'is-hidden': this._page !== 'ptsview',
+          })}"
+          .patients="${this._patients}"
+        >
+        </patients-view>
         <users-view
           id="usersview"
           .users="${this._users}"
@@ -1221,6 +1250,11 @@ export class CollectClient extends LitElement {
         ?activate="${this._showUserForm}"
         .user="${this._currentEditUser}"
       ></user-form>
+      <patient-form
+        class="${classMap({ 'is-hidden': !this._showPatientForm })}"
+        ?activate="${this._showPatientForm}"
+        .patient="${this._currentEditPatient}"
+      ></patient-form>
       <uprofile-form
         class="${classMap({ 'is-hidden': !this._showUserProfileForm })}"
         ?activate="${this._showUserProfileForm}"

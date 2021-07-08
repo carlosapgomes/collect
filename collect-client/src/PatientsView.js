@@ -28,6 +28,8 @@ export class PatientsView extends LitElement {
   }
 
   _edit(p) {
+    // eslint-disable-next-line no-console
+    console.log(p);
     this.dispatchEvent(
       new CustomEvent('edit-patient', {
         detail: p,
@@ -55,20 +57,6 @@ export class PatientsView extends LitElement {
     );
   }
 
-  // _updateProcsByDate(e) {
-  // if (e.target.value) {
-  // const values = e.target.value.split('-');
-  // const date = `${values[2]}/${values[1]}/${values[0]}`;
-  // this.dispatchEvent(
-  // new CustomEvent('update-procedures-list-by-date', {
-  // detail: date,
-  // bubbles: true,
-  // composed: true,
-  // }),
-  // );
-  // }
-  // }
-
   render() {
     return html`
       <style>
@@ -92,7 +80,9 @@ export class PatientsView extends LitElement {
                       <div class="card-content">
                         <div class="content is-flex is-flex-direction-row">
                           <div class="is-align-self-flex-start is-flex-grow-4">
-                            <strong>${p.name}</strong>
+                            <strong>${p.name}</strong> - DN:
+                            ${window.dayjs(p.dateOfBirth).format('DD/MM/YYYY')}
+                            - Registro: ${p.recNumber}
                           </div>
                           <div
                             class="is-flex 

@@ -34,7 +34,9 @@ export class PatientForm extends LitElement {
         this._name = this.patient.name ? this.patient.name : '';
         this._gender = this.patient.gender ? this.patient.gender : '';
         this._recNumber = this.patient.recNumber ? this.patient.recNumber : '';
-        this._dateOfBirth = this.patient.dateOfBirth ? this.patient.dateOfBirth : new Date('now');
+        this._dateOfBirth = this.patient.dateOfBirth
+          ? window.dayjs(this.patient.dateOfBirth).format('YYYY-MM-DD')
+          : window.dayjs(new Date('now')).format('YYYY-MM-DD');
       }
     }
   }
@@ -73,7 +75,9 @@ export class PatientForm extends LitElement {
       dateOfBirth: this._dateOfBirth,
       recNumber: this._recNumber,
     };
-    if (this.patient.id) {
+    // eslint-disable-next-line no-console
+    console.log(`Saving patient: ${JSON.stringify(p, null, 2)}`);
+    if (this.patient && this.patient.id) {
       p.id = this.patient.id;
     }
 
@@ -123,18 +127,30 @@ export class PatientForm extends LitElement {
               <label class="label">Sexo:</label>
               <div class="control">
                 <label class="radio">
-                  <input type="radio" name="gender"
-                    @input="${() => {this._gender='M'}}">
+                  <input
+                    type="radio"
+                    name="gender"
+                    ?checked="${this._gender === 'M'}"
+                    @input="${() => {
+                      this._gender = 'M';
+                    }}"
+                  />
                   M
                 </label>
                 <label class="radio">
-                  <input type="radio" name="gender"
-                    @input="${() => {this._gender='F'}}">
+                  <input
+                    type="radio"
+                    name="gender"
+                    ?checked="${this._gender === 'F'}"
+                    @input="${() => {
+                      this._gender = 'F';
+                    }}"
+                  />
                   F
                 </label>
-               </div>
-               <div class="field">
-                 <label class="label">DN:</label>
+              </div>
+              <div class="field">
+                <label class="label">DN:</label>
                 <input
                   class="input"
                   id="date-of-birth"
@@ -146,7 +162,7 @@ export class PatientForm extends LitElement {
                 />
               </div>
               <div class="field">
-                 <label class="label">Registro:</label>
+                <label class="label">Registro:</label>
                 <input
                   class="input"
                   id="record-number"
@@ -171,4 +187,3 @@ export class PatientForm extends LitElement {
     `;
   }
 }
-
