@@ -8,7 +8,9 @@ export class SpinnerLoader extends LitElement {
         display: block;
       }
       #circularG {
-        position: relative;
+        position: absolute;
+        right: 50%;
+        bottom: 50%;
         width: 58px;
         height: 58px;
         margin: auto;
@@ -180,7 +182,7 @@ export class SpinnerLoader extends LitElement {
 
   render() {
     return html`
-      <div id="circularG">
+      <div id="circularG" class="spinner">
         <div id="circularG_1" class="circularG"></div>
         <div id="circularG_2" class="circularG"></div>
         <div id="circularG_3" class="circularG"></div>
