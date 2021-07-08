@@ -11,14 +11,14 @@ module.exports = function (app) {
       allowNull: false
     },
     gender: {
-      type: DataTypes.ENUM('M','F'),
+      type: DataTypes.ENUM('M', 'F'),
       allowNull: false
     },
     dateOfBirth: {
       type: DataTypes.DATE,
       allowNull: false
     },
-    recordNumber: {
+    recNumber: {
       type: DataTypes.STRING,
       allowNull: false
     },
