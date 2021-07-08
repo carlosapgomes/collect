@@ -639,7 +639,7 @@ export class CollectClient extends LitElement {
 
   _loadShowPatientForm() {
     // eslint-disable-next-line no-console
-    console.log('loadShowPatientForm');
+    // console.log('loadShowPatientForm');
     // dynamically load doctor-form if neccessary
     if (typeof customElements.get('patient-form') === 'undefined') {
       import('./patient-form.js').then(() => {
@@ -655,7 +655,7 @@ export class CollectClient extends LitElement {
       // clear doctors list
       this._patients = [];
       // eslint-disable-next-line no-console
-      console.log('updating patients list ...');
+      // console.log('updating patients list ...');
       this._spinnerHidden = false;
       try {
         const patientsList = await this.client.service('patients').find({
@@ -666,7 +666,7 @@ export class CollectClient extends LitElement {
           },
         });
         // eslint-disable-next-line no-console
-        console.log(patientsList.data);
+        // console.log(patientsList.data);
         if (patientsList.data.length > 0) {
           this._patients = [...patientsList.data];
         }
@@ -681,7 +681,7 @@ export class CollectClient extends LitElement {
 
   _editPatient(e) {
     // eslint-disable-next-line no-console
-    console.log(JSON.stringify(e.detail, null, 2));
+    // console.log(JSON.stringify(e.detail, null, 2));
     this._currentEditPatient = { ...e.detail };
     // eslint-disable-next-line no-console
     // console.log(this._currentEditDoctor);
@@ -690,7 +690,7 @@ export class CollectClient extends LitElement {
 
   _removePatient(e) {
     // eslint-disable-next-line no-console
-    console.log(`entering removePatient for ${e.detail}`);
+    // console.log(`entering removePatient for ${e.detail}`);
 
     this._confirmModalObject = { ...e.detail };
     this._confirmModalFunction = this._removeCurrentPatient;
@@ -701,19 +701,19 @@ export class CollectClient extends LitElement {
   async _removeCurrentPatient(p) {
     if (this._user.isEnabled) {
       // eslint-disable-next-line no-console
-      console.log(JSON.stringify(p.detail, null, 2));
+      // console.log(JSON.stringify(p.detail, null, 2));
       this.dispatchEvent(new CustomEvent('show-spinner'));
       if (p.id) {
         // it is an update
         try {
           // eslint-disable-next-line no-console
           console.log('removing patient');
-          const res = await this.client.service('patients').remove(p.id);
+          await this.client.service('patients').remove(p.id);
           this._spinnerHidden = true;
           this._modalMsg = 'Paciente removido com sucesso!';
           this._toggleModal = true;
           // eslint-disable-next-line no-console
-          console.log(`Patient removed: ${JSON.stringify(res, null, 2)}`);
+          // console.log(`Patient removed: ${JSON.stringify(res, null, 2)}`);
           this.dispatchEvent(
             new CustomEvent('update-patients-list', {
               bubbles: true,
@@ -743,21 +743,19 @@ export class CollectClient extends LitElement {
   async _savePatient(e) {
     if (this._user.isEnabled) {
       // eslint-disable-next-line no-console
-      console.log(JSON.stringify(e.detail, null, 2));
+      // console.log(JSON.stringify(e.detail, null, 2));
       this._spinnerHidden = false;
       const p = { ...e.detail };
       if (p.id) {
         try {
           // eslint-disable-next-line no-console
           console.log('updating patient');
-          const res = await this.client
-            .service('patients')
-            .patch(p.id, { ...p });
+          await this.client.service('patients').patch(p.id, { ...p });
           this._spinnerHidden = true;
           this._modalMsg = 'Paciente gravado com sucesso!';
           this._toggleModal = true;
           // eslint-disable-next-line no-console
-          console.log(`Patient updated: ${JSON.stringify(res, null, 2)}`);
+          // console.log(`Patient updated: ${JSON.stringify(res, null, 2)}`);
           this.dispatchEvent(
             new CustomEvent('update-patients-list', {
               bubbles: true,
@@ -772,12 +770,12 @@ export class CollectClient extends LitElement {
         try {
           // eslint-disable-next-line no-console
           console.log('creating patient');
-          const res = await this.client.service('patients').create({ ...p });
+          await this.client.service('patients').create({ ...p });
           this._spinnerHidden = true;
           this._modalMsg = 'Paciente gravado com sucesso!';
           this._toggleModal = true;
           // eslint-disable-next-line no-console
-          console.log(JSON.stringify(res, null, 2));
+          // console.log(JSON.stringify(res, null, 2));
           this.dispatchEvent(
             new CustomEvent('update-patients-list', {
               bubbles: true,
@@ -820,7 +818,7 @@ export class CollectClient extends LitElement {
           },
         });
         // eslint-disable-next-line no-console
-        console.log(procTypesList.data);
+        // console.log(procTypesList.data);
         if (procTypesList.data.length > 0) {
           this._proceduresTypes = [...procTypesList.data];
         }
