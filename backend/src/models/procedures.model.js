@@ -6,15 +6,34 @@ const DataTypes = Sequelize.DataTypes;
 module.exports = function (app) {
   const sequelizeClient = app.get('sequelizeClient');
   const procedures = sequelizeClient.define('procedures', {
-    name: {
+    descr: {
       type: DataTypes.STRING,
       allowNull: false
     },
     code: {
       type: DataTypes.STRING,
       allowNull: false
-    }
-
+    },
+    ptName: {
+      type: DataTypes.STRING,
+      allowNull: false
+    },
+    ptID: {
+      type: DataTypes.STRING,
+      allowNull: false
+    },
+    procDateTime: {
+      type: DataTypes.DATE,
+      allowNull: false
+    },
+    docName: {
+      type: DataTypes.STRING,
+      allowNull: false
+    },
+    docID: {
+      type: DataTypes.STRING,
+      allowNull: false
+    },
   }, {
     hooks: {
       beforeCount(options) {
