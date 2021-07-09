@@ -16,6 +16,7 @@ export class CollectClient extends LitElement {
       _procedures: { type: Array, state: true },
       _currentProcedure: { type: Object, state: true },
       _currentProceduresDate: { type: String, state: true },
+      _showProcedureForm: {type: Boolean, state: true},
       // procedures types
       _proceduresTypes: { type: Array, state: true },
       _currentEditProcType: { type: Object, state: true },
@@ -106,7 +107,18 @@ export class CollectClient extends LitElement {
     // add event listeners
     this.addEventListener('login', this._handleLoginEvent);
 
-    // Users
+   // Procedures
+    this.addEventListener('update-procedures-list', this._updateProceduresList);
+    //this.addEventListener('update-procedures-list-by-date', this._updateProceduresListByDate);
+    this.addEventListener('edit-procedure', this._editProcedure);
+    this.addEventListener('add-procedure', this._loadShowProcForm);
+    this.addEventListener('save-procedure-form', this._saveProcedure);
+    this.addEventListener('close-procedure-form', () => {
+      this._currentProcedure = null;
+      this._showProcedureForm = false;
+    });
+
+ // Users
     this.addEventListener('update-users-list', this._updateUsersList);
     this.addEventListener('edit-user', this._editUser);
     this.addEventListener('save-user-profile', this._saveUserProfile);
@@ -317,6 +329,132 @@ export class CollectClient extends LitElement {
 
   _navBarBurgerClicked() {
     this._burgerActive = !this._burgerActive;
+  }
+
+  //
+  // Procedures
+  //
+  _loadShowProcForm() {
+    // dynamically load proc-form if neccessary
+    if (typeof customElements.get('proc-form') === 'undefined') {
+      import('./proc-form.js').then(() => {
+        this._showProcedureForm = true;
+      });
+    } else {
+      this._showProcedureForm = true;
+    }
+  }
+ 
+async _updateProceduresList(e) {
+    if (this._user.isEnabled) {
+      // clear users list
+      this._procedures = [];
+      // eslint-disable-next-line no-console
+      console.log('updating procedures list ...');
+      this._spinnerHidden = false;
+      // defaults to today's procedures
+      let startDateTime = window.dayjs().startOf('day');
+      let endDateTime = window.dayjs().endOf('day');
+      // if a property queryByDate was set on event
+      if (e.detail.queryByDate){
+        startDateTime = window.dayjs(e.detail.queryByDate).startOf('day');
+        endDateTime = window.dayjs(startDateTime).endOf('day'); 
+      };
+      // if a property queryByMonth was set on event
+      if (e.detail.queryByMonth){
+      // update query
+        startDateTime = window.dayjs(e.detail.queryByMonth).startOf('month');
+        endDateTime = window.dayjs(startDateTime).endOf('month'); 
+        };
+      const query = {
+          $sort: {
+            procDateTime: 1,
+          },
+          procDateTime: 
+          { 
+            $gte: startDateTime.getTime(),
+            $lte: endDateTime.getTime(), 
+          }
+        };      
+      if (!this._user.isAdmin){
+        query.docID = this.user.id;
+      }
+      try {
+        const procsList = await this.client.service('procedures').find({
+          query: {...query }});
+        // eslint-disable-next-line no-console
+         console.log(procsList.data);
+        if (procsList.data.length > 0) {
+          this._procedures = [...procsList.data];
+        }
+        this._spinnerHidden = true;
+      } catch (err) {
+        this._spinnerHidden = true;
+        this._modalMsg = `Erro ao buscar lista de tipos de procedimentos: ${err}`;
+        this._toggleModal = true;
+      }
+    }
+  }
+
+  _editProcedure(e) {
+    // eslint-disable-next-line no-console
+    // console.log(JSON.stringify(e.detail, null, 2));
+    this._currentProcedure = { ...e.detail };
+    // eslint-disable-next-line no-console
+    // console.log(this._currentProcedure);
+    this._loadShowProcForm();
+  }
+
+    async _saveProcedure(e) {
+    if (this._user.isEnabled) {
+      // eslint-disable-next-line no-console
+      // console.log(JSON.stringify(e.detail, null, 2));
+      this._spinnerHidden = false;
+      const p = { ...e.detail };
+      if (p.id) {
+        try {
+          // eslint-disable-next-line no-console
+          console.log('updating procedure');
+          await this.client.service('procedures').patch(p.id, { ...p });
+          this._spinnerHidden = true;
+          this._modalMsg = 'Procedimento gravado com sucesso!';
+          this._toggleModal = true;
+          // eslint-disable-next-line no-console
+          // console.log(`Procedure updated: ${JSON.stringify(res, null, 2)}`);
+          this.dispatchEvent(
+            new CustomEvent('update-procedures-list', {
+              detail:{queryByDate: p.procDateTime},
+              bubbles: true,
+              composed: true,
+            })
+          );
+        } catch (err) {
+          // eslint-disable-next-line no-console
+          console.log(`could not update procedure: ${err}`);
+        }
+      } else {
+        try {
+          // eslint-disable-next-line no-console
+          console.log('creating procedure');
+          await this.client.service('procedures').create({ ...p });
+          this._spinnerHidden = true;
+          this._modalMsg = 'Procedimento gravado com sucesso!';
+          this._toggleModal = true;
+          // eslint-disable-next-line no-console
+          // console.log(JSON.stringify(res, null, 2));
+          this.dispatchEvent(
+            new CustomEvent('update-procedures-list', {
+              detail:{queryByDate: p.procDateTime},
+              bubbles: true,
+              composed: true,
+            })
+          );
+        } catch (err) {
+          // eslint-disable-next-line no-console
+          console.log(`could not create procedure: ${err}`);
+        }
+      }
+    }
   }
 
   //
@@ -1243,6 +1381,13 @@ export class CollectClient extends LitElement {
       </div>
 
       <!-- dynamic elements -->
+      <proc-form
+        class="${classMap({ 'is-hidden': !this._showProcedureForm })}"
+        ?activate="${this._showProcedureForm}"
+        .procedure="${this._currentProcedure}"
+        .doctors="${this._doctors}"
+        .proctypes="${this._proceduresTypes}"
+      ></proc-form>
       <user-form
         class="${classMap({ 'is-hidden': !this._showUserForm })}"
         ?activate="${this._showUserForm}"
