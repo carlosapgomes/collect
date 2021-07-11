@@ -7,7 +7,7 @@ export class IconPlus extends LitElement {
   }
 
   render() {
-    return html`<span class="icon is-small is-right">
+    return html`<span class="icon is-small">
       <svg
         id="i-plus"
         xmlns="http://www.w3.org/2000/svg"
