@@ -356,12 +356,12 @@ async _updateProceduresList(e) {
       let startDateTime = window.dayjs().startOf('day');
       let endDateTime = window.dayjs().endOf('day');
       // if a property queryByDate was set on event
-      if (e.detail.queryByDate){
+      if (( e.detail ) && ( e.detail.queryByDate )){
         startDateTime = window.dayjs(e.detail.queryByDate).startOf('day');
         endDateTime = window.dayjs(startDateTime).endOf('day'); 
       };
       // if a property queryByMonth was set on event
-      if (e.detail.queryByMonth){
+      if ((e.detail) && ( e.detail.queryByMonth )){
       // update query
         startDateTime = window.dayjs(e.detail.queryByMonth).startOf('month');
         endDateTime = window.dayjs(startDateTime).endOf('month'); 
@@ -372,8 +372,8 @@ async _updateProceduresList(e) {
           },
           procDateTime: 
           { 
-            $gte: startDateTime.getTime(),
-            $lte: endDateTime.getTime(), 
+            $gte: window.dayjs( startDateTime ).millisecond(),
+            $lte: window.dayjs( endDateTime ).millisecond(), 
           }
         };      
       if (!this._user.isAdmin){
