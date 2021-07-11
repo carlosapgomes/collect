@@ -10,22 +10,23 @@ export class ProcForm extends LitElement {
   static get properties() {
     return {
       procedure: { type: Object },
-      _dateISO: { type: String },
-      activate: { type: Boolean },
-      _procedureName: { type: String },
-      _date: { type: String },
-      _procedureCode: { type: String },
-      _patientName: { type: String },
-      _patientRecNumber: { type: String },
-      _patientGender: { type: String },
-      _patientAge: { type: Number },
-      _bed: { type: String },
-      _doctorName: { type: String },
+      _dateISO: { type: String , state: true},
+      activate: { type: Boolean , state: true},
+      _procedureName: { type: String , state: true},
+      _date: { type: String , state: true},
+      _procedureCode: { type: String , state: true},
+      _patientName: { type: String , state: true},
+      _patientRecNumber: { type: String , state: true},
+      _patientGender: { type: String , state: true},
+      _patientAge: { type: Number, state: true },
+      _bed: { type: String , state: true},
+      _doctorName: { type: String , state: true},
       _weekDay: { type: Number },
-      doctors: { type: Array },
-      _doctorsOptions: { type: Array },
-      proctypes: { type: Array },
-      _procTypesOptions: { type: Array },
+      doctors: { type: Array},
+      _doctorsOptions: { type: Array , state: true},
+      proctypes: { type: Array},
+      _procTypesOptions: { type: Array , state: true},
+      _activateDocSearchDropDown: {type: Boolean, state: true},
     };
   }
 
@@ -48,14 +49,15 @@ export class ProcForm extends LitElement {
     this._doctorsOptions = [];
     this.proctypes = [];
     this._procTypesOptions = [];
+    this._activateDocSearchDropDown = false;
   }
 
   firstUpdated() {
     const [d] = new Date().toISOString().split('T');
     this._dateISO = d;
-    if (this.doctors) {
-      this._updateDoctorsList();
-    }
+    // if (this.doctors) {
+      // this._updateDoctorsList();
+    // }
     if (this.proctypes) {
       this._updateProcTypesList();
     }
@@ -232,6 +234,14 @@ export class ProcForm extends LitElement {
     this._closeForm();
   }
 
+  _searchDoc(e){
+      // eslint-disable-next-line no-console
+      console.log(e.target.value);
+    if(e.target.value.length > 4){
+      this._activateDocSearchDropDown = true;
+    }
+  }
+
   render() {
     return html`
       <div class="modal ${classMap({ 'is-active': this.activate })}">
@@ -304,6 +314,28 @@ export class ProcForm extends LitElement {
                   </select>
                 </div>
               </div>
+                <div class="dropdown is-expanded ${classMap({'is-active': this._activateDocSearchDropDown})}">
+                  <div class="dropdown-trigger">
+                  <div class="field">
+                    <div class="control is-expanded has-icons-right">
+                      <input 
+                      class="input" 
+                      type="search" 
+                      @keyup="${this._searchDoc}"
+                      placeholder="Search..."/>
+                      <span class="icon is-small is-right"><i class="fas fa-search"></i></span>
+                    </div>
+                  </div>
+                </div>
+                <div class="dropdown-menu" id="dropdown-menu" role="menu">
+                  <div class="dropdown-content">
+                    <a href="#" class="dropdown-item">Dropdown item</a>
+                    <a href="#" class="dropdown-item">Other dropdown item</a>
+                    <hr class="dropdown-divider">
+                      <a href="#" class="dropdown-item">With a divider</a>
+                    </div>
+                  </div>
+                </div>
               <div class="field">
                 <label class="label">Médico</label>
                 <div class="control is-expanded">
