@@ -272,6 +272,7 @@ export class ProcForm extends LitElement {
   _docSelected(d) {
     // eslint-disable-next-line no-console
     console.log(JSON.stringify(d, null, 2));
+    this._currentDoc = { ...d };
     this._doctorName = d.name;
     this._activateDocSearchDropDown = false;
   }
@@ -279,7 +280,16 @@ export class ProcForm extends LitElement {
   _searchPatient(e) {
     // eslint-disable-next-line no-console
     console.log(e.target.value);
-    if (e.target.value.length > 4) {
+    // fire event to hide procedure form from parent's view
+
+    if (e.target.value.length > 2) {
+      this.dispatchEvent(
+        new CustomEvent('search-patient', {
+          detail: e.target.value,
+          bubbles: true,
+          composed: true,
+        })
+      );
       this._activatePatientSearchDropDown = true;
     }
   }
@@ -287,7 +297,8 @@ export class ProcForm extends LitElement {
   _patientSelected(p) {
     // eslint-disable-next-line no-console
     console.log(JSON.stringify(p, null, 2));
-    this._doctorName = p.name;
+    this._currentPatient = { ...p };
+    this._patientName = p.name;
     this._activatePatientSearchDropDown = false;
   }
 
@@ -457,7 +468,7 @@ export class ProcForm extends LitElement {
                           type="search"
                           @keyup="${this._searchPatient}"
                           .value="${this._patientName}"
-                          placeholder="buscar pelo nome"
+                          placeholder="buscar pelo nome ou registro"
                         />
                         <icon-search></icon-search>
                       </div>
@@ -479,7 +490,7 @@ export class ProcForm extends LitElement {
                                   e.preventDefault();
                                   this._patientSelected(p);
                                 }}"
-                                >${p.name}</a
+                                >${p.name} - Reg: ${p.recNumber}</a
                               >
                             `
                           )

@@ -147,6 +147,7 @@ export class CollectClient extends LitElement {
 
     // patients
     this.addEventListener('update-patients-list', this._updatePatientsList);
+    this.addEventListener('search-patient', this._searchPatient);
     this.addEventListener('remove-patient', this._removePatient);
     this.addEventListener('edit-patient', this._editPatient);
     this.addEventListener('add-patient', this._loadShowPatientForm);
@@ -815,15 +816,50 @@ export class CollectClient extends LitElement {
   // patients
 
   _loadShowPatientForm() {
-    // eslint-disable-next-line no-console
-    // console.log('loadShowPatientForm');
-    // dynamically load doctor-form if neccessary
     if (typeof customElements.get('patient-form') === 'undefined') {
       import('./patient-form.js').then(() => {
         this._showPatientForm = true;
       });
     } else {
       this._showPatientForm = true;
+    }
+  }
+
+  async _searchPatient(e) {
+    if (this._user.isEnabled) {
+      // clear patient list
+      this._patients = [];
+      // eslint-disable-next-line no-console
+      console.log(`searching for patient: ${e.detail}`);
+      this._spinnerHidden = false;
+      try {
+        const patientsList = await this.client.service('patients').find({
+          query: {
+            $or: [
+              {
+                name: {
+                  $like: `${e.detail}%`,
+                },
+              },
+              {
+                recNumber: {
+                  $like: `${e.detail}%`,
+                },
+              },
+            ],
+          },
+        });
+        // eslint-disable-next-line no-console
+        console.log(patientsList.data);
+        if (patientsList.data.length > 0) {
+          this._patients = [...patientsList.data];
+        }
+        this._spinnerHidden = true;
+      } catch (_err) {
+        this._spinnerHidden = true;
+        this._modalMsg = 'Erro ao buscar lista de pacientes';
+        this._toggleModal = true;
+      }
     }
   }
 
@@ -1425,6 +1461,7 @@ export class CollectClient extends LitElement {
         ?activate="${this._showProcedureForm}"
         .procedure="${this._currentProcedure}"
         .doctors="${this._doctors}"
+        .patients="${this._patients}"
         .proctypes="${this._proceduresTypes}"
       ></proc-form>
       <user-form
