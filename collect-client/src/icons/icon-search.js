@@ -1,3 +1,3 @@
-import { IconSearch } from './Icons.js';
+import { IconSearch } from './IconSearch.js';
 
 customElements.define('icon-search', IconSearch);
