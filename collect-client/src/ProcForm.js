@@ -1,6 +1,7 @@
 import { html, LitElement } from 'lit-element';
 import { classMap } from 'lit-html/directives/class-map.js';
-import './icons-elements.js';
+import './icons/icon-search.js';
+import './icons/icon-plus.js';
 
 export class ProcForm extends LitElement {
   // use lightDOM
@@ -254,7 +255,16 @@ export class ProcForm extends LitElement {
   _searchDoc(e) {
     // eslint-disable-next-line no-console
     console.log(e.target.value);
-    if (e.target.value.length > 4) {
+    // fire event to hide procedure form from parent's view
+
+    if (e.target.value.length > 2) {
+      this.dispatchEvent(
+        new CustomEvent('search-doctor', {
+          detail: e.target.value,
+          bubbles: true,
+          composed: true,
+        })
+      );
       this._activateDocSearchDropDown = true;
     }
   }
@@ -294,6 +304,14 @@ export class ProcForm extends LitElement {
     console.log(JSON.stringify(p, null, 2));
     this._doctorName = p.name;
     this._activateProcTypeSearchDropDown = false;
+  }
+
+  _addPatient(e) {
+    e.preventDefault();
+    // fire event to hide procedure form from parent's view
+    this.dispatchEvent(
+      new CustomEvent('add-patient', { bubbles: true, composed: true })
+    );
   }
 
   render() {
@@ -420,55 +438,74 @@ export class ProcForm extends LitElement {
 
               <!-- patients dropdown search -->
               <div
-                class="dropdown is-expanded ${classMap({
-                  'is-active': this._activatePatientSearchDropDown,
-                })}"
+                class="is-flex
+                is-justify-content-space-between
+                is-flex-direction-row"
               >
-                <div class="dropdown-trigger">
-                  <div class="field">
-                    <label class="label">Paciente</label>
-                    <div class="control is-expanded has-icons-right">
-                      <input
-                        class="input"
-                        type="search"
-                        @keyup="${this._searchPatient}"
-                        .value="${this._patientName}"
-                        placeholder="buscar pelo nome"
-                      />
-                      <icon-search></icon-search>
+                <div
+                  class="dropdown
+                  ${classMap({
+                    'is-active': this._activatePatientSearchDropDown,
+                  })}"
+                >
+                  <div class="dropdown-trigger">
+                    <div class="field">
+                      <label class="label">Paciente</label>
+                      <div class="control is-expanded has-icons-right">
+                        <input
+                          class="input"
+                          type="search"
+                          @keyup="${this._searchPatient}"
+                          .value="${this._patientName}"
+                          placeholder="buscar pelo nome"
+                        />
+                        <icon-search></icon-search>
+                      </div>
+                    </div>
+                  </div>
+                  <div class="dropdown-menu" id="dropdown-menu" role="menu">
+                    <div class="dropdown-content">
+                      ${this.patients
+                        ? this.patients.map(
+                            p => html`
+                              <a
+                                href="#"
+                                class="dropdown-item"
+                                @click="${e => {
+                                  e.preventDefault();
+                                  this._patientSelected(p);
+                                }}"
+                                @keydown="${e => {
+                                  e.preventDefault();
+                                  this._patientSelected(p);
+                                }}"
+                                >${p.name}</a
+                              >
+                            `
+                          )
+                        : html`<p></p>`}
                     </div>
                   </div>
                 </div>
-                <div class="dropdown-menu" id="dropdown-menu" role="menu">
-                  <div class="dropdown-content">
-                    ${this.patients
-                      ? this.patients.map(
-                          p => html`
-                            <a
-                              href="#"
-                              class="dropdown-item"
-                              @click="${e => {
-                                e.preventDefault();
-                                this._patientSelected(p);
-                              }}"
-                              @keydown="${e => {
-                                e.preventDefault();
-                                this._patientSelected(p);
-                              }}"
-                              >${p.name}</a
-                            >
-                          `
-                        )
-                      : html`<p></p>`}
-                  </div>
+                <div class="is-align-self-flex-end">
+                  <button
+                    class="button 
+                    is-ghost 
+                    has-tooltip-arrow
+                    has-tooltip-top"
+                    data-tooltip="Adicionar"
+                    @click="${this._addPatient}"
+                    @keydown="${this._addPatient}"
+                  >
+                    <icon-plus></icon-plus>
+                  </button>
                 </div>
               </div>
               <br />
-              <br />
               <div
-                class="field 
-                is-flex is-flex-direction-row 
-                is-justify-content-space-around"
+                class="field
+                is-flex is-flex-direction-row
+                is-justify-content-space-between"
               >
                 <div>
                   <label class="label">Unidade</label>
@@ -516,7 +553,7 @@ export class ProcForm extends LitElement {
 
               <!-- doctors dropdown search -->
               <div
-                class="dropdown is-expanded ${classMap({
+                class="dropdown is-up is-expanded ${classMap({
                   'is-active': this._activateDocSearchDropDown,
                 })}"
               >
@@ -529,7 +566,7 @@ export class ProcForm extends LitElement {
                         type="search"
                         @keyup="${this._searchDoc}"
                         .value="${this._doctorName}"
-                        placeholder="buscar pelo nome"
+                        placeholder="buscar pelo nome ou CRM"
                       />
                       <icon-search></icon-search>
                     </div>
@@ -551,7 +588,7 @@ export class ProcForm extends LitElement {
                                 e.preventDefault();
                                 this._docSelected(d);
                               }}"
-                              >${d.name}</a
+                              >${d.name} - ${d.licenceNumber}</a
                             >
                           `
                         )
