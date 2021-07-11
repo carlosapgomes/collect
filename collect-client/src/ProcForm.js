@@ -1,5 +1,6 @@
 import { html, LitElement } from 'lit-element';
 import { classMap } from 'lit-html/directives/class-map.js';
+import './icons-elements.js';
 
 export class ProcForm extends LitElement {
   // use lightDOM
@@ -10,23 +11,29 @@ export class ProcForm extends LitElement {
   static get properties() {
     return {
       procedure: { type: Object },
-      _dateISO: { type: String , state: true},
-      activate: { type: Boolean , state: true},
-      _procedureName: { type: String , state: true},
-      _date: { type: String , state: true},
-      _procedureCode: { type: String , state: true},
-      _patientName: { type: String , state: true},
-      _patientRecNumber: { type: String , state: true},
-      _patientGender: { type: String , state: true},
+      _dateISO: { type: String, state: true },
+      activate: { type: Boolean, state: true },
+      _procedureName: { type: String, state: true },
+      _date: { type: String, state: true },
+      _procedureCode: { type: String, state: true },
+      patients: { type: Array },
+      _currentPatient: { type: Object, state: true },
+      _patientName: { type: String, state: true },
+      _patientRecNumber: { type: String, state: true },
+      _patientGender: { type: String, state: true },
       _patientAge: { type: Number, state: true },
-      _bed: { type: String , state: true},
-      _doctorName: { type: String , state: true},
+      _activatePatientSearchDropDown: { type: Boolean, state: true },
+      _bed: { type: String, state: true },
       _weekDay: { type: Number },
-      doctors: { type: Array},
-      _doctorsOptions: { type: Array , state: true},
-      proctypes: { type: Array},
-      _procTypesOptions: { type: Array , state: true},
-      _activateDocSearchDropDown: {type: Boolean, state: true},
+      doctors: { type: Array },
+      _currentDoc: { type: Object, state: true },
+      _doctorsOptions: { type: Array, state: true },
+      _doctorName: { type: String, state: true },
+      _activateDocSearchDropDown: { type: Boolean, state: true },
+      proctypes: { type: Array },
+      _procTypesOptions: { type: Array, state: true },
+      _procTypeDescr: { type: String, state: true },
+      _activateProcTypeSearchDropDown: { type: Boolean, state: true },
     };
   }
 
@@ -36,9 +43,11 @@ export class ProcForm extends LitElement {
     this._procedureName = '';
     this._procedureCode = '';
     this._patientName = '';
+    this._currentPatient = {};
     this._patientRecNumber = '';
     this._patientGender = '';
     this._patientAge = 0;
+    this._activatePatientSearchDropDown = false;
     this._bed = '';
     this._date = '';
     this._doctorName = '';
@@ -46,17 +55,20 @@ export class ProcForm extends LitElement {
     this.activate = false;
     this._weekDay = -1; // 0=sunday, 1=monday ... 6=saturday
     this.doctors = [];
+    this._currentDoc = {};
     this._doctorsOptions = [];
+    this._activateDocSearchDropDown = false;
     this.proctypes = [];
     this._procTypesOptions = [];
-    this._activateDocSearchDropDown = false;
+    this._procTypeDescr = '';
+    this._activateProcTypeSearchDropDown = false;
   }
 
   firstUpdated() {
     const [d] = new Date().toISOString().split('T');
     this._dateISO = d;
     // if (this.doctors) {
-      // this._updateDoctorsList();
+    // this._updateDoctorsList();
     // }
     if (this.proctypes) {
       this._updateProcTypesList();
@@ -160,16 +172,22 @@ export class ProcForm extends LitElement {
     document.getElementById('procedure-form').reset();
     this._procedureName = '';
     this._procedureCode = '';
+    this._procTypeDescr = '';
+    this._activateProcTypeSearchDropDown = false;
     this._patientName = '';
+    this._currentPatient = {};
     this._patientRecNumber = '';
     this._patientGender = '';
     this._patientAge = 0;
+    this._activatePatientSearchDropDown = false;
     this._bed = '';
     const [d] = new Date().toISOString().split('T');
     this._dateISO = d;
     // @ts-ignore
     this._date = '';
+    this._currentDoc = {};
     this._doctorName = '';
+    this._activateDocSearchDropDown = false;
     this._dateISO = '';
     this._weekDay = -1; // 0=sunday, 1=monday ... 6=saturday
   }
@@ -184,9 +202,8 @@ export class ProcForm extends LitElement {
 
   _handleSaveForm() {
     // @ts-ignore
-    const proc = this.proctypes[
-      document.getElementById('proc-type-select').value
-    ];
+    const proc =
+      this.proctypes[document.getElementById('proc-type-select').value];
     this._procedureName = proc.procedure;
     this._procedureCode = proc.code;
     // @ts-ignore
@@ -234,12 +251,49 @@ export class ProcForm extends LitElement {
     this._closeForm();
   }
 
-  _searchDoc(e){
-      // eslint-disable-next-line no-console
-      console.log(e.target.value);
-    if(e.target.value.length > 4){
+  _searchDoc(e) {
+    // eslint-disable-next-line no-console
+    console.log(e.target.value);
+    if (e.target.value.length > 4) {
       this._activateDocSearchDropDown = true;
     }
+  }
+
+  _docSelected(d) {
+    // eslint-disable-next-line no-console
+    console.log(JSON.stringify(d, null, 2));
+    this._doctorName = d.name;
+    this._activateDocSearchDropDown = false;
+  }
+
+  _searchPatient(e) {
+    // eslint-disable-next-line no-console
+    console.log(e.target.value);
+    if (e.target.value.length > 4) {
+      this._activatePatientSearchDropDown = true;
+    }
+  }
+
+  _patientSelected(p) {
+    // eslint-disable-next-line no-console
+    console.log(JSON.stringify(p, null, 2));
+    this._doctorName = p.name;
+    this._activatePatientSearchDropDown = false;
+  }
+
+  _searchProcType(e) {
+    // eslint-disable-next-line no-console
+    console.log(e.target.value);
+    if (e.target.value.length > 4) {
+      this._activateProcTypeSearchDropDown = true;
+    }
+  }
+
+  _procTypeSelected(p) {
+    // eslint-disable-next-line no-console
+    console.log(JSON.stringify(p, null, 2));
+    this._doctorName = p.name;
+    this._activateProcTypeSearchDropDown = false;
   }
 
   render() {
@@ -314,133 +368,194 @@ export class ProcForm extends LitElement {
                   </select>
                 </div>
               </div>
-                <div class="dropdown is-expanded ${classMap({'is-active': this._activateDocSearchDropDown})}">
-                  <div class="dropdown-trigger">
+
+              <!-- procedure type dropdown search -->
+              <div
+                class="dropdown is-expanded 
+                ${classMap({
+                  'is-active': this._activateProcTypeSearchDropDown,
+                })}"
+              >
+                <div class="dropdown-trigger">
                   <div class="field">
+                    <label class="label">Procedimento</label>
                     <div class="control is-expanded has-icons-right">
-                      <input 
-                      class="input" 
-                      type="search" 
-                      @keyup="${this._searchDoc}"
-                      placeholder="Search..."/>
-                      <span class="icon is-small is-right"><i class="fas fa-search"></i></span>
+                      <input
+                        class="input"
+                        type="search"
+                        @keyup="${this._searchProcType}"
+                        .value="${this._procTypeDescr}"
+                        placeholder="buscar pelo nome"
+                      />
+                      <icon-search></icon-search>
                     </div>
                   </div>
                 </div>
                 <div class="dropdown-menu" id="dropdown-menu" role="menu">
                   <div class="dropdown-content">
-                    <a href="#" class="dropdown-item">Dropdown item</a>
-                    <a href="#" class="dropdown-item">Other dropdown item</a>
-                    <hr class="dropdown-divider">
-                      <a href="#" class="dropdown-item">With a divider</a>
+                    ${this.proctypes
+                      ? this.proctypes.map(
+                          p => html`
+                            <a
+                              href="#"
+                              class="dropdown-item"
+                              @click="${e => {
+                                e.preventDefault();
+                                this._proctypeSelected(p);
+                              }}"
+                              @keydown="${e => {
+                                e.preventDefault();
+                                this._proctypeSelected(p);
+                              }}"
+                              >${p.descr}</a
+                            >
+                          `
+                        )
+                      : html`<p></p>`}
+                  </div>
+                </div>
+              </div>
+              <br />
+              <br />
+
+              <!-- patients dropdown search -->
+              <div
+                class="dropdown is-expanded ${classMap({
+                  'is-active': this._activatePatientSearchDropDown,
+                })}"
+              >
+                <div class="dropdown-trigger">
+                  <div class="field">
+                    <label class="label">Paciente</label>
+                    <div class="control is-expanded has-icons-right">
+                      <input
+                        class="input"
+                        type="search"
+                        @keyup="${this._searchPatient}"
+                        .value="${this._patientName}"
+                        placeholder="buscar pelo nome"
+                      />
+                      <icon-search></icon-search>
                     </div>
                   </div>
                 </div>
-              <div class="field">
-                <label class="label">Médico</label>
-                <div class="control is-expanded">
-                  <div class="select is-fullwidth">
-                    <select id="proc-doctor-name" required>
-                      ${this._doctorsOptions}
-                    </select>
+                <div class="dropdown-menu" id="dropdown-menu" role="menu">
+                  <div class="dropdown-content">
+                    ${this.patients
+                      ? this.patients.map(
+                          p => html`
+                            <a
+                              href="#"
+                              class="dropdown-item"
+                              @click="${e => {
+                                e.preventDefault();
+                                this._patientSelected(p);
+                              }}"
+                              @keydown="${e => {
+                                e.preventDefault();
+                                this._patientSelected(p);
+                              }}"
+                              >${p.name}</a
+                            >
+                          `
+                        )
+                      : html`<p></p>`}
                   </div>
                 </div>
               </div>
-              <div class="field">
-                <label class="label">Paciente</label>
-                <input
-                  class="input"
-                  id="patient-name"
-                  type="text"
-                  placeholder="Paciente"
-                  .value="${this._patientName}"
-                  required
-                />
-              </div>
-              <div class="field">
-                <label class="label">Registro</label>
-                <input
-                  class="input"
-                  id="patient-record-number"
-                  type="text"
-                  placeholder="Registro"
-                  .value="${this._patientRecNumber}"
-                  required
-                />
-              </div>
-              <div class="field">
-                <label class="label"> Gênero</label>
-                <div class="control">
-                  <label class="radio">
-                    <input id="gender-male" type="radio" name="gender" />
-                    Masculino
-                  </label>
-                  <label class="radio">
-                    <input id="gender-female" type="radio" name="gender" />
-                    Feminino
-                  </label>
+              <br />
+              <br />
+              <div
+                class="field 
+                is-flex is-flex-direction-row 
+                is-justify-content-space-around"
+              >
+                <div>
+                  <label class="label">Unidade</label>
+                  <div class="select">
+                    <select id="ward" name="ward">
+                      <option value="CC">CC</option>
+                      <option value="SALA VERMELHA">SALA VERMELHA</option>
+                      <option value="SALA AMARELA">SALA AMARELA</option>
+                      <option value="SALA VERDE">SALA VERDE</option>
+                      <option value="CO">CO</option>
+                      <option value="CONSULTÓRIO">CONSULTÓRIO</option>
+                      <option value="UTI 1">UTI 1</option>
+                      <option value="UTI 2">UTI 2</option>
+                      <option value="UTI CIRURG">UTI CIRURG</option>
+                      <option value="UTI NEURO">CHD</option>
+                      <option value="UTI CARDIO">UTI CARDIO</option>
+                      <option value="ENF INTERMEDIARIO">
+                        ENF INTERMEDIARIO
+                      </option>
+                      <option value="ENF 1A">ENF 1A</option>
+                      <option value="ENF 1B">ENF 1B</option>
+                      <option value="ENF 1C">ENF 1C</option>
+                      <option value="ENF 2A">ENF 2A</option>
+                      <option value="ENF 2B">ENF 2B</option>
+                      <option value="ENF 2C">ENF 2C</option>
+                      <option value="ENF 3A">ENF 3A</option>
+                      <option value="ENF 3B">ENF 3B</option>
+                      <option value="ENF 3C">ENF 3C</option>
+                      <option value="ENF 4A">ENF 4A</option>
+                      <option value="ENF 4B">ENF 4B</option>
+                      <option value="ENF 4C">ENF 4C</option>
+                    </select>
+                  </div>
                 </div>
-              </div>
-              <div class="field">
-                <label class="label">Idade</label>
-                <input
-                  class="input"
-                  id="patient-age"
-                  type="number"
-                  min="0"
-                  step="1"
-                  placholder="Idade (anos)"
-                  .value="${this._patientAge}"
-                />
+                <div>
+                  <label class="label">Leito</label>
+                  <input
+                    class="input"
+                    id="bed"
+                    type="text"
+                    .value="${this._bed}"
+                  />
+                </div>
               </div>
 
-              <div class="field">
-                <label class="field">Unidade</label>
-                <div class="select">
-                  <select id="ward" name="ward">
-                    <option value="CC">CC</option>
-                    <option value="SALA VERMELHA">SALA VERMELHA</option>
-                    <option value="SALA AMARELA">SALA AMARELA</option>
-                    <option value="SALA VERDE">SALA VERDE</option>
-                    <option value="CO">CO</option>
-                    <option value="CONSULTÓRIO">CONSULTÓRIO</option>
-                    <option value="UTI 1">UTI 1</option>
-                    <option value="UTI 2">UTI 2</option>
-                    <option value="UTI CIRURG">UTI CIRURG</option>
-                    <option value="UTI NEURO">CHD</option>
-                    <option value="UTI CARDIO">UTI CARDIO</option>
-                    <option value="ENF INTERMEDIARIO">ENF INTERMEDIARIO</option>
-                    <option value="ENF 1A">ENF 1A</option>
-                    <option value="ENF 1B">ENF 1B</option>
-                    <option value="ENF 1C">ENF 1C</option>
-                    <option value="ENF 2A">ENF 2A</option>
-                    <option value="ENF 2B">ENF 2B</option>
-                    <option value="ENF 2C">ENF 2C</option>
-                    <option value="ENF 3A">ENF 3A</option>
-                    <option value="ENF 3B">ENF 3B</option>
-                    <option value="ENF 3C">ENF 3C</option>
-                    <option value="ENF 4A">ENF 4A</option>
-                    <option value="ENF 4B">ENF 4B</option>
-                    <option value="ENF 4C">ENF 4C</option>
-                  </select>
+              <!-- doctors dropdown search -->
+              <div
+                class="dropdown is-expanded ${classMap({
+                  'is-active': this._activateDocSearchDropDown,
+                })}"
+              >
+                <div class="dropdown-trigger">
+                  <div class="field">
+                    <label class="label">Médico</label>
+                    <div class="control is-expanded has-icons-right">
+                      <input
+                        class="input"
+                        type="search"
+                        @keyup="${this._searchDoc}"
+                        .value="${this._doctorName}"
+                        placeholder="buscar pelo nome"
+                      />
+                      <icon-search></icon-search>
+                    </div>
+                  </div>
                 </div>
-              </div>
-              <div class="field">
-                <label class="label">Leito</label>
-                <input
-                  class="input"
-                  id="bed"
-                  type="text"
-                  .value="${this._bed}"
-                />
-              </div>
-              <div class="field">
-                <label class="label">Procedimento</label>
-                <div class="control is-expanded">
-                  <div class="select is-fullwidth">
-                    <select id="proc-type-select" required>
-                      ${this._procTypesOptions}
-                    </select>
+                <div class="dropdown-menu" id="dropdown-menu" role="menu">
+                  <div class="dropdown-content">
+                    ${this.doctors
+                      ? this.doctors.map(
+                          d => html`
+                            <a
+                              href="#"
+                              class="dropdown-item"
+                              @click="${e => {
+                                e.preventDefault();
+                                this._docSelected(d);
+                              }}"
+                              @keydown="${e => {
+                                e.preventDefault();
+                                this._docSelected(d);
+                              }}"
+                              >${d.name}</a
+                            >
+                          `
+                        )
+                      : html`<p></p>`}
                   </div>
                 </div>
               </div>

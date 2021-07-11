@@ -1,4 +1,4 @@
-import {html, LitElement} from 'lit-element';
+import { html, LitElement } from 'lit-element';
 import './btn-fab.js';
 
 export class ProcsView extends LitElement {
@@ -9,8 +9,8 @@ export class ProcsView extends LitElement {
 
   static get properties() {
     return {
-      procedures: {type: Array},
-      date: {type: String},
+      procedures: { type: Array },
+      date: { type: String },
     };
   }
 
@@ -22,27 +22,36 @@ export class ProcsView extends LitElement {
 
   firstUpdated() {
     this.dispatchEvent(
-      new CustomEvent('update-procedures-list',
-        {bubbles: true, composed: true}),
+      new CustomEvent('update-procedures-list', {
+        bubbles: true,
+        composed: true,
+      })
     );
-    this.dispatchEvent(new CustomEvent('update-doctors-list',
-      {bubbles: true, composed: true}));
     this.dispatchEvent(
-      new CustomEvent('update-procedures-types-list',
-        {bubbles: true, composed: true}),
+      new CustomEvent('update-doctors-list', { bubbles: true, composed: true })
+    );
+    this.dispatchEvent(
+      new CustomEvent('update-procedures-types-list', {
+        bubbles: true,
+        composed: true,
+      })
     );
   }
 
   _edit(p) {
     this.dispatchEvent(
-      new CustomEvent('edit-procedure',
-        {detail: p, bubbles: true, composed: true}),
+      new CustomEvent('edit-procedure', {
+        detail: p,
+        bubbles: true,
+        composed: true,
+      })
     );
   }
 
   _addProc() {
-    this.dispatchEvent(new CustomEvent('add-procedure',
-      {bubbles: true, composed: true}));
+    this.dispatchEvent(
+      new CustomEvent('add-procedure', { bubbles: true, composed: true })
+    );
   }
 
   _updateProcsByDate(e) {
@@ -54,7 +63,7 @@ export class ProcsView extends LitElement {
           detail: date,
           bubbles: true,
           composed: true,
-        }),
+        })
       );
     }
   }
@@ -84,14 +93,18 @@ export class ProcsView extends LitElement {
             <br />
             <br />
             ${this.procedures
-        ? this.procedures.map(
-          p => html`
+              ? this.procedures.map(
+                  p => html`
                     <div class="card proc-card">
                       <div class="card-content">
                         <div class="content is-flex is-flex-direction-row">
                           <div class="is-align-self-flex-start is-flex-grow-4">
-                            <strong>${p.descr}</strong> <small>
-                              Data: ${window.dayjs(p.procDateTime).format('DD/MM/YYYY HH:MM')}<br />
+                            <strong>${p.descr}</strong>
+                            <small>
+                              Data:
+                              ${window
+                                .dayjs(p.procDateTime)
+                                .format('DD/MM/YYYY HH:MM')}<br />
                               Paciente: ${p.ptName}<br />
                               Médico: ${p.docName}
                             </small>
@@ -103,38 +116,38 @@ export class ProcsView extends LitElement {
                             is-flex-direction-column"
                           >
                             <div
-                            class="button is-white
+                              class="button is-white
                               is-align-self-flex-end
                               has-tooltip-arrow
                               has-tooltip-right"
                               data-tooltip="Editar"
-                            @click="${() => {
-                            this._edit(p);
-                            }}"
-                            @keydown="${() => {
-                            this._edit(p);
-                            }}"
-                          >
-                            <span class="icon is-small is-right">
-                              <svg
-                                id="i-edit"
-                                xmlns="http://www.w3.org/2000/svg"
-                                viewBox="0 0 32 32"
-                                width="16"
-                                height="16"
-                                fill="none"
-                                stroke="currentcolor"
-                                stroke-linecap="round"
-                                stroke-linejoin="round"
-                                stroke-width="2"
-                              >
-                                <path
-                                  d="M30 7 L25 2 5 22 3 29 10 27 Z M21 6 L26 11 Z M5 22 L10 27 Z"
-                                />
-                              </svg>
-                            </span>
-                          </div>
-                          <div
+                              @click="${() => {
+                                this._edit(p);
+                              }}"
+                              @keydown="${() => {
+                                this._edit(p);
+                              }}"
+                            >
+                              <span class="icon is-small is-right">
+                                <svg
+                                  id="i-edit"
+                                  xmlns="http://www.w3.org/2000/svg"
+                                  viewBox="0 0 32 32"
+                                  width="16"
+                                  height="16"
+                                  fill="none"
+                                  stroke="currentcolor"
+                                  stroke-linecap="round"
+                                  stroke-linejoin="round"
+                                  stroke-width="2"
+                                >
+                                  <path
+                                    d="M30 7 L25 2 5 22 3 29 10 27 Z M21 6 L26 11 Z M5 22 L10 27 Z"
+                                  />
+                                </svg>
+                              </span>
+                            </div>
+                            <div
                               class="button is-white
                             is-align-self-flex-end
                             has-tooltip-arrow
@@ -166,23 +179,22 @@ export class ProcsView extends LitElement {
                                 </svg>
                               </span>
                             </div>
-</div>                        
+                          </div>
                         </div>
                       </div>
                     </div>
-                  `,
-        )
-        : html`</p>`}
+                  `
+                )
+              : html`</p>`}
           </div>
         </div>
 
         <btn-fab
           @click="${() => {
-        this._addProc();
-      }}"
+            this._addProc();
+          }}"
         ></btn-fab>
       </section>
     `;
   }
 }
-

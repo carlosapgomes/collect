@@ -8,7 +8,20 @@ export default {
 };
 
 function Template(activate) {
-  return html`<proc-form ?activate=${activate}></proc-form>`;
+  const doctors = [
+    {
+      name: 'doc1',
+      id: 'id1',
+    },
+    {
+      name: 'doc2',
+      id: 'id2',
+    },
+  ];
+  return html`<proc-form
+    .doctors=${doctors}
+    ?activate=${activate}
+  ></proc-form>`;
 }
 
 export const App = Template.bind({});
