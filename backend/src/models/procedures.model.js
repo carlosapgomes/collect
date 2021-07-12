@@ -14,6 +14,10 @@ module.exports = function (app) {
       type: DataTypes.STRING,
       allowNull: false
     },
+    procDateTime: {
+      type: DataTypes.DATE,
+      allowNull: false
+    },
     ptName: {
       type: DataTypes.STRING,
       allowNull: false
@@ -26,11 +30,11 @@ module.exports = function (app) {
       type: DataTypes.STRING,
       allowNull: false
     },
-    ptAge: { 
+    ptAge: {
       type: DataTypes.Number,
       allowNull: false
-    },    
-    ptGender: { 
+    },
+    ptGender: {
       type: DataTypes.ENUM('M', 'F'),
       allowNull: false
     },
@@ -41,10 +45,6 @@ module.exports = function (app) {
     ptBed: {
       type: DataTypes.STRING,
       allowNull: true
-    },
-    procDateTime: {
-      type: DataTypes.DATE,
-      allowNull: false
     },
     docName: {
       type: DataTypes.STRING,

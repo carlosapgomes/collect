@@ -16,6 +16,9 @@ export class ProcForm extends LitElement {
       activate: { type: Boolean, state: true },
       _procedureName: { type: String, state: true },
       _date: { type: String, state: true },
+      _currentProcDate: { type: String, state: true },
+      _currentProcHour: { type: String, state: true },
+      _currentProcMinute: { type: String, state: true },
       _procedureCode: { type: String, state: true },
       patients: { type: Array },
       _currentPatient: { type: Object, state: true },
@@ -32,7 +35,7 @@ export class ProcForm extends LitElement {
       _doctorName: { type: String, state: true },
       _activateDocSearchDropDown: { type: Boolean, state: true },
       proctypes: { type: Array },
-      _currentProcType: {type: Object, state: true},
+      _currentProcType: { type: Object, state: true },
       _procTypesOptions: { type: Array, state: true },
       _procTypeDescr: { type: String, state: true },
       _activateProcTypeSearchDropDown: { type: Boolean, state: true },
@@ -83,12 +86,11 @@ export class ProcForm extends LitElement {
   updated(changedProperties) {
     if (changedProperties.has('procedure')) {
       if (this.procedure && this.procedure.date) {
-        const d = this.procedure.date.split('/');
-        this._dateISO = `${d[2]}-${d[1]}-${d[0]}`;
-        this._procedureName = this.procedure.procedure;
-        this._date = this.procedure.date;
-        this._weekDay = this.procedure.weekDay ? this.procedure.weekDay : '';
-        this._procedureCode = this.procedure.procCode;
+        // const d = this.procedure.date.split('/');
+        // this._dateISO = `${d[2]}-${d[1]}-${d[0]}`;
+        this._currentProcDate = this.procedure.dateTime;
+        this._procTypeDescr = this.procedure.descr;
+
         this._patientName = this.procedure.patientName;
         this._doctorName = this.procedure.doctorName;
         if (this.doctors && this._doctorName) {
@@ -203,43 +205,25 @@ export class ProcForm extends LitElement {
   }
 
   _handleSaveForm() {
-    // @ts-ignore
-    //const proc =
-    //this.proctypes[document.getElementById('proc-type-select').value];
-    //this._procedureName = proc.procedure;
-    //this._procedureCode = proc.code;
-    // @ts-ignore
-    // this._patientName = document.getElementById('patient-name').value;
-    // @ts-ignore
-    //this._doctorName = document.getElementById('proc-doctor-name').value;
-    // @ts-ignore
-    const d = document.getElementById('date').value.split('-');
-    const dt = new Date(`${d} GMT-03:00`);
-    this._date = `${d[2]}/${d[1]}/${d[0]}`;
-    this._weekDay = dt.getDay();
-    const HH = document.getElementById('hours').value;
-    const MM = document.getElementById('minutes').value;
-    const procTime = `${HH}:${MM}`;
-    //const gender = document.getElementById('gender-male').selected
-      //? 'male'
-      //: 'female';
-    //const ward = document.getElementById('ward').value;
+    const dateTime = window.dayjs(
+      `${this._currentProcDate}T${this._currentProcHour}:${this._currentProcMinute}:00.000-03:00`
+    );
     const p = {
       descr: this._currentProcType.descr,
       code: this._currentProcType.code,
+      procDateTime: dateTime,
       ptName: this._currentPatient.name,
       ptRecN: this._currentPatient.recNumber,
       ptID: this._currentPatient.id,
-      patientAge: this._patientAge,
-      patientGender: this._currentPatient.gender,
-      ward: this._Ward,
-      bed: this._bed,
-      doctorName: this._currentDoc.name,
-      procDateTime: this._date,
-      time: procTime,
+      ptAge: dateTime.diff(this._currentPatient._dateOfBirth, 'year'),
+      ptGender: this._currentPatient.gender,
+      ptWard: this._Ward,
+      ptBed: this._bed,
+      docName: this._currentDoc.name,
+      docID: this._currentDoc.id,
     };
-    if (this.procedure && this.procedure.key) {
-      p.key = this.procedure.key;
+    if (this.procedure && this.procedure.id) {
+      p.id = this.procedure.id;
     }
     // fire event to save/update procedure
     this.dispatchEvent(
@@ -357,13 +341,22 @@ export class ProcForm extends LitElement {
                   class="input"
                   id="date"
                   type="date"
-                  .value="${this._dateISO}"
+                  .value="${this._currentProcDate}"
+                  @input="${e => {
+                    this._currentProcDate = e.target.value;
+                  }}"
                 />
               </div>
               <div class="field">
                 <label class="label">Hora (24h)</label>
                 <div class="select">
-                  <select id="hours" name="hours">
+                  <select
+                    id="hours"
+                    @blur="${e => {
+                      this._currentProcHour = e.target.value;
+                    }}"
+                    name="hours"
+                  >
                     <option value="00">00</option>
                     <option value="01">01</option>
                     <option value="02">02</option>
@@ -392,7 +385,14 @@ export class ProcForm extends LitElement {
                 </div>
                 <span>:</span>
                 <div class="select">
-                  <select id="minutes" name="minutes">
+                  <select
+                    id="minutes"
+                    name="minutes"
+                    @blur="${e => {
+                      this._currentProcMinute = e.target.value;
+                      console.log(this._currentProcMinute);
+                    }}"
+                  >
                     <option value="00">00</option>
                     <option value="05">05</option>
                     <option value="10">10</option>
