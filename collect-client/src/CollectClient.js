@@ -163,6 +163,7 @@ export class CollectClient extends LitElement {
       this._updateProcTypesList
     );
     this.addEventListener('edit-procedure-type', this._editProcType);
+    this.addEventListener('search-procedure-type', this._searchProcType);
     this.addEventListener('remove-procedure-type', this._removeProcType);
     this.addEventListener('add-procedure-type', this._loadShowProcTypeForm);
     this.addEventListener('save-procedure-type-form', this._saveProcType);
@@ -1012,6 +1013,35 @@ export class CollectClient extends LitElement {
       });
     } else {
       this._showProcTypeForm = true;
+    }
+  }
+
+  async _searchProcType(e){
+    if (this._user.isEnabled) {
+      // clear procedures types list
+      this._proceduresTypes = [];
+      // eslint-disable-next-line no-console
+      console.log(`searching for procedures types: ${e.detail}`);
+      this._spinnerHidden = false;
+      try {
+        const procTypesList = await this.client.service('proctypes').find({
+          query: {
+                descr: {
+                  $like: `%${e.detail}%`,
+                },
+          },
+        });
+        // eslint-disable-next-line no-console
+        console.log(procTypesList.data);
+        if (procTypesList.data.length > 0) {
+          this._proceduresTypes = [...procTypesList.data];
+        }
+        this._spinnerHidden = true;
+      } catch (_err) {
+        this._spinnerHidden = true;
+        this._modalMsg = 'Erro ao buscar lista de tipos de procedimentos';
+        this._toggleModal = true;
+      }
     }
   }
 

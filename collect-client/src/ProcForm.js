@@ -32,6 +32,7 @@ export class ProcForm extends LitElement {
       _doctorName: { type: String, state: true },
       _activateDocSearchDropDown: { type: Boolean, state: true },
       proctypes: { type: Array },
+      _currentProcType: {type: Object, state: true},
       _procTypesOptions: { type: Array, state: true },
       _procTypeDescr: { type: String, state: true },
       _activateProcTypeSearchDropDown: { type: Boolean, state: true },
@@ -305,7 +306,16 @@ export class ProcForm extends LitElement {
   _searchProcType(e) {
     // eslint-disable-next-line no-console
     console.log(e.target.value);
-    if (e.target.value.length > 4) {
+    // fire event to hide procedure form from parent's view
+
+    if (e.target.value.length > 2) {
+      this.dispatchEvent(
+        new CustomEvent('search-procedure-type', {
+          detail: e.target.value,
+          bubbles: true,
+          composed: true,
+        })
+      );
       this._activateProcTypeSearchDropDown = true;
     }
   }
@@ -313,7 +323,8 @@ export class ProcForm extends LitElement {
   _procTypeSelected(p) {
     // eslint-disable-next-line no-console
     console.log(JSON.stringify(p, null, 2));
-    this._doctorName = p.name;
+    this._currentProcType = { ...p };
+    this._procTypeDescr = p.descr;
     this._activateProcTypeSearchDropDown = false;
   }
 
@@ -430,11 +441,11 @@ export class ProcForm extends LitElement {
                               class="dropdown-item"
                               @click="${e => {
                                 e.preventDefault();
-                                this._proctypeSelected(p);
+                                this._procTypeSelected(p);
                               }}"
                               @keydown="${e => {
                                 e.preventDefault();
-                                this._proctypeSelected(p);
+                                this._procTypeSelected(p);
                               }}"
                               >${p.descr}</a
                             >
