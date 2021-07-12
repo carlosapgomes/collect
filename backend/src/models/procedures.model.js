@@ -18,9 +18,29 @@ module.exports = function (app) {
       type: DataTypes.STRING,
       allowNull: false
     },
+    ptRecN: {
+      type: DataTypes.STRING,
+      allowNull: false
+    },
     ptID: {
       type: DataTypes.STRING,
       allowNull: false
+    },
+    ptAge: { 
+      type: DataTypes.Number,
+      allowNull: false
+    },    
+    ptGender: { 
+      type: DataTypes.ENUM('M', 'F'),
+      allowNull: false
+    },
+    ptWard: {
+      type: DataTypes.STRING,
+      allowNull: true
+    },
+    ptBed: {
+      type: DataTypes.STRING,
+      allowNull: true
     },
     procDateTime: {
       type: DataTypes.DATE,

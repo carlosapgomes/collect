@@ -204,14 +204,14 @@ export class ProcForm extends LitElement {
 
   _handleSaveForm() {
     // @ts-ignore
-    const proc =
-      this.proctypes[document.getElementById('proc-type-select').value];
-    this._procedureName = proc.procedure;
-    this._procedureCode = proc.code;
+    //const proc =
+    //this.proctypes[document.getElementById('proc-type-select').value];
+    //this._procedureName = proc.procedure;
+    //this._procedureCode = proc.code;
     // @ts-ignore
     // this._patientName = document.getElementById('patient-name').value;
     // @ts-ignore
-    this._doctorName = document.getElementById('proc-doctor-name').value;
+    //this._doctorName = document.getElementById('proc-doctor-name').value;
     // @ts-ignore
     const d = document.getElementById('date').value.split('-');
     const dt = new Date(`${d} GMT-03:00`);
@@ -220,23 +220,23 @@ export class ProcForm extends LitElement {
     const HH = document.getElementById('hours').value;
     const MM = document.getElementById('minutes').value;
     const procTime = `${HH}:${MM}`;
-    const gender = document.getElementById('gender-male').selected
-      ? 'male'
-      : 'female';
-    const ward = document.getElementById('ward').value;
+    //const gender = document.getElementById('gender-male').selected
+      //? 'male'
+      //: 'female';
+    //const ward = document.getElementById('ward').value;
     const p = {
-      procedure: this._procedureName,
-      procCode: this._procedureCode,
-      patientName: this._patientName,
-      patientRecNumber: this._patientRecNumber,
+      descr: this._currentProcType.descr,
+      code: this._currentProcType.code,
+      ptName: this._currentPatient.name,
+      ptRecN: this._currentPatient.recNumber,
+      ptID: this._currentPatient.id,
       patientAge: this._patientAge,
-      patientGender: gender,
-      ward,
+      patientGender: this._currentPatient.gender,
+      ward: this._Ward,
       bed: this._bed,
-      doctorName: this._doctorName,
-      date: this._date,
+      doctorName: this._currentDoc.name,
+      procDateTime: this._date,
       time: procTime,
-      weekDay: this._weekDay,
     };
     if (this.procedure && this.procedure.key) {
       p.key = this.procedure.key;
