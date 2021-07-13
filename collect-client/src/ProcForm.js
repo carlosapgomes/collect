@@ -12,31 +12,22 @@ export class ProcForm extends LitElement {
   static get properties() {
     return {
       procedure: { type: Object },
-      _dateISO: { type: String, state: true },
       activate: { type: Boolean, state: true },
-      _procedureName: { type: String, state: true },
-      _date: { type: String, state: true },
       _currentProcDate: { type: String, state: true },
       _currentProcHour: { type: String, state: true },
       _currentProcMinute: { type: String, state: true },
-      _procedureCode: { type: String, state: true },
       patients: { type: Array },
       _currentPatient: { type: Object, state: true },
       _patientName: { type: String, state: true },
-      _patientRecNumber: { type: String, state: true },
-      _patientGender: { type: String, state: true },
-      _patientAge: { type: Number, state: true },
       _activatePatientSearchDropDown: { type: Boolean, state: true },
+      _ward: {type: String, state: true},
       _bed: { type: String, state: true },
-      _weekDay: { type: Number },
       doctors: { type: Array },
       _currentDoc: { type: Object, state: true },
-      _doctorsOptions: { type: Array, state: true },
       _doctorName: { type: String, state: true },
       _activateDocSearchDropDown: { type: Boolean, state: true },
       proctypes: { type: Array },
       _currentProcType: { type: Object, state: true },
-      _procTypesOptions: { type: Array, state: true },
       _procTypeDescr: { type: String, state: true },
       _activateProcTypeSearchDropDown: { type: Boolean, state: true },
     };
@@ -45,39 +36,30 @@ export class ProcForm extends LitElement {
   constructor() {
     super();
     this.procedure = {};
-    this._procedureName = '';
-    this._procedureCode = '';
     this._patientName = '';
     this._currentPatient = {};
-    this._patientRecNumber = '';
-    this._patientGender = '';
-    this._patientAge = 0;
     this._activatePatientSearchDropDown = false;
+    this._ward = '';
     this._bed = '';
-    this._date = '';
     this._doctorName = '';
-    this._dateISO = '';
     this.activate = false;
-    this._weekDay = -1; // 0=sunday, 1=monday ... 6=saturday
     this.doctors = [];
     this._currentDoc = {};
-    this._doctorsOptions = [];
     this._activateDocSearchDropDown = false;
     this.proctypes = [];
-    this._procTypesOptions = [];
     this._procTypeDescr = '';
     this._activateProcTypeSearchDropDown = false;
   }
 
   firstUpdated() {
-    const [d] = new Date().toISOString().split('T');
-    this._dateISO = d;
+    const [d] = window.dayjs().format().split('T');
+    this._currentProcDate = d;
     // if (this.doctors) {
     // this._updateDoctorsList();
     // }
-    if (this.proctypes) {
-      this._updateProcTypesList();
-    }
+    //if (this.proctypes) {
+      //this._updateProcTypesList();
+    //}
   }
 
   /**
@@ -86,38 +68,64 @@ export class ProcForm extends LitElement {
   updated(changedProperties) {
     if (changedProperties.has('procedure')) {
       if (this.procedure && this.procedure.date) {
-        // const d = this.procedure.date.split('/');
-        // this._dateISO = `${d[2]}-${d[1]}-${d[0]}`;
-        this._currentProcDate = this.procedure.dateTime;
+        [ this._currentProcDate ] = window.dayjs(this.procedure.dateTime).format().split('T');
+        this._currentProcHour = window.dayjs(this.procedure.dateTime).
+          hour().toLocaleString('pt-BR',{minimumIntegerDigits: 2,});
+        this._currentProcMinute = window.dayjs(this.procedure.dateTime).
+          minute().toLocaleString('pt-BR',{minimumIntegerDigits: 2,});
+ 
+        this._currentProcType = {
+          descr: this.procedure.descr,
+          code: this.procedure.code,
+        };
+        this.proctypes = [{...this._currentProcType}];
         this._procTypeDescr = this.procedure.descr;
 
-        this._patientName = this.procedure.patientName;
-        this._doctorName = this.procedure.doctorName;
-        if (this.doctors && this._doctorName) {
-          console.log(`updating doctor name to: ${this._doctorName}`);
-          // @ts-ignore
-          document.getElementById('docOptionsDefault').selected = false;
-          for (let i = 0; i < this.doctors.length; i += 1) {
-            if (this.doctors[i].name === this._doctorName) {
-              // @ts-ignore
-              document.getElementById(`docOption${i}`).selected = true;
-              break;
-            }
-          }
-        }
+        this._currentPatient = {
+          name: this.procedure.ptName,
+          recNumber: this.procedure.ptRecN,
+          id: this.procedure.ptID,
+          dateOfBirth: this.procedure.ptDateOfBirth,
+          gender: this.procedure.ptGender,
+        };
+        this.patients = [{...this._currentPatient}];
+        this._patientName = this._currentPatient.name;
+
+        this._currentDoc = {
+          name: this.procedure.docName,
+          id: this.procedure.docID,
+          licenceNumber: this.procedure.docLicenceNumber
+        };
+        this._doctorName = this.procedure.doName;
+        this.doctors = [{...this._currentDoc}];
+        
+        this._bed = this.procedure.ptBed;
+        this._ward = this.procedure.ptWard;
+        //if (this.doctors && this._doctorName) {
+          //console.log(`updating doctor name to: ${this._doctorName}`);
+           //@ts-ignore
+          //document.getElementById('docOptionsDefault').selected = false;
+          //for (let i = 0; i < this.doctors.length; i += 1) {
+            //if (this.doctors[i].name === this._doctorName) {
+              //@ts-ignore
+              //document.getElementById(`docOption${i}`).selected = true;
+              //break;
+            //}
+          //}
+        //}
       }
-      if (this.proctypes && this._procedureName) {
-        console.log(`updating proc type to: ${this._procedureName}`);
-        // @ts-ignore
-        document.getElementById('procOptionsDefault').selected = false;
-        for (let i = 0; i < this.proctypes.length; i += 1) {
-          if (this.proctypes[i].procedure === this._procedureName) {
-            // @ts-ignore
-            document.getElementById(`procOption${i}`).selected = true;
-            break;
-          }
-        }
-      }
+      //if (this.proctypes && this._procedureName) {
+        //console.log(`updating proc type to: ${this._procedureName}`);
+         //@ts-ignore
+        //document.getElementById('procOptionsDefault').selected = false;
+        //for (let i = 0; i < this.proctypes.length; i += 1) {
+          //if (this.proctypes[i].procedure === this._procedureName) {
+             //@ts-ignore
+            //document.getElementById(`procOption${i}`).selected = true;
+            //break;
+          //}
+        //}
+      //}
     }
     if (changedProperties.has('doctors')) {
       this._updateDoctorsList();
@@ -127,39 +135,39 @@ export class ProcForm extends LitElement {
     }
   }
 
-  _updateDoctorsList() {
-    this._doctorsOptions = [];
-    this._doctorsOptions.push(
-      html`
-        <option id="docOptionsDefault" value="" selected disabled hidden>
-          Escolha
-        </option>
-      `
-    );
-    this.doctors.forEach((value, index) => {
-      const docOpId = `docOption${index}`;
-      this._doctorsOptions.push(html`
-        <option id="${docOpId}" value="${value.name}">${value.name}</option>
-      `);
-    });
-  }
+  //_updateDoctorsList() {
+    //this._doctorsOptions = [];
+    //this._doctorsOptions.push(
+      //html`
+        //<option id="docOptionsDefault" value="" selected disabled hidden>
+          //Escolha
+        //</option>
+      //`
+    //);
+    //this.doctors.forEach((value, index) => {
+      //const docOpId = `docOption${index}`;
+      //this._doctorsOptions.push(html`
+        //<option id="${docOpId}" value="${value.name}">${value.name}</option>
+      //`);
+    //});
+  //}
 
-  _updateProcTypesList() {
-    this._procTypesOptions = [];
-    this._procTypesOptions.push(
-      html`
-        <option id="procOptionsDefault" value="" selected disabled hidden>
-          Escolha
-        </option>
-      `
-    );
-    this.proctypes.forEach((value, index) => {
-      const procOpId = `procOption${index}`;
-      this._procTypesOptions.push(html`
-        <option id="${procOpId}" value="${index}">${value.procedure}</option>
-      `);
-    });
-  }
+  //_updateProcTypesList() {
+    //this._procTypesOptions = [];
+    //this._procTypesOptions.push(
+      //html`
+        //<option id="procOptionsDefault" value="" selected disabled hidden>
+          //Escolha
+        //</option>
+      //`
+    //);
+    //this.proctypes.forEach((value, index) => {
+      //const procOpId = `procOption${index}`;
+      //this._procTypesOptions.push(html`
+        //<option id="${procOpId}" value="${index}">${value.procedure}</option>
+      //`);
+    //});
+  //}
 
   _closeForm() {
     // clear form
@@ -175,25 +183,20 @@ export class ProcForm extends LitElement {
     // @ts-ignore
     document.getElementById('procedure-form').reset();
     this._procedureName = '';
-    this._procedureCode = '';
     this._procTypeDescr = '';
     this._activateProcTypeSearchDropDown = false;
     this._patientName = '';
     this._currentPatient = {};
-    this._patientRecNumber = '';
-    this._patientGender = '';
-    this._patientAge = 0;
     this._activatePatientSearchDropDown = false;
+    this._ward = '';
     this._bed = '';
     const [d] = new Date().toISOString().split('T');
-    this._dateISO = d;
+    //this._dateISO = d;
     // @ts-ignore
-    this._date = '';
     this._currentDoc = {};
     this._doctorName = '';
     this._activateDocSearchDropDown = false;
-    this._dateISO = '';
-    this._weekDay = -1; // 0=sunday, 1=monday ... 6=saturday
+    //this._dateISO = '';
   }
 
   _saveForm(e) {
@@ -217,7 +220,7 @@ export class ProcForm extends LitElement {
       ptID: this._currentPatient.id,
       ptAge: dateTime.diff(this._currentPatient._dateOfBirth, 'year'),
       ptGender: this._currentPatient.gender,
-      ptWard: this._Ward,
+      ptWard: this._ward,
       ptBed: this._bed,
       docName: this._currentDoc.name,
       docID: this._currentDoc.id,
@@ -390,7 +393,6 @@ export class ProcForm extends LitElement {
                     name="minutes"
                     @blur="${e => {
                       this._currentProcMinute = e.target.value;
-                      console.log(this._currentProcMinute);
                     }}"
                   >
                     <option value="00">00</option>
@@ -532,7 +534,10 @@ export class ProcForm extends LitElement {
                 <div>
                   <label class="label">Unidade</label>
                   <div class="select">
-                    <select id="ward" name="ward">
+                    <select id="ward" name="ward"
+                      .value="${this._ward}"
+                      @blur="${(e)=>{this._ward = e.target.value;}}"
+                    >
                       <option value="CC">CC</option>
                       <option value="SALA VERMELHA">SALA VERMELHA</option>
                       <option value="SALA AMARELA">SALA AMARELA</option>
@@ -569,6 +574,7 @@ export class ProcForm extends LitElement {
                     id="bed"
                     type="text"
                     .value="${this._bed}"
+                    @input="${(e) => {this._bed = e.target.value;}}"
                   />
                 </div>
               </div>
