@@ -223,6 +223,7 @@ export class ProcForm extends LitElement {
       ptWard: this._ward,
       ptBed: this._bed,
       docName: this._currentDoc.name,
+      docLicenceNumber: this._currentDoc.licenceNumber,
       docID: this._currentDoc.id,
     };
     if (this.procedure && this.procedure.id) {

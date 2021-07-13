@@ -30,6 +30,10 @@ module.exports = function (app) {
       type: DataTypes.STRING,
       allowNull: false
     },
+    ptDateOfBirth: {
+      type: DataTypes.DATE,
+      allowNull: false
+    },
     ptAge: {
       type: DataTypes.Number,
       allowNull: false
@@ -47,6 +51,10 @@ module.exports = function (app) {
       allowNull: true
     },
     docName: {
+      type: DataTypes.STRING,
+      allowNull: false
+    },
+    docLicenceNumber: {
       type: DataTypes.STRING,
       allowNull: false
     },
