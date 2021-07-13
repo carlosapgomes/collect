@@ -12,7 +12,7 @@ export class ProcForm extends LitElement {
   static get properties() {
     return {
       procedure: { type: Object },
-      activate: { type: Boolean, state: true },
+      activate: { type: Boolean },
       _currentProcDate: { type: String, state: true },
       _currentProcHour: { type: String, state: true },
       _currentProcMinute: { type: String, state: true },
