@@ -379,7 +379,7 @@ export class CollectClient extends LitElement {
         },
       };
       if (!this._user.isAdmin) {
-        query.docID = this.user.id;
+        query.docID = this._user.id;
       }
       try {
         const procsList = await this.client.service('procedures').find({
