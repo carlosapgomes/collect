@@ -27,6 +27,13 @@ export class PatientsView extends LitElement {
     );
   }
 
+  updated(changedProperties) {
+    if (changedProperties.has('patients')) {
+      // eslint-disable-next-line no-console
+      console.log(JSON.stringify(this.patients, null, 2));
+    }
+  }
+
   _edit(p) {
     // eslint-disable-next-line no-console
     console.log(p);
@@ -81,7 +88,9 @@ export class PatientsView extends LitElement {
                         <div class="content is-flex is-flex-direction-row">
                           <div class="is-align-self-flex-start is-flex-grow-4">
                             <strong>${p.name}</strong> - DN:
-                            ${window.dayjs(p.dateOfBirth).format('DD/MM/YYYY')}
+                            ${window
+                              .dayjs(p.dateOfBirth, 'YYYY-MM-DD HH:mm.ss.sss Z')
+                              .format('DD/MM/YYYY')}
                             - Registro: ${p.recNumber}
                           </div>
                           <div
