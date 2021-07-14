@@ -35,7 +35,7 @@ module.exports = function (app) {
       allowNull: false
     },
     ptAge: {
-      type: DataTypes.Number,
+      type: DataTypes.NUMBER,
       allowNull: false
     },
     ptGender: {
