@@ -1016,7 +1016,7 @@ export class CollectClient extends LitElement {
     }
   }
 
-  async _searchProcType(e){
+  async _searchProcType(e) {
     if (this._user.isEnabled) {
       // clear procedures types list
       this._proceduresTypes = [];
@@ -1026,9 +1026,9 @@ export class CollectClient extends LitElement {
       try {
         const procTypesList = await this.client.service('proctypes').find({
           query: {
-                descr: {
-                  $like: `%${e.detail}%`,
-                },
+            descr: {
+              $like: `%${e.detail}%`,
+            },
           },
         });
         // eslint-disable-next-line no-console

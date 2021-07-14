@@ -72,9 +72,9 @@ export class ProcForm extends LitElement {
   updated(changedProperties) {
     if (changedProperties.has('procedure')) {
       if (this.procedure && this.procedure.date) {
-        this._currentProcDate = window
-          .dayjs.tz(this.procedure.dateTime, 'America/Bahia')
-          .format('YYYY-MM-DD')
+        this._currentProcDate = window.dayjs
+          .tz(this.procedure.dateTime)
+          .format('YYYY-MM-DD');
         this._currentProcHour = window
           .dayjs(this.procedure.dateTime)
           .hour()
