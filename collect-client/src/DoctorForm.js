@@ -88,7 +88,7 @@ export class DoctorForm extends LitElement {
         <div class="modal-background"></div>
         <div class="modal-card">
           <header class="modal-card-head">
-            <p class="modal-card-title">Usuário</p>
+            <p class="modal-card-title">Médico</p>
             <button
               class="delete"
               aria-label="close"
