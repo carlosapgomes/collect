@@ -356,8 +356,8 @@ export class CollectClient extends LitElement {
       console.log('updating procedures list ...');
       this._spinnerHidden = false;
       // defaults to today's procedures
-      let startDateTime = window.dayjs().startOf('day');
-      let endDateTime = window.dayjs().endOf('day');
+      let startDateTime = window.dayjs.tz().startOf('day');
+      let endDateTime = window.dayjs.tz().endOf('day');
       // if a property queryByDate was set on event
       if (e.detail && e.detail.queryByDate) {
         startDateTime = window.dayjs(e.detail.queryByDate).startOf('day');
@@ -374,8 +374,8 @@ export class CollectClient extends LitElement {
           procDateTime: 1,
         },
         procDateTime: {
-          $gte: window.dayjs(startDateTime).millisecond(),
-          $lte: window.dayjs(endDateTime).millisecond(),
+          $gte: window.dayjs(startDateTime).format(),
+          $lte: window.dayjs(endDateTime).format(),
         },
       };
       if (!this._user.isAdmin) {

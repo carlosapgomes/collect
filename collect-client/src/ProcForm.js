@@ -75,12 +75,12 @@ export class ProcForm extends LitElement {
         this._currentProcDate = window.dayjs
           .tz(this.procedure.dateTime)
           .format('YYYY-MM-DD');
-        this._currentProcHour = window
-          .dayjs(this.procedure.dateTime)
+        this._currentProcHour = window.dayjs
+          .tz(this.procedure.dateTime)
           .hour()
           .toLocaleString('pt-BR', { minimumIntegerDigits: 2 });
-        this._currentProcMinute = window
-          .dayjs(this.procedure.dateTime)
+        this._currentProcMinute = window.dayjs
+          .tz(this.procedure.dateTime)
           .minute()
           .toLocaleString('pt-BR', { minimumIntegerDigits: 2 });
 
@@ -95,7 +95,7 @@ export class ProcForm extends LitElement {
           name: this.procedure.ptName,
           recNumber: this.procedure.ptRecN,
           id: this.procedure.ptID,
-          dateOfBirth: this.procedure.ptDateOfBirth,
+          dateOfBirth: window.dayjs.tz(this.procedure.ptDateOfBirth),
           gender: this.procedure.ptGender,
         };
         this.patients = [{ ...this._currentPatient }];
@@ -220,7 +220,9 @@ export class ProcForm extends LitElement {
   _handleSaveForm() {
     // eslint-disable-next-line no-console
     console.log(
-      `currentProcDate: ${this._currentProcDate}\n currentProcHour: ${this._currentProcHour}\n currentProcMinute: ${this._currentProcMinute}`
+      `currentProcDate: ${this._currentProcDate}\n 
+      currentProcHour: ${this._currentProcHour}\n
+      currentProcMinute: ${this._currentProcMinute}`
     );
 
     const dateTime = window.dayjs(
@@ -230,24 +232,28 @@ export class ProcForm extends LitElement {
     console.log(JSON.stringify(dateTime, null, 2));
     // eslint-disable-next-line no-console
     console.log(`pt dateOfBirth: ${this._currentPatient.dateOfBirth}`);
-    const ptAge = window.dayjs(
+    const ptDOB = window.dayjs(
       this._currentPatient.dateOfBirth,
       'YYYY-MM-DD HH:mm.ss.sss Z'
     );
     // eslint-disable-next-line no-console
-    console.log(`ptAge: ${ptAge}`);
-    const age = dateTime.diff(ptAge, 'year');
+    console.log(`ptAge: ${ptDOB}`);
+    const age = dateTime.diff(ptDOB, 'year');
     // eslint-disable-next-line no-console
     console.log(`age: ${age}`);
+    // eslint-disable-next-line no-console
+    console.log(`dateTime.format: ${dateTime.format()}`);
+    // eslint-disable-next-line no-console
+    console.log(`pt dateOfBirth: ${window.dayjs.tz(ptDOB).format()}`);
 
     const p = {
       descr: this._currentProcType.descr,
       code: this._currentProcType.code,
-      procDateTime: dateTime,
+      procDateTime: dateTime.format(),
       ptName: this._currentPatient.name,
       ptRecN: this._currentPatient.recNumber,
       ptID: this._currentPatient.id,
-      ptDateOfBirth: this._currentPatient.dateOfBirth,
+      ptDateOfBirth: window.dayjs.tz(ptDOB).format(),
       ptAge: age,
       ptGender: this._currentPatient.gender,
       ptWard: this._ward,
