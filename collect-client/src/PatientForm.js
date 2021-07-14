@@ -24,7 +24,7 @@ export class PatientForm extends LitElement {
     this.activate = false;
     this._name = '';
     this._gender = '';
-    [this._dateOfBirth] = window.dayjs.tz().format().split('T');
+    this._dateOfBirth = window.dayjs.tz().format('YYYY-MM-DD');
     this._recNumber = '';
   }
 
@@ -35,7 +35,7 @@ export class PatientForm extends LitElement {
         this._gender = this.patient.gender ? this.patient.gender : '';
         this._recNumber = this.patient.recNumber ? this.patient.recNumber : '';
         this._dateOfBirth = this.patient.dateOfBirth
-          ? window.dayjs.tz(this.patient.dateOfBirth).format('YYYY-MM-DD')
+          ? window.dayjs.tz(this.patient.dateOfBirth, 'America/Bahia').format('YYYY-MM-DD')
           : window.dayjs.tz().format('YYYY-MM-DD');
       }
     }
@@ -56,7 +56,8 @@ export class PatientForm extends LitElement {
     document.getElementById('patient-form').reset();
     this._name = '';
     this._gender = '';
-    [this._dateOfBirth] = window.dayjs.tz().format().split('T');
+    this._dateOfBirth = window.dayjs.tz().format('YYYY-MM-DD');
+    // [this._dateOfBirth] = window.dayjs.tz().format().split('T');
     this._recNumber = '';
   }
 
@@ -74,7 +75,7 @@ export class PatientForm extends LitElement {
     const p = {
       name: this._name,
       gender: this._gender,
-      dateOfBirth: window.dayjs.tz(this._dateOfBirth, 'America/Bahia'),
+      dateOfBirth: window.dayjs.tz(this._dateOfBirth, 'America/Bahia').format(),
       recNumber: this._recNumber,
     };
     // eslint-disable-next-line no-console

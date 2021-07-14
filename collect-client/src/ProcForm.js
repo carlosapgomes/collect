@@ -52,7 +52,7 @@ export class ProcForm extends LitElement {
   }
 
   firstUpdated() {
-    const [d] = window.dayjs().format().split('T');
+    const d = window.dayjs.tz().format('YYYY-MM-DD');
     this._currentProcDate = d;
     // eslint-disable-next-line no-console
     console.log(JSON.stringify(d, null, 2));
@@ -72,10 +72,9 @@ export class ProcForm extends LitElement {
   updated(changedProperties) {
     if (changedProperties.has('procedure')) {
       if (this.procedure && this.procedure.date) {
-        [this._currentProcDate] = window
-          .dayjs(this.procedure.dateTime)
-          .format()
-          .split('T');
+        this._currentProcDate = window
+          .dayjs.tz(this.procedure.dateTime, 'America/Bahia')
+          .format('YYYY-MM-DD')
         this._currentProcHour = window
           .dayjs(this.procedure.dateTime)
           .hour()
