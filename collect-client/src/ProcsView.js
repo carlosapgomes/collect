@@ -21,6 +21,7 @@ export class ProcsView extends LitElement {
   }
 
   firstUpdated() {
+    [this.date] = window.dayjs().format().split('T');
     this.dispatchEvent(
       new CustomEvent('update-procedures-list', {
         bubbles: true,
