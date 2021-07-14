@@ -104,8 +104,11 @@ export class ProcsView extends LitElement {
                             <small>
                               Data:
                               ${window
-                                .dayjs(p.procDateTime)
-                                .format('DD/MM/YYYY HH:MM')}<br />
+                                .dayjs(
+                                  p.procDateTime,
+                                  'YYYY-MM-DD HH:mm.ss.SSS Z'
+                                )
+                                .format('DD/MM/YYYY HH:mm')}<br />
                               Paciente: ${p.ptName}<br />
                               Médico: ${p.docName}
                             </small>
