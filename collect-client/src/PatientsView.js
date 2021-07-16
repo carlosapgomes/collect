@@ -89,7 +89,7 @@ export class PatientsView extends LitElement {
                         <div class="content is-flex is-flex-direction-row">
                           <div class="is-align-self-flex-start is-flex-grow-4">
                             <strong>${p.name}</strong> - DN:
-                            ${DateTime.fromSQL(p.procDateTime, {
+                            ${DateTime.fromSQL(p.dateOfBirth, {
                                 locale: 'pt-BR',
                               }).toLocaleString(DateTime.SHORT)}
                             - Registro: ${p.recNumber}
