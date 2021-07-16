@@ -1,5 +1,6 @@
 import { html, LitElement } from 'lit-element';
 import { classMap } from 'lit-html/directives/class-map.js';
+import { DateTime } from 'luxon';
 import './icons/icon-search.js';
 import './icons/icon-plus.js';
 
@@ -52,7 +53,7 @@ export class ProcForm extends LitElement {
   }
 
   firstUpdated() {
-    const d = window.dayjs.tz().format('YYYY-MM-DD');
+    const d = DateTime.local().toISODate();
     this._currentProcDate = d;
     // eslint-disable-next-line no-console
     console.log(JSON.stringify(d, null, 2));
@@ -72,17 +73,12 @@ export class ProcForm extends LitElement {
   updated(changedProperties) {
     if (changedProperties.has('procedure')) {
       if (this.procedure && this.procedure.date) {
-        this._currentProcDate = window.dayjs
-          .tz(this.procedure.dateTime)
-          .format('YYYY-MM-DD');
-        this._currentProcHour = window.dayjs
-          .tz(this.procedure.dateTime)
-          .hour()
-          .toLocaleString('pt-BR', { minimumIntegerDigits: 2 });
-        this._currentProcMinute = window.dayjs
-          .tz(this.procedure.dateTime)
-          .minute()
-          .toLocaleString('pt-BR', { minimumIntegerDigits: 2 });
+        this._currentProcDate = DateTime.local(this.procedure.dateTime).
+          toISODate(); 
+        this._currentProcHour =DateTime.local(this.procedure.dateTime).
+          hour().toLocaleString('pt-BR', { minimumIntegerDigits: 2 });
+        this._currentProcMinute = DateTime.local(this.procedure.dateTime)
+          .minute().toLocaleString('pt-BR', { minimumIntegerDigits: 2 });
 
         this._currentProcType = {
           descr: this.procedure.descr,
@@ -95,7 +91,7 @@ export class ProcForm extends LitElement {
           name: this.procedure.ptName,
           recNumber: this.procedure.ptRecN,
           id: this.procedure.ptID,
-          dateOfBirth: window.dayjs.tz(this.procedure.ptDateOfBirth),
+          dateOfBirth: DateTime.local(this.procedure.ptDateOfBirth).toSQL(),
           gender: this.procedure.ptGender,
         };
         this.patients = [{ ...this._currentPatient }];
@@ -225,36 +221,34 @@ export class ProcForm extends LitElement {
       currentProcMinute: ${this._currentProcMinute}`
     );
 
-    const dateTime = window.dayjs(
+    const dateTime = DateTime.fromISO(
       `${this._currentProcDate}T${this._currentProcHour}:${this._currentProcMinute}:00.000-03:00`
     );
     // eslint-disable-next-line no-console
     console.log(JSON.stringify(dateTime, null, 2));
     // eslint-disable-next-line no-console
     console.log(`pt dateOfBirth: ${this._currentPatient.dateOfBirth}`);
-    const ptDOB = window.dayjs(
-      this._currentPatient.dateOfBirth,
-      'YYYY-MM-DD HH:mm.ss.sss Z'
-    );
+    const ptDOB = DateTime.fromSQL(
+      this._currentPatient.dateOfBirth);
     // eslint-disable-next-line no-console
-    console.log(`ptAge: ${ptDOB}`);
-    const age = dateTime.diff(ptDOB, 'year');
+    console.log(`ptDOB: ${ptDOB}`);
+    const age = dateTime.diff(ptDOB, 'years').toObject();
     // eslint-disable-next-line no-console
-    console.log(`age: ${age}`);
+    console.log(`age: ${age.years} years`);
     // eslint-disable-next-line no-console
-    console.log(`dateTime.format: ${dateTime.format()}`);
+    console.log(`dateTime.format: ${dateTime.toISO()}`);
     // eslint-disable-next-line no-console
-    console.log(`pt dateOfBirth: ${window.dayjs.tz(ptDOB).format()}`);
+    console.log(`pt dateOfBirth: ${ptDOB.toISO()}`);
 
     const p = {
       descr: this._currentProcType.descr,
       code: this._currentProcType.code,
-      procDateTime: dateTime.format(),
+      procDateTime: dateTime.toISO(),
       ptName: this._currentPatient.name,
       ptRecN: this._currentPatient.recNumber,
       ptID: this._currentPatient.id,
-      ptDateOfBirth: window.dayjs.tz(ptDOB).format(),
-      ptAge: age,
+      ptDateOfBirth: ptDOB.toISO(),
+      ptAge: age.years,
       ptGender: this._currentPatient.gender,
       ptWard: this._ward,
       ptBed: this._bed,
