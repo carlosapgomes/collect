@@ -363,12 +363,8 @@ export class CollectClient extends LitElement {
       let endDateTime = DateTime.local().endOf('day');
       // if a property queryByDate was set on event
       if (e.detail && e.detail.queryByDate) {
-        startDateTime = e.detail.queryByDate.startOf('day');
-        endDateTime = e.detail.queryByDate.endOf('day');
-        // eslint-disable-next-line no-console
-        console.log(`startDateTime: ${startDateTime}`);
-        // eslint-disable-next-line no-console
-        console.log(`endDateTime: ${endDateTime}`);
+        startDateTime = DateTime.local(e.detail.queryByDate).startOf('day');
+        endDateTime = DateTime.local(e.detail.queryByDate).endOf('day');
       }
       // if a property queryByMonth was set on event
       if (e.detail && e.detail.queryByMonth) {
@@ -376,6 +372,10 @@ export class CollectClient extends LitElement {
         startDateTime = DateTime.local(e.detail.queryByMonth).startOf('month');
         endDateTime = DateTime.local(startDateTime).endOf('month');
       }
+        // eslint-disable-next-line no-console
+        console.log(`startDateTime: ${startDateTime}`);
+        // eslint-disable-next-line no-console
+        console.log(`endDateTime: ${endDateTime}`);
       const query = {
         $sort: {
           procDateTime: 1,

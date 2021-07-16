@@ -66,7 +66,7 @@ export class ProcsView extends LitElement {
       this.date = date.toISODate();
       this.dispatchEvent(
         new CustomEvent('update-procedures-list', {
-          detail: { queryByDate: date },
+          detail: { queryByDate: date.toISO() },
           bubbles: true,
           composed: true,
         })
