@@ -2,6 +2,7 @@
 import { installRouter } from 'pwa-helpers/router.js';
 import { LitElement, html } from 'lit-element';
 import { classMap } from 'lit-html/directives/class-map.js';
+import { DateTime } from 'luxon';
 
 export class CollectClient extends LitElement {
   // use lightDOM
@@ -354,28 +355,34 @@ export class CollectClient extends LitElement {
       this._procedures = [];
       // eslint-disable-next-line no-console
       console.log('updating procedures list ...');
+      // eslint-disable-next-line no-console
+      console.log(JSON.stringify(e.detail, null, 2));
       this._spinnerHidden = false;
       // defaults to today's procedures
-      let startDateTime = window.dayjs.tz().startOf('day');
-      let endDateTime = window.dayjs.tz().endOf('day');
+      let startDateTime = DateTime.local().startOf('day');
+      let endDateTime = DateTime.local().endOf('day');
       // if a property queryByDate was set on event
       if (e.detail && e.detail.queryByDate) {
-        startDateTime = window.dayjs(e.detail.queryByDate).startOf('day');
-        endDateTime = window.dayjs(startDateTime).endOf('day');
+        startDateTime = e.detail.queryByDate.startOf('day');
+        endDateTime = e.detail.queryByDate.endOf('day');
+        // eslint-disable-next-line no-console
+        console.log(`startDateTime: ${startDateTime}`);
+        // eslint-disable-next-line no-console
+        console.log(`endDateTime: ${endDateTime}`);
       }
       // if a property queryByMonth was set on event
       if (e.detail && e.detail.queryByMonth) {
         // update query
-        startDateTime = window.dayjs(e.detail.queryByMonth).startOf('month');
-        endDateTime = window.dayjs(startDateTime).endOf('month');
+        startDateTime = DateTime.local(e.detail.queryByMonth).startOf('month');
+        endDateTime = DateTime.local(startDateTime).endOf('month');
       }
       const query = {
         $sort: {
           procDateTime: 1,
         },
         procDateTime: {
-          $gte: window.dayjs(startDateTime).format(),
-          $lte: window.dayjs(endDateTime).format(),
+          $gte: startDateTime.toISO(),
+          $lte: endDateTime.toISO(),
         },
       };
       if (!this._user.isAdmin) {
