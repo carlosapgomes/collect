@@ -22,7 +22,7 @@ export class ProcsView extends LitElement {
   }
 
   firstUpdated() {
-    this.date = DateTime.local();
+    this.date = DateTime.local().toISODate();
     this.dispatchEvent(
       new CustomEvent('update-procedures-list', {
         bubbles: true,
@@ -63,6 +63,7 @@ export class ProcsView extends LitElement {
       // eslint-disable-next-line no-console
       console.log(`date changed to: ${e.target.value}`);
       const date = DateTime.fromISO(e.target.value);
+      this.date = date.toISODate();
       this.dispatchEvent(
         new CustomEvent('update-procedures-list', {
           detail: { queryByDate: date },
