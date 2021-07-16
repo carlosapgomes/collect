@@ -1,5 +1,6 @@
 import { html, LitElement } from 'lit-element';
 import './btn-fab.js';
+import { DateTime } from 'luxon';
 
 export class PatientsView extends LitElement {
   // use lightDOM
@@ -88,9 +89,9 @@ export class PatientsView extends LitElement {
                         <div class="content is-flex is-flex-direction-row">
                           <div class="is-align-self-flex-start is-flex-grow-4">
                             <strong>${p.name}</strong> - DN:
-                            ${window
-                              .dayjs(p.dateOfBirth, 'YYYY-MM-DD HH:mm.ss.sss Z')
-                              .format('DD/MM/YYYY')}
+                            ${DateTime.fromSQL(p.procDateTime, {
+                                locale: 'pt-BR',
+                              }).toLocaleString(DateTime.SHORT)}
                             - Registro: ${p.recNumber}
                           </div>
                           <div
