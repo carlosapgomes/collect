@@ -1,5 +1,6 @@
 import { html, LitElement } from 'lit-element';
 import './btn-fab.js';
+import { DateTime } from 'luxon';
 
 export class ProcsView extends LitElement {
   // use lightDOM
@@ -21,7 +22,7 @@ export class ProcsView extends LitElement {
   }
 
   firstUpdated() {
-    [this.date] = window.dayjs().format().split('T');
+    this.date = DateTime.local();
     this.dispatchEvent(
       new CustomEvent('update-procedures-list', {
         bubbles: true,
@@ -57,11 +58,14 @@ export class ProcsView extends LitElement {
 
   _updateProcsByDate(e) {
     if (e.target.value) {
-      const values = e.target.value.split('-');
-      const date = `${values[2]}/${values[1]}/${values[0]}`;
+      // const values = e.target.value.split('-');
+      // const date = `${values[2]}/${values[1]}/${values[0]}`;
+      // eslint-disable-next-line no-console
+      console.log(`date changed to: ${e.target.value}`);
+      const date = DateTime.fromISO(e.target.value);
       this.dispatchEvent(
-        new CustomEvent('update-procedures-list-by-date', {
-          detail: date,
+        new CustomEvent('update-procedures-list', {
+          detail: { queryByDate: date },
           bubbles: true,
           composed: true,
         })
@@ -89,7 +93,7 @@ export class ProcsView extends LitElement {
               class="input"
               type="date"
               .value="${this.date}"
-              @change="${this._updateProcsByDate}"
+              @input="${this._updateProcsByDate}"
             />
             <br />
             <br />
@@ -103,12 +107,9 @@ export class ProcsView extends LitElement {
                             <strong>${p.descr}</strong>
                             <small>
                               Data:
-                              ${window
-                                .dayjs(
-                                  p.procDateTime,
-                                  'YYYY-MM-DD HH:mm.ss.SSS Z'
-                                )
-                                .format('DD/MM/YYYY HH:mm')}<br />
+                              ${DateTime.fromSQL(p.procDateTime, {
+                                locale: 'pt-BR',
+                              }).toLocaleString(DateTime.DATETIME_SHORT)}<br />
                               Paciente: ${p.ptName}<br />
                               Médico: ${p.docName}
                             </small>
