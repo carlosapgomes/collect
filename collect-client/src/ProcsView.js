@@ -29,21 +29,23 @@ export class ProcsView extends LitElement {
         composed: true,
       })
     );
-    //this.dispatchEvent(
-      //new CustomEvent('update-doctors-list', { bubbles: true, composed: true })
-    //);
-    //this.dispatchEvent(
-      //new CustomEvent('update-procedures-types-list', {
-        //bubbles: true,
-        //composed: true,
-      //})
-    //);
+    // this.dispatchEvent(
+    // new CustomEvent('update-doctors-list', { bubbles: true, composed: true })
+    // );
+    // this.dispatchEvent(
+    // new CustomEvent('update-procedures-types-list', {
+    // bubbles: true,
+    // composed: true,
+    // })
+    // );
   }
 
   _edit(p) {
+    // eslint-disable-next-line no-console
+    console.log(p, null, 2);
     this.dispatchEvent(
       new CustomEvent('edit-procedure', {
-        detail: p,
+        detail: { ...p },
         bubbles: true,
         composed: true,
       })

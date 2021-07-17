@@ -72,13 +72,22 @@ export class ProcForm extends LitElement {
    */
   updated(changedProperties) {
     if (changedProperties.has('procedure')) {
-      if (this.procedure && this.procedure.date) {
-        this._currentProcDate = DateTime.local(this.procedure.dateTime).
-          toISODate(); 
-        this._currentProcHour =DateTime.local(this.procedure.dateTime).
-          hour().toLocaleString('pt-BR', { minimumIntegerDigits: 2 });
-        this._currentProcMinute = DateTime.local(this.procedure.dateTime)
-          .minute().toLocaleString('pt-BR', { minimumIntegerDigits: 2 });
+      // eslint-disable-next-line no-console
+      console.log('entering updated');
+      if (this.procedure && this.procedure.procDateTime) {
+        // eslint-disable-next-line no-console
+        console.log('procedure changed and is defined');
+        // eslint-disable-next-line no-console
+        console.log(JSON.stringify(this.procedure, null, 2));
+        const procDateTime = DateTime.fromSQL(this.procedure.procDateTime);
+        this._currentProcDate = procDateTime.toISODate();
+        // eslint-disable-next-line no-console
+        this._currentProcHour = procDateTime.hour.toLocaleString('pt-BR', {
+          minimumIntegerDigits: 2,
+        });
+        this._currentProcMinute = procDateTime.minute.toLocaleString('pt-BR', {
+          minimumIntegerDigits: 2,
+        });
 
         this._currentProcType = {
           descr: this.procedure.descr,
@@ -86,6 +95,8 @@ export class ProcForm extends LitElement {
         };
         this.proctypes = [{ ...this._currentProcType }];
         this._procTypeDescr = this.procedure.descr;
+        // eslint-disable-next-line no-console
+        console.log(`this._procTypeDescr: ${this._procTypeDescr}`);
 
         this._currentPatient = {
           name: this.procedure.ptName,
@@ -102,43 +113,13 @@ export class ProcForm extends LitElement {
           id: this.procedure.docID,
           licenceNumber: this.procedure.docLicenceNumber,
         };
-        this._doctorName = this.procedure.doName;
+        this._doctorName = this.procedure.docName;
         this.doctors = [{ ...this._currentDoc }];
 
         this._bed = this.procedure.ptBed;
         this._ward = this.procedure.ptWard;
-        // if (this.doctors && this._doctorName) {
-        // console.log(`updating doctor name to: ${this._doctorName}`);
-        // @ts-ignore
-        // document.getElementById('docOptionsDefault').selected = false;
-        // for (let i = 0; i < this.doctors.length; i += 1) {
-        // if (this.doctors[i].name === this._doctorName) {
-        // @ts-ignore
-        // document.getElementById(`docOption${i}`).selected = true;
-        // break;
-        // }
-        // }
-        // }
       }
-      // if (this.proctypes && this._procedureName) {
-      // console.log(`updating proc type to: ${this._procedureName}`);
-      // @ts-ignore
-      // document.getElementById('procOptionsDefault').selected = false;
-      // for (let i = 0; i < this.proctypes.length; i += 1) {
-      // if (this.proctypes[i].procedure === this._procedureName) {
-      // @ts-ignore
-      // document.getElementById(`procOption${i}`).selected = true;
-      // break;
-      // }
-      // }
-      // }
     }
-    // if (changedProperties.has('doctors')) {
-    // this._updateDoctorsList();
-    // }
-    // if (changedProperties.has('proctypes')) {
-    // this._updateProcTypesList();
-    // }
   }
 
   // _updateDoctorsList() {
@@ -228,8 +209,7 @@ export class ProcForm extends LitElement {
     console.log(JSON.stringify(dateTime, null, 2));
     // eslint-disable-next-line no-console
     console.log(`pt dateOfBirth: ${this._currentPatient.dateOfBirth}`);
-    const ptDOB = DateTime.fromSQL(
-      this._currentPatient.dateOfBirth);
+    const ptDOB = DateTime.fromSQL(this._currentPatient.dateOfBirth);
     // eslint-disable-next-line no-console
     console.log(`ptDOB: ${ptDOB}`);
     const age = dateTime.diff(ptDOB, 'years').toObject();
@@ -386,6 +366,7 @@ export class ProcForm extends LitElement {
                 <div class="select">
                   <select
                     id="hours"
+                    .value="${this._currentProcHour}"
                     @blur="${e => {
                       this._currentProcHour = e.target.value;
                     }}"
@@ -422,6 +403,7 @@ export class ProcForm extends LitElement {
                   <select
                     id="minutes"
                     name="minutes"
+                    .value="${this._currentProcMinute}"
                     @blur="${e => {
                       this._currentProcMinute = e.target.value;
                     }}"

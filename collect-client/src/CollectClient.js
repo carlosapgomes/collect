@@ -363,8 +363,8 @@ export class CollectClient extends LitElement {
       let endDateTime = DateTime.local().endOf('day');
       // if a property queryByDate was set on event
       if (e.detail && e.detail.queryByDate) {
-        startDateTime = DateTime.local(e.detail.queryByDate).startOf('day');
-        endDateTime = DateTime.local(e.detail.queryByDate).endOf('day');
+        startDateTime = DateTime.fromISO(e.detail.queryByDate).startOf('day');
+        endDateTime = DateTime.fromISO(e.detail.queryByDate).endOf('day');
       }
       // if a property queryByMonth was set on event
       if (e.detail && e.detail.queryByMonth) {
@@ -372,10 +372,10 @@ export class CollectClient extends LitElement {
         startDateTime = DateTime.local(e.detail.queryByMonth).startOf('month');
         endDateTime = DateTime.local(startDateTime).endOf('month');
       }
-        // eslint-disable-next-line no-console
-        console.log(`startDateTime: ${startDateTime}`);
-        // eslint-disable-next-line no-console
-        console.log(`endDateTime: ${endDateTime}`);
+      // eslint-disable-next-line no-console
+      console.log(`startDateTime: ${startDateTime}`);
+      // eslint-disable-next-line no-console
+      console.log(`endDateTime: ${endDateTime}`);
       const query = {
         $sort: {
           procDateTime: 1,
@@ -408,7 +408,7 @@ export class CollectClient extends LitElement {
 
   _editProcedure(e) {
     // eslint-disable-next-line no-console
-    // console.log(JSON.stringify(e.detail, null, 2));
+    console.log(JSON.stringify(e.detail, null, 2));
     this._currentProcedure = { ...e.detail };
     // eslint-disable-next-line no-console
     // console.log(this._currentProcedure);
