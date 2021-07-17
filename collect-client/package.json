@@ -39,7 +39,8 @@
     "lit-html": "^1.4.1",
     "luxon": "^2.0.1",
     "pwa-helpers": "^0.9.1",
-    "superagent": "^6.1.0"
+    "superagent": "^6.1.0",
+    "xlsx": "^0.17.0"
   },
   "eslintConfig": {
     "extends": [
