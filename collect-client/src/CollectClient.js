@@ -98,12 +98,6 @@ export class CollectClient extends LitElement {
         storage: window.storage,
       })
     );
-    // const proceduressvc = this.client.service('procedures');
-    // proceduressvc.find().then(res => {
-    // if (typeof res.data !== 'undefined') {
-    // this.procedureslist = [...res.data];
-    // }
-    // });
 
     // add event listeners
     this.addEventListener('login', this._handleLoginEvent);
@@ -187,13 +181,6 @@ export class CollectClient extends LitElement {
     this.addEventListener('hide-spinner', () => {
       this._spinnerHidden = true;
     });
-    // document.getElementById('loginactionbtn').addEventListener('click', e => {
-    // e.preventDefault();
-    // @ts-ignore
-    // if (document.getElementById('loginform').reportValidity()) {
-    // this._handleSignIn();
-    // }
-    // });
   }
 
   async _handleLoginEvent(e) {
