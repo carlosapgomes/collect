@@ -357,6 +357,9 @@ export class CollectClient extends LitElement {
         startDateTime = DateTime.local(e.detail.queryByMonth).startOf('month');
         endDateTime = DateTime.local(startDateTime).endOf('month');
       }
+      this._currentProceduresDate = startDateTime.toISODate();
+      // eslint-disable-next-line no-console
+      console.log(`_currentProceduresDate: ${this._currentProceduresDate}`);
       // eslint-disable-next-line no-console
       console.log(`startDateTime: ${startDateTime}`);
       // eslint-disable-next-line no-console

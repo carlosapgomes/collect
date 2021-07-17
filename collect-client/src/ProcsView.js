@@ -22,6 +22,7 @@ export class ProcsView extends LitElement {
   }
 
   firstUpdated() {
+    console.log('firstUpdated');
     this.date = DateTime.local().toISODate();
     this.dispatchEvent(
       new CustomEvent('update-procedures-list', {
