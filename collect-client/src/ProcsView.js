@@ -22,28 +22,15 @@ export class ProcsView extends LitElement {
   }
 
   firstUpdated() {
-    console.log('firstUpdated');
-    this.date = DateTime.local().toISODate();
     this.dispatchEvent(
       new CustomEvent('update-procedures-list', {
         bubbles: true,
         composed: true,
       })
     );
-    // this.dispatchEvent(
-    // new CustomEvent('update-doctors-list', { bubbles: true, composed: true })
-    // );
-    // this.dispatchEvent(
-    // new CustomEvent('update-procedures-types-list', {
-    // bubbles: true,
-    // composed: true,
-    // })
-    // );
   }
 
   _edit(p) {
-    // eslint-disable-next-line no-console
-    console.log(p, null, 2);
     this.dispatchEvent(
       new CustomEvent('edit-procedure', {
         detail: { ...p },
@@ -61,10 +48,6 @@ export class ProcsView extends LitElement {
 
   _updateProcsByDate(e) {
     if (e.target.value) {
-      // const values = e.target.value.split('-');
-      // const date = `${values[2]}/${values[1]}/${values[0]}`;
-      // eslint-disable-next-line no-console
-      console.log(`date changed to: ${e.target.value}`);
       const date = DateTime.fromISO(e.target.value);
       this.date = date.toISODate();
       this.dispatchEvent(
