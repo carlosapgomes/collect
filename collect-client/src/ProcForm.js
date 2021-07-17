@@ -59,13 +59,7 @@ export class ProcForm extends LitElement {
     console.log(JSON.stringify(d, null, 2));
     this._currentProcHour = '00';
     this._currentProcMinute = '00';
-    // if (this.doctors) {
-    // this._updateDoctorsList();
-    // }
-    // if (this.proctypes) {
-    // this._updateProcTypesList();
-    // }
-  }
+    }
 
   /**
    * @param {{ has: (arg0: string) => any; }} changedProperties
@@ -102,9 +96,12 @@ export class ProcForm extends LitElement {
           name: this.procedure.ptName,
           recNumber: this.procedure.ptRecN,
           id: this.procedure.ptID,
-          dateOfBirth: DateTime.local(this.procedure.ptDateOfBirth).toSQL(),
+          dateOfBirth: this.procedure.ptDateOfBirth,
           gender: this.procedure.ptGender,
         };
+        // eslint-disable-next-line no-console
+        console.log(`this._currentPatient:\n 
+        ${JSON.stringify(this._currentPatient,null,2)}`);
         this.patients = [{ ...this._currentPatient }];
         this._patientName = this._currentPatient.name;
 

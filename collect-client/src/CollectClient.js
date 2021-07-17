@@ -188,8 +188,6 @@ export class CollectClient extends LitElement {
     const data = { ...e.detail };
     try {
       const auth = await this._login(data.username, data.password);
-      // eslint-disable-next-line no-console
-      console.log(auth);
       this._user = { ...auth.user };
       if (!this._user.isEnabled) {
         // show msg and call logout
