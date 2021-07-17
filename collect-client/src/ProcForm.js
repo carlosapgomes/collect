@@ -209,9 +209,10 @@ export class ProcForm extends LitElement {
     const ptDOB = DateTime.fromSQL(this._currentPatient.dateOfBirth);
     // eslint-disable-next-line no-console
     console.log(`ptDOB: ${ptDOB}`);
-    const age = dateTime.diff(ptDOB, 'years').toObject();
+    const ageObj = dateTime.diff(ptDOB, 'years').toObject();
+    const age = parseInt(ageObj.years,10);
     // eslint-disable-next-line no-console
-    console.log(`age: ${age.years} years`);
+    console.log(`age: ${age} years`);
     // eslint-disable-next-line no-console
     console.log(`dateTime.format: ${dateTime.toISO()}`);
     // eslint-disable-next-line no-console
@@ -225,7 +226,7 @@ export class ProcForm extends LitElement {
       ptRecN: this._currentPatient.recNumber,
       ptID: this._currentPatient.id,
       ptDateOfBirth: ptDOB.toISO(),
-      ptAge: age.years,
+      ptAge: age,
       ptGender: this._currentPatient.gender,
       ptWard: this._ward,
       ptBed: this._bed,
