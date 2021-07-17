@@ -3,6 +3,7 @@ import { installRouter } from 'pwa-helpers/router.js';
 import { LitElement, html } from 'lit-element';
 import { classMap } from 'lit-html/directives/class-map.js';
 import { DateTime } from 'luxon';
+import sheets from './utilities/sheets.js';
 
 export class CollectClient extends LitElement {
   // use lightDOM
@@ -13,7 +14,6 @@ export class CollectClient extends LitElement {
   static get properties() {
     return {
       // procedures
-      proceduresList: { type: Array },
       _procedures: { type: Array, state: true },
       _currentProcedure: { type: Object, state: true },
       _currentProceduresDate: { type: String, state: true },
@@ -57,7 +57,6 @@ export class CollectClient extends LitElement {
     super();
     this.client = {};
     this.rest = {};
-    this.proceduresList = [];
     this._page = 'home';
     this._burgerActive = false;
     this._user = null;
@@ -105,6 +104,7 @@ export class CollectClient extends LitElement {
     // Procedures
     this.addEventListener('update-procedures-list', this._updateProceduresList);
     // this.addEventListener('update-procedures-list-by-date', this._updateProceduresListByDate);
+    this.addEventListener('get-spreadsheet', this._getSpreadsheet);
     this.addEventListener('edit-procedure', this._editProcedure);
     this.addEventListener('add-procedure', this._loadShowProcForm);
     this.addEventListener('save-procedure-form', this._saveProcedure);
@@ -392,6 +392,10 @@ export class CollectClient extends LitElement {
         this._toggleModal = true;
       }
     }
+  }
+
+  _getSpreadsheet(){
+    sheets([ ...this._procedures ],{ ...this._user });
   }
 
   _editProcedure(e) {

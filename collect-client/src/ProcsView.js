@@ -60,6 +60,15 @@ export class ProcsView extends LitElement {
     }
   }
 
+  _getSpreadsheet(){
+    this.dispatchEvent(
+      new CustomEvent('get-spreadsheet',{
+        bubbles: true,
+        composed:true, 
+      })
+    );
+  }
+
   render() {
     return html`
       <style>
@@ -75,14 +84,19 @@ export class ProcsView extends LitElement {
         <div class="column is-6 is-offset-3">
           <div class="container">
             <h1 class="subtitle has-text-centered is-3">Procedimentos</h1>
-            <input
+            <div class="is-flex 
+              flex-direction-row
+              is-justify-content-space-between">
+              <input
               id="procs-date"
               class="input"
               type="date"
               .value="${this.date}"
               @input="${this._updateProcsByDate}"
             />
-            <br />
+            <button class="button is-success"
+              @click="${this._getSpreadsheet}">Baixar</button>
+            </div>            
             <br />
             ${this.procedures
               ? this.procedures.map(
