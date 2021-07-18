@@ -1490,6 +1490,7 @@ export class CollectClient extends LitElement {
         class="${classMap({ 'is-hidden': !this._showProcedureForm })}"
         ?activate="${this._showProcedureForm}"
         .user="${this._user}"
+        .users="${this._users}"
         .procedure="${this._currentProcedure}"
         .patients="${this._patients}"
         .proctypes="${this._proceduresTypes}"
