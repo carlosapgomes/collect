@@ -662,11 +662,11 @@ export class ProcForm extends LitElement {
                               class="dropdown-item"
                               @click="${e => {
                                 e.preventDefault();
-                                this._userSelected(d);
+                                this._userSelected(u);
                               }}"
                               @keydown="${e => {
                                 e.preventDefault();
-                                this._userSelected(d);
+                                this._userSelected(u);
                               }}"
                               >${u.name} - ${u.licenceNumber}</a
                             >
