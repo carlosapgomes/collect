@@ -13,6 +13,7 @@ export class ProcForm extends LitElement {
   static get properties() {
     return {
       procedure: { type: Object },
+      _procExecPlace: {type: String, state: true},
       activate: { type: Boolean },
       _currentProcDate: { type: String, state: true },
       _currentProcHour: { type: String, state: true },
@@ -24,6 +25,7 @@ export class ProcForm extends LitElement {
       _ward: { type: String, state: true },
       _bed: { type: String, state: true },
       doctors: { type: Array },
+      _team: { type: String,state: true },
       _currentDoc: { type: Object, state: true },
       _doctorName: { type: String, state: true },
       _activateDocSearchDropDown: { type: Boolean, state: true },
@@ -38,6 +40,7 @@ export class ProcForm extends LitElement {
   constructor() {
     super();
     this.procedure = {};
+    this._procExecPlace = '';
     this._patientName = '';
     this._currentPatient = {};
     this._activatePatientSearchDropDown = false;
@@ -46,6 +49,7 @@ export class ProcForm extends LitElement {
     this._doctorName = '';
     this.activate = false;
     this.doctors = [];
+    this._team = '';
     this._currentDoc = {};
     this._activateDocSearchDropDown = false;
     this.proctypes = [];
@@ -116,43 +120,11 @@ export class ProcForm extends LitElement {
 
         this._bed = this.procedure.ptBed;
         this._ward = this.procedure.ptWard;
+        this._procExecPlace = this.procedure.execPlace;
+        this._team = this.procedure.team;
       }
     }
   }
-
-  // _updateDoctorsList() {
-  // this._doctorsOptions = [];
-  // this._doctorsOptions.push(
-  // html`
-  // <option id="docOptionsDefault" value="" selected disabled hidden>
-  // Escolha
-  // </option>
-  // `
-  // );
-  // this.doctors.forEach((value, index) => {
-  // const docOpId = `docOption${index}`;
-  // this._doctorsOptions.push(html`
-  // <option id="${docOpId}" value="${value.name}">${value.name}</option>
-  // `);
-  // });
-  // }
-
-  // _updateProcTypesList() {
-  // this._procTypesOptions = [];
-  // this._procTypesOptions.push(
-  // html`
-  // <option id="procOptionsDefault" value="" selected disabled hidden>
-  // Escolha
-  // </option>
-  // `
-  // );
-  // this.proctypes.forEach((value, index) => {
-  // const procOpId = `procOption${index}`;
-  // this._procTypesOptions.push(html`
-  // <option id="${procOpId}" value="${index}">${value.procedure}</option>
-  // `);
-  // });
-  // }
 
   _closeForm() {
     // clear form
@@ -165,6 +137,7 @@ export class ProcForm extends LitElement {
 
   _clearFields() {
     this.procedure = {};
+    this._procExecPlace = '';
     // @ts-ignore
     document.getElementById('procedure-form').reset();
     this._procedureName = '';
@@ -175,6 +148,7 @@ export class ProcForm extends LitElement {
     this._activatePatientSearchDropDown = false;
     this._ward = '';
     this._bed = '';
+    this._team = '';
     this._currentDoc = {};
     this._doctorName = '';
     this._activateDocSearchDropDown = false;
@@ -218,6 +192,7 @@ export class ProcForm extends LitElement {
     const p = {
       descr: this._currentProcType.descr,
       code: this._currentProcType.code,
+      execPlace: this._procExecPlace,
       procDateTime: dateTime.toISO(),
       ptName: this._currentPatient.name,
       ptRecN: this._currentPatient.recNumber,
@@ -227,6 +202,7 @@ export class ProcForm extends LitElement {
       ptGender: this._currentPatient.gender,
       ptWard: this._ward,
       ptBed: this._bed,
+      team: this._team,
       docName: this._currentDoc.name,
       docLicenceNumber: this._currentDoc.licenceNumber,
       docID: this._currentDoc.id,
@@ -474,6 +450,61 @@ export class ProcForm extends LitElement {
               </div>
               <br />
               <br />
+
+              <!-- place of procedure execution -->
+              <div 
+                class="field
+                is-flex is-flex-direction-row
+                is-justify-content-space-between"
+              >
+                <div>
+                  <div class="field">
+                  <label class="label">Local de execução do procedimento:</label>
+                  <div class="select">
+                    <select
+                      id="execplace"
+                      name="execplace"
+                      .value="${this._procExecPlace}"
+                      @blur="${e => {
+                      this._procExecPlace = e.target.value;
+                      }}"
+                    >
+                      <option value="CC">CC</option>
+                      <option value="Hemodinamica">Hemodinamica</option>
+                      <option value="Emergencia">Emergencia</option>
+                      <option value="Enfermaria">Enfermaria</option>
+                      <option value="CHD">CHD</option>
+                      <option value="Bioimagem">Bioimagem</option>
+                    </select>
+                  </div>
+                </div>
+                </div>
+                <div>
+                  <div class="field">
+                    <label class="label">Equipe:</label>
+                  <div class="select">
+                    <select
+                      id="team"
+                      name="team"
+                      .value="${this._team}"
+                      @blur="${e => {
+                      this._team = e.target.value;
+                      }}"
+                    >
+                      <option value="Cirurgia Geral">Cirurgia Geral</option>
+                      <option value="Cirurgia Plástica">Cirurgia Plástica</option>
+                      <option value="Cirurgia Pediátrica">Cirurgia Pediátrica</option>
+                      <option value="Cirurgia Vascular">Cirurgia Vascular</option>
+                      <option value="Ginecologia Obstetrícia">Ginecologia Obstetrícia</option>
+                      <option value="Neurocirurgia">Neurocirurgia</option>
+                      <option value="Proctologia">Proctologia</option>
+                      <option value="Radiointervensão">Radiointervensão</option>
+                      <option value="Urologia">Urologia</option>
+                    </select>
+                  </div>
+                </div>
+                </div>
+              </div>
 
               <!-- patients dropdown search -->
               <div

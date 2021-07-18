@@ -18,6 +18,10 @@ module.exports = function (app) {
       type: DataTypes.DATE,
       allowNull: false
     },
+    execPlace:{
+      type: DataTypes.STRING,
+      allowNull: false
+    },
     ptName: {
       type: DataTypes.STRING,
       allowNull: false
@@ -49,6 +53,10 @@ module.exports = function (app) {
     ptBed: {
       type: DataTypes.STRING,
       allowNull: true
+    },
+    docTeam:{
+      type: DataTypes.STRING,
+      allowNull: false,
     },
     docName: {
       type: DataTypes.STRING,
