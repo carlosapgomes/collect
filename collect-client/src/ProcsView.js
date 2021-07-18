@@ -1,4 +1,5 @@
 import { html, LitElement } from 'lit-element';
+import { classMap } from 'lit-html/directives/class-map.js';
 import './btn-fab.js';
 import { DateTime } from 'luxon';
 
@@ -12,6 +13,11 @@ export class ProcsView extends LitElement {
     return {
       procedures: { type: Array },
       date: { type: String },
+      _searchByDate : { type: String, state: true },
+      _searchByPersonTeam: { type: String, state: true },
+      _userName: { type: String, state: true },
+      _team: { type: String, state: true },
+      _toggleUserOrTeamSearch: { type: Boolean, state: true },
     };
   }
 
@@ -19,6 +25,11 @@ export class ProcsView extends LitElement {
     super();
     this.procedures = [];
     this.date = '';
+    this._searchByDate =  'day';
+    this._searchByPersonTeam =  'person';
+    this._userName = '';
+    this._team = '';
+    this._toggleUserOrTeamSearch = true;
   }
 
   firstUpdated() {
@@ -60,6 +71,23 @@ export class ProcsView extends LitElement {
     }
   }
 
+  _searchUser(e) {
+    // eslint-disable-next-line no-console
+    console.log(e.target.value);
+    // fire event to hide procedure form from parent's view
+
+    if (e.target.value.length > 2) {
+      this.dispatchEvent(
+        new CustomEvent('search-user', {
+          detail: e.target.value,
+          bubbles: true,
+          composed: true,
+        })
+      );
+      this._activateUserSearchDropDown = true;
+    }
+  }
+  
   _getSpreadsheet(){
     this.dispatchEvent(
       new CustomEvent('get-spreadsheet',{
@@ -84,6 +112,35 @@ export class ProcsView extends LitElement {
         <div class="column is-6 is-offset-3">
           <div class="container">
             <h1 class="subtitle has-text-centered is-3">Procedimentos</h1>
+            <div>
+              <div>
+                <div class="control">
+                <label class="label">Período:</label>
+                <label class="radio">
+                  <input 
+                    type="radio" 
+                    checked
+                    name="searchByDate"
+                    @click="${() => {this._searchByDate = 'day';}}"/>
+                    Dia
+                  </label>
+                    <label class="radio">
+                      <input 
+                        type="radio" 
+                        name="searchByDate"
+                        @click="${() => {this._searchByDate = 'week';}}"/>
+                        Semana
+                    </label>
+                    <label class="radio">
+                      <input 
+                        type="radio" 
+                        name="searchByDate"
+                        @click="${() => {this._searchByDate = 'month';}}"/>
+                        Mês
+                    </label>
+                    </div>
+              </div> 
+            </div>
             <div class="is-flex 
               flex-direction-row
               is-justify-content-space-between">
@@ -94,9 +151,109 @@ export class ProcsView extends LitElement {
               .value="${this.date}"
               @input="${this._updateProcsByDate}"
             />
-            <button class="button is-success"
-              @click="${this._getSpreadsheet}">Baixar</button>
+            <!-- <button class="button is-success"
+              @click="${this._getSpreadsheet}">Baixar</button> -->
             </div>            
+            <div>
+              <div  class="control">
+              <label class="label">Executante:</label>
+              <label class="radio">
+                <input 
+                  type="radio" 
+                  checked
+                  name="searchByPersonTeam"
+                  @click="${() => {
+                this._searchByPersonTeam = 'person';
+                this._toggleUserOrTeamSearch = true;}}"/>
+                 Indivíduo 
+              </label>
+            <label class="radio">
+                <input 
+                  type="radio" 
+                  name="searchByPersonTeam"
+                  @click="${() => {
+              this._searchByPersonTeam = 'team';
+              this._toggleUserOrTeamSearch = false;}}"/>
+                 Equipe 
+              </label>
+            </div>
+            <div class="is-flex 
+              flex-direction-row is-justify-content-space-between">
+              <div class="is-flex-grow-3">
+            <!-- users dropdown search -->
+              <div
+                class="dropdown is-up is-expanded ${classMap({
+                  'is-hidden': !this._toggleUserOrTeamSearch,
+                  'is-active': this._activateUserSearchDropDown,
+                })}"
+              >
+                <div class="dropdown-trigger">
+                  <div class="field">
+                    <div class="control is-expanded has-icons-right">
+                      <input
+                        class="input"
+                        type="search"
+                        @keyup="${this._searchUser}"
+                        .value="${this._userName}"
+                        placeholder="nome/registro de classe"
+                      />
+                      <icon-search></icon-search>
+                    </div>
+                  </div>
+                </div>
+                <div class="dropdown-menu" id="dropdown-menu" role="menu">
+                  <div class="dropdown-content">
+                    ${this.users
+                      ? this.users.map(
+                          u => html`
+                            <a
+                              href="#"
+                              class="dropdown-item"
+                              @click="${e => {
+                                e.preventDefault();
+                                this._userSelected(u);
+                              }}"
+                              @keydown="${e => {
+                                e.preventDefault();
+                                this._userSelected(u);
+                              }}"
+                              >${u.name} - ${u.licenceNumber}</a
+                            >
+                          `
+                        )
+                      : html`<p></p>`}
+                  </div>
+                </div>
+              </div>    
+                <div class="${classMap({
+                  'is-hidden': this._toggleUserOrTeamSearch,
+                })}">
+                <div class="select">
+                    <select
+                      id="team"
+                      name="team"
+                      .value="${this._team}"
+                      @blur="${e => {
+                      this._team = e.target.value;
+                      }}"
+                    >
+                      <option value="all">Todas</option>
+                      <option value="Cirurgia Geral">Cirurgia Geral</option>
+                      <option value="Cirurgia Plástica">Cirurgia Plástica</option>
+                      <option value="Cirurgia Pediátrica">Cirurgia Pediátrica</option>
+                      <option value="Cirurgia Vascular">Cirurgia Vascular</option>
+                      <option value="Ginecologia Obstetrícia">Ginecologia Obstetrícia</option>
+                      <option value="Neurocirurgia">Neurocirurgia</option>
+                      <option value="Proctologia">Proctologia</option>
+                      <option value="Radiointervensão">Radiointervensão</option>
+                      <option value="Urologia">Urologia</option>
+                    </select>
+                  </div></div>
+              </div>
+            <button class="button is-success is-flex-grow-1"
+              @click="${this._getSpreadsheet}">Baixar</button>
+            </div> 
+            </div>
             <br />
             ${this.procedures
               ? this.procedures.map(
