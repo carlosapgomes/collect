@@ -31,19 +31,18 @@ module.exports = function (app) {
     isAdmin: {
       type: DataTypes.BOOLEAN,
     },
-    profBoardName: {
+    isEnabled: {
+      type: DataTypes.BOOLEAN,
+    },
+    changePassword: {
+      type: DataTypes.BOOLEAN,
+    }, profBoardName: {
       type: DataTypes.STRING,
       allowNull: true,
     },
     licenceNumber: {
       type: DataTypes.STRING,
       allowNull: true,
-    },
-    isEnabled: {
-      type: DataTypes.BOOLEAN,
-    },
-    changePassword: {
-      type: DataTypes.BOOLEAN,
     },
   }, {
     hooks: {
