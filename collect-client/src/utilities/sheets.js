@@ -23,8 +23,8 @@ export default function sheets (procedures,user){
     'Setor',
     'Leito',
     'Equipe',
-    'Médico',
-    'CRM',
+    'Executante',
+    'N.licença(crm/coren)',
   ];
   const rows = procedures.map((p)=>
     [
@@ -40,8 +40,8 @@ export default function sheets (procedures,user){
       p.ptWard,
       p.ptBed,
       p.team,
-      p.docName,
-      p.docLicenceNumber,
+      p.userName,
+      p.userLicenceNumber,
     ] 
   );
   const wsData = [header,...rows];
