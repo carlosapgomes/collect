@@ -373,8 +373,8 @@ export class CollectClient extends LitElement {
           $lte: endDateTime.toISO(),
         },
       };
-      if (!this._user.isAdmin) {
-        query.docID = this._user.id;
+      if (!this._user.isAdmin && this._user.docLicenceNumber ) {
+        query.docLicenceNumber = this._user.docLicenceNumber;
       }
       try {
         const procsList = await this.client.service('procedures').find({
@@ -1488,6 +1488,7 @@ export class CollectClient extends LitElement {
       <proc-form
         class="${classMap({ 'is-hidden': !this._showProcedureForm })}"
         ?activate="${this._showProcedureForm}"
+        .user="${this._user}"
         .procedure="${this._currentProcedure}"
         .doctors="${this._doctors}"
         .patients="${this._patients}"

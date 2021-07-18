@@ -62,7 +62,22 @@ module.exports = function (app) {
       type: DataTypes.STRING,
       allowNull: false
     },
-  }, {
+    createdByUserName: {
+      type: DataTypes.STRING,
+      allowNull: false
+    },
+    createdByUserID: {
+      type: DataTypes.STRING,
+      allowNull: false
+    },
+    updatedByUserName: {
+      type: DataTypes.STRING,
+      allowNull: false
+    },
+    updatedByUserID: {
+      type: DataTypes.STRING,
+      allowNull: false
+    },}, {
     hooks: {
       beforeCount(options) {
         options.raw = true;

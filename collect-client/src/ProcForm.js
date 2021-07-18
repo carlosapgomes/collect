@@ -31,6 +31,7 @@ export class ProcForm extends LitElement {
       _currentProcType: { type: Object, state: true },
       _procTypeDescr: { type: String, state: true },
       _activateProcTypeSearchDropDown: { type: Boolean, state: true },
+      user: { type: Object },
     };
   }
 
@@ -174,13 +175,9 @@ export class ProcForm extends LitElement {
     this._activatePatientSearchDropDown = false;
     this._ward = '';
     this._bed = '';
-    // const [d] = new Date().toISOString().split('T');
-    // this._dateISO = d;
-    // @ts-ignore
     this._currentDoc = {};
     this._doctorName = '';
     this._activateDocSearchDropDown = false;
-    // this._dateISO = '';
   }
 
   _saveForm(e) {
@@ -233,9 +230,16 @@ export class ProcForm extends LitElement {
       docName: this._currentDoc.name,
       docLicenceNumber: this._currentDoc.licenceNumber,
       docID: this._currentDoc.id,
+      updatedByUserName: this.user.name,
+      updatedByUserID: this.user.id,
     };
     if (this.procedure && this.procedure.id) {
+      // it is a procedure edit
       p.id = this.procedure.id;
+    }else{
+      // it is a new procedure
+      p.createdByUserName = this.user.name;
+      p.createdByUserID = this.user.id;
     }
     // fire event to save/update procedure
     this.dispatchEvent(
