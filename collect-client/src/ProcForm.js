@@ -24,16 +24,16 @@ export class ProcForm extends LitElement {
       _activatePatientSearchDropDown: { type: Boolean, state: true },
       _ward: { type: String, state: true },
       _bed: { type: String, state: true },
-      doctors: { type: Array },
       _team: { type: String,state: true },
-      _currentDoc: { type: Object, state: true },
-      _doctorName: { type: String, state: true },
-      _activateDocSearchDropDown: { type: Boolean, state: true },
+      _currentUser: { type: Object, state: true },
+      _userName: { type: String, state: true },
+      _activateUserSearchDropDown: { type: Boolean, state: true },
       proctypes: { type: Array },
       _currentProcType: { type: Object, state: true },
       _procTypeDescr: { type: String, state: true },
       _activateProcTypeSearchDropDown: { type: Boolean, state: true },
       user: { type: Object },
+      users: { type: Array },
     };
   }
 
@@ -46,12 +46,12 @@ export class ProcForm extends LitElement {
     this._activatePatientSearchDropDown = false;
     this._ward = '';
     this._bed = '';
-    this._doctorName = '';
+    this._userName = '';
     this.activate = false;
-    this.doctors = [];
+    this.users = [];
     this._team = '';
-    this._currentDoc = {};
-    this._activateDocSearchDropDown = false;
+    this._currentUser = {};
+    this._activateUserSearchDropDown = false;
     this.proctypes = [];
     this._procTypeDescr = '';
     this._activateProcTypeSearchDropDown = false;
@@ -110,13 +110,13 @@ export class ProcForm extends LitElement {
         this.patients = [{ ...this._currentPatient }];
         this._patientName = this._currentPatient.name;
 
-        this._currentDoc = {
-          name: this.procedure.docName,
-          id: this.procedure.docID,
-          licenceNumber: this.procedure.docLicenceNumber,
+        this._currentUser = {
+          name: this.procedure.userName,
+          id: this.procedure.userID,
+          licenceNumber: this.procedure.userLicenceNumber,
         };
-        this._doctorName = this.procedure.docName;
-        this.doctors = [{ ...this._currentDoc }];
+        this._userName = this.procedure.userName;
+        this.users = [{ ...this._currentUser }];
 
         this._bed = this.procedure.ptBed;
         this._ward = this.procedure.ptWard;
@@ -150,8 +150,8 @@ export class ProcForm extends LitElement {
     this._bed = '';
     this._team = '';
     this._currentDoc = {};
-    this._doctorName = '';
-    this._activateDocSearchDropDown = false;
+    this._userName = '';
+    this._activateUserSearchDropDown = false;
   }
 
   _saveForm(e) {
@@ -229,29 +229,29 @@ export class ProcForm extends LitElement {
     this._closeForm();
   }
 
-  _searchDoc(e) {
+  _searchUser(e) {
     // eslint-disable-next-line no-console
     console.log(e.target.value);
     // fire event to hide procedure form from parent's view
 
     if (e.target.value.length > 2) {
       this.dispatchEvent(
-        new CustomEvent('search-doctor', {
+        new CustomEvent('search-user', {
           detail: e.target.value,
           bubbles: true,
           composed: true,
         })
       );
-      this._activateDocSearchDropDown = true;
+      this._activateUserSearchDropDown = true;
     }
   }
 
   _docSelected(d) {
     // eslint-disable-next-line no-console
     console.log(JSON.stringify(d, null, 2));
-    this._currentDoc = { ...d };
-    this._doctorName = d.name;
-    this._activateDocSearchDropDown = false;
+    this._currentUser = { ...d };
+    this._userName = d.name;
+    this._activateUserSearchDropDown = false;
   }
 
   _searchPatient(e) {
@@ -631,22 +631,22 @@ export class ProcForm extends LitElement {
                 </div>
               </div>
 
-              <!-- doctors dropdown search -->
+              <!-- users dropdown search -->
               <div
                 class="dropdown is-up is-expanded ${classMap({
-                  'is-active': this._activateDocSearchDropDown,
+                  'is-active': this._activateUserSearchDropDown,
                 })}"
               >
                 <div class="dropdown-trigger">
                   <div class="field">
-                    <label class="label">Médico</label>
+                    <label class="label">Executante</label>
                     <div class="control is-expanded has-icons-right">
                       <input
                         class="input"
                         type="search"
-                        @keyup="${this._searchDoc}"
-                        .value="${this._doctorName}"
-                        placeholder="buscar pelo nome ou CRM"
+                        @keyup="${this._searchUser}"
+                        .value="${this._userName}"
+                        placeholder="buscar pelo nome ou registro de classe"
                       />
                       <icon-search></icon-search>
                     </div>
@@ -654,21 +654,21 @@ export class ProcForm extends LitElement {
                 </div>
                 <div class="dropdown-menu" id="dropdown-menu" role="menu">
                   <div class="dropdown-content">
-                    ${this.doctors
-                      ? this.doctors.map(
-                          d => html`
+                    ${this.users
+                      ? this.users.map(
+                          u => html`
                             <a
                               href="#"
                               class="dropdown-item"
                               @click="${e => {
                                 e.preventDefault();
-                                this._docSelected(d);
+                                this._userSelected(d);
                               }}"
                               @keydown="${e => {
                                 e.preventDefault();
-                                this._docSelected(d);
+                                this._userSelected(d);
                               }}"
-                              >${d.name} - ${d.licenceNumber}</a
+                              >${u.name} - ${u.licenceNumber}</a
                             >
                           `
                         )

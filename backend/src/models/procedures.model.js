@@ -58,15 +58,15 @@ module.exports = function (app) {
       type: DataTypes.STRING,
       allowNull: false,
     },
-    docName: {
+    userName: {
       type: DataTypes.STRING,
       allowNull: false
     },
-    docLicenceNumber: {
+    userLicenceNumber: {
       type: DataTypes.STRING,
       allowNull: false
     },
-    docID: {
+    userID: {
       type: DataTypes.STRING,
       allowNull: false
     },

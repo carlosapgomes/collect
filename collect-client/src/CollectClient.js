@@ -35,9 +35,9 @@ export class CollectClient extends LitElement {
       _currentEditPatient: { type: Object, state: true },
       _showPatientForm: { type: Boolean, state: true },
       // doctors
-      _doctors: { type: Array, state: true },
-      _currentEditDoctor: { type: Object, state: true },
-      _showDoctorForm: { type: Boolean, state: true },
+      //_doctors: { type: Array, state: true },
+      //_currentEditDoctor: { type: Object, state: true },
+      //_showDoctorForm: { type: Boolean, state: true },
       // controls
       _page: { type: String, state: true },
       _burgerActive: { type: Boolean, state: true },
@@ -72,14 +72,14 @@ export class CollectClient extends LitElement {
     this._users = [];
     this._currentEditUser = {};
     this._toggleResetPwModal = false;
-    this._doctors = [];
-    this._currentEditDoctor = {};
+    //this._doctors = [];
+    //this._currentEditDoctor = {};
     this._proceduresTypes = [];
     this._currentEditProcType = {};
     this._showUserForm = false;
     this._showUserProfileForm = false;
     this._showProcTypeForm = false;
-    this._showDoctorForm = false;
+    //this._showDoctorForm = false;
     this._toggleConfirmationModal = false;
     this._confirmationModalMsg = '';
     this._confirmModalObject = {};
@@ -115,6 +115,7 @@ export class CollectClient extends LitElement {
 
     // Users
     this.addEventListener('update-users-list', this._updateUsersList);
+    this.addEventListener('search-user', this._searchUser);
     this.addEventListener('edit-user', this._editUser);
     this.addEventListener('save-user-profile', this._saveUserProfile);
     this.addEventListener('add-user', this._loadShowUserForm);
@@ -129,16 +130,16 @@ export class CollectClient extends LitElement {
     });
 
     // doctors
-    this.addEventListener('update-doctors-list', this._updateDoctorsList);
-    this.addEventListener('search-doctor', this._searchDoctor);
-    this.addEventListener('remove-doctor', this._removeDoctor);
-    this.addEventListener('edit-doctor', this._editDoctor);
-    this.addEventListener('add-doctor', this._loadShowDoctorForm);
-    this.addEventListener('save-doctor-form', this._saveDoctor);
-    this.addEventListener('close-doctor-form', () => {
-      this._currentEditDoctor = null;
-      this._showDoctorForm = false;
-    });
+    //this.addEventListener('update-doctors-list', this._updateDoctorsList);
+    //this.addEventListener('search-doctor', this._searchDoctor);
+    //this.addEventListener('remove-doctor', this._removeDoctor);
+    //this.addEventListener('edit-doctor', this._editDoctor);
+    //this.addEventListener('add-doctor', this._loadShowDoctorForm);
+    //this.addEventListener('save-doctor-form', this._saveDoctor);
+    //this.addEventListener('close-doctor-form', () => {
+      //this._currentEditDoctor = null;
+      //this._showDoctorForm = false;
+    //});
 
     // patients
     this.addEventListener('update-patients-list', this._updatePatientsList);
@@ -290,16 +291,16 @@ export class CollectClient extends LitElement {
           this.dispatchEvent(new CustomEvent('update-users-list'));
         }
         break;
-      case 'doctorsview':
-        if (typeof customElements.get('doctors-view') === 'undefined') {
-          import('./doctors-view.js').catch(e => {
+      //case 'doctorsview':
+        //if (typeof customElements.get('doctors-view') === 'undefined') {
+          //import('./doctors-view.js').catch(e => {
             // eslint-disable-next-line no-console
-            console.log(e);
-          });
-        } else {
-          this.dispatchEvent(new CustomEvent('update-doctors-list'));
-        }
-        break;
+            //console.log(e);
+          //});
+        //} else {
+          //this.dispatchEvent(new CustomEvent('update-doctors-list'));
+        //}
+        //break;
       case 'procedurestypesview':
         if (typeof customElements.get('proctypes-view') === 'undefined') {
           import('./proctypes-view.js').catch(e => {
@@ -595,22 +596,22 @@ export class CollectClient extends LitElement {
               composed: true,
             })
           );
-          if (u.isDoctor) {
-            const d = {
-              name: u.name,
-              licenceNumber: u.docLicenceNumber,
-            };
-            // eslint-disable-next-line no-console
-            // console.log(d);
-            // fire event to save/update doctor
-            this.dispatchEvent(
-              new CustomEvent('save-doctor-form', {
-                detail: d,
-                bubbles: true,
-                composed: true,
-              })
-            );
-          }
+          //if (u.isDoctor) {
+            //const d = {
+              //name: u.name,
+              //licenceNumber: u.docLicenceNumber,
+            //};
+             //eslint-disable-next-line no-console
+             //console.log(d);
+             //fire event to save/update doctor
+            //this.dispatchEvent(
+              //new CustomEvent('save-doctor-form', {
+                //detail: d,
+                //bubbles: true,
+                //composed: true,
+              //})
+            //);
+          //}
         } catch (err) {
           // eslint-disable-next-line no-console
           console.log(`could not create user: ${err}`);
@@ -620,26 +621,26 @@ export class CollectClient extends LitElement {
   }
 
   // Doctors
-  _loadShowDoctorForm() {
+  //_loadShowDoctorForm() {
     // dynamically load doctor-form if neccessary
-    if (typeof customElements.get('doctor-form') === 'undefined') {
-      import('./doctor-form.js').then(() => {
-        this._showDoctorForm = true;
-      });
-    } else {
-      this._showDoctorForm = true;
-    }
-  }
+    //if (typeof customElements.get('doctor-form') === 'undefined') {
+      //import('./doctor-form.js').then(() => {
+        //this._showDoctorForm = true;
+      //});
+    //} else {
+      //this._showDoctorForm = true;
+    //}
+  //}
 
-  async _searchDoctor(e) {
+  async _searchUser(e) {
     if (this._user.isEnabled) {
       // clear doctors list
-      this._doctors = [];
+      this._users = [];
       // eslint-disable-next-line no-console
-      console.log(`searching for doctors: ${e.detail}`);
+      console.log(`searching for users: ${e.detail}`);
       this._spinnerHidden = false;
       try {
-        const doctorsList = await this.client.service('doctors').find({
+        const usersList = await this.client.service('users').find({
           query: {
             $or: [
               {
@@ -656,162 +657,162 @@ export class CollectClient extends LitElement {
           },
         });
         // eslint-disable-next-line no-console
-        console.log(doctorsList.data);
-        if (doctorsList.data.length > 0) {
-          this._doctors = [...doctorsList.data];
+        console.log(usersList.data);
+        if (usersList.data.length > 0) {
+          this._users = [...usersList.data];
         }
         this._spinnerHidden = true;
       } catch (_err) {
         this._spinnerHidden = true;
-        this._modalMsg = 'Erro ao buscar lista de médicos';
+        this._modalMsg = 'Erro ao buscar lista de usuários';
         this._toggleModal = true;
       }
     }
   }
 
-  async _updateDoctorsList() {
-    if (this._isAdmin && this._user.isEnabled) {
+  //async _updateDoctorsList() {
+    //if (this._isAdmin && this._user.isEnabled) {
       // clear doctors list
-      this._doctors = [];
+      //this._doctors = [];
       // eslint-disable-next-line no-console
-      console.log('updating doctors list ...');
-      this._spinnerHidden = false;
-      try {
-        const doctorsList = await this.client.service('doctors').find({
-          query: {
-            $sort: {
-              name: 1,
-            },
-          },
-        });
+      //console.log('updating doctors list ...');
+      //this._spinnerHidden = false;
+      //try {
+        //const doctorsList = await this.client.service('doctors').find({
+          //query: {
+            //$sort: {
+              //name: 1,
+            //},
+          //},
+        //});
         // eslint-disable-next-line no-console
-        console.log(doctorsList.data);
-        if (doctorsList.data.length > 0) {
-          this._doctors = [...doctorsList.data];
-        }
-        this._spinnerHidden = true;
-      } catch (e) {
-        this._spinnerHidden = true;
-        this._modalMsg = 'Erro ao buscar lista de médicos';
-        this._toggleModal = true;
-      }
-    }
-  }
+        //console.log(doctorsList.data);
+        //if (doctorsList.data.length > 0) {
+          //this._doctors = [...doctorsList.data];
+        //}
+        //this._spinnerHidden = true;
+      //} catch (e) {
+        //this._spinnerHidden = true;
+        //this._modalMsg = 'Erro ao buscar lista de médicos';
+        //this._toggleModal = true;
+      //}
+    //}
+  //}
 
-  _editDoctor(e) {
+  //_editDoctor(e) {
     // eslint-disable-next-line no-console
     // console.log(JSON.stringify(e.detail, null, 2));
-    this._currentEditDoctor = { ...e.detail };
+    //this._currentEditDoctor = { ...e.detail };
     // eslint-disable-next-line no-console
     // console.log(this._currentEditDoctor);
-    this._loadShowDoctorForm();
-  }
+    //this._loadShowDoctorForm();
+  //}
 
-  _removeDoctor(e) {
+  //_removeDoctor(e) {
     // eslint-disable-next-line no-console
-    console.log(`entering removeDoctor for ${e.detail}`);
+    //console.log(`entering removeDoctor for ${e.detail}`);
 
-    this._confirmModalObject = { ...e.detail };
-    this._confirmModalFunction = this._removeCurrentDoctor;
-    this._confirmationModalMsg = `Confirma a remoção do médico: ${e.detail.nome}?`;
-    this._toggleConfirmationModal = true;
-  }
+    //this._confirmModalObject = { ...e.detail };
+    //this._confirmModalFunction = this._removeCurrentDoctor;
+    //this._confirmationModalMsg = `Confirma a remoção do médico: ${e.detail.nome}?`;
+    //this._toggleConfirmationModal = true;
+  //}
 
-  async _removeCurrentDoctor(d) {
-    if (this._isAdmin && this._user.isEnabled) {
+  //async _removeCurrentDoctor(d) {
+    //if (this._isAdmin && this._user.isEnabled) {
       // eslint-disable-next-line no-console
-      console.log(JSON.stringify(d.detail, null, 2));
-      this.dispatchEvent(new CustomEvent('show-spinner'));
-      if (d.id) {
+      //console.log(JSON.stringify(d.detail, null, 2));
+      //this.dispatchEvent(new CustomEvent('show-spinner'));
+      //if (d.id) {
         // it is an update
-        try {
+        //try {
           // eslint-disable-next-line no-console
-          console.log('removing doctor type');
-          const res = await this.client.service('doctors').remove(d.id);
-          this._spinnerHidden = true;
-          this._modalMsg = 'Médico removido com sucesso!';
-          this._toggleModal = true;
+          //console.log('removing doctor type');
+          //const res = await this.client.service('doctors').remove(d.id);
+          //this._spinnerHidden = true;
+          //this._modalMsg = 'Médico removido com sucesso!';
+          //this._toggleModal = true;
           // eslint-disable-next-line no-console
-          console.log(
-            `Procedure type removed: ${JSON.stringify(res, null, 2)}`
-          );
-          this.dispatchEvent(
-            new CustomEvent('update-doctors-list', {
-              bubbles: true,
-              composed: true,
-            })
-          );
-        } catch (err) {
+          //console.log(
+            //`Procedure type removed: ${JSON.stringify(res, null, 2)}`
+          //);
+          //this.dispatchEvent(
+            //new CustomEvent('update-doctors-list', {
+              //bubbles: true,
+              //composed: true,
+            //})
+          //);
+        //} catch (err) {
           // eslint-disable-next-line no-console
-          console.log(`could not remove doctor: ${err}`);
-        }
-      } else {
-        this._spinnerHidden = true;
-        this._modalMsg = 'Erro ao remover médico';
-        this._toggleModal = true;
-        this.dispatchEvent(
-          new CustomEvent('update-doctors-list', {
-            bubbles: true,
-            composed: true,
-          })
-        );
+          //console.log(`could not remove doctor: ${err}`);
+        //}
+      //} else {
+        //this._spinnerHidden = true;
+        //this._modalMsg = 'Erro ao remover médico';
+        //this._toggleModal = true;
+        //this.dispatchEvent(
+          //new CustomEvent('update-doctors-list', {
+            //bubbles: true,
+            //composed: true,
+          //})
+        //);
         // eslint-disable-next-line no-console
-        console.log(`could not remove doctor: missing id`);
-      }
-    }
-  }
+        //console.log(`could not remove doctor: missing id`);
+      //}
+    //}
+  //}
 
-  async _saveDoctor(e) {
-    if (this._isAdmin && this._user.isEnabled) {
+  //async _saveDoctor(e) {
+    //if (this._isAdmin && this._user.isEnabled) {
       // eslint-disable-next-line no-console
-      console.log(JSON.stringify(e.detail, null, 2));
-      this._spinnerHidden = false;
-      const d = { ...e.detail };
-      if (d.id) {
-        try {
+      //console.log(JSON.stringify(e.detail, null, 2));
+      //this._spinnerHidden = false;
+      //const d = { ...e.detail };
+      //if (d.id) {
+        //try {
           // eslint-disable-next-line no-console
-          console.log('updating doctor');
-          const res = await this.client
-            .service('doctors')
-            .patch(d.id, { ...d });
-          this._spinnerHidden = true;
-          this._modalMsg = 'Médico gravado com sucesso!';
-          this._toggleModal = true;
+          //console.log('updating doctor');
+          //const res = await this.client
+            //.service('doctors')
+            //.patch(d.id, { ...d });
+          //this._spinnerHidden = true;
+          //this._modalMsg = 'Médico gravado com sucesso!';
+          //this._toggleModal = true;
           // eslint-disable-next-line no-console
-          console.log(`Doctor updated: ${JSON.stringify(res, null, 2)}`);
-          this.dispatchEvent(
-            new CustomEvent('update-doctors-list', {
-              bubbles: true,
-              composed: true,
-            })
-          );
-        } catch (err) {
+          //console.log(`Doctor updated: ${JSON.stringify(res, null, 2)}`);
+          //this.dispatchEvent(
+            //new CustomEvent('update-doctors-list', {
+              //bubbles: true,
+              //composed: true,
+            //})
+          //);
+        //} catch (err) {
           // eslint-disable-next-line no-console
-          console.log(`could not update doctor: ${err}`);
-        }
-      } else {
-        try {
+          //console.log(`could not update doctor: ${err}`);
+        //}
+      //} else {
+        //try {
           // eslint-disable-next-line no-console
-          console.log('creating doctor');
-          const res = await this.client.service('doctors').create({ ...d });
-          this._spinnerHidden = true;
-          this._modalMsg = 'Médico gravado com sucesso!';
-          this._toggleModal = true;
+          //console.log('creating doctor');
+          //const res = await this.client.service('doctors').create({ ...d });
+          //this._spinnerHidden = true;
+          //this._modalMsg = 'Médico gravado com sucesso!';
+          //this._toggleModal = true;
           // eslint-disable-next-line no-console
-          console.log(JSON.stringify(res, null, 2));
-          this.dispatchEvent(
-            new CustomEvent('update-doctors-list', {
-              bubbles: true,
-              composed: true,
-            })
-          );
-        } catch (err) {
+          //console.log(JSON.stringify(res, null, 2));
+          //this.dispatchEvent(
+            //new CustomEvent('update-doctors-list', {
+              //bubbles: true,
+              //composed: true,
+            //})
+          //);
+        //} catch (err) {
           // eslint-disable-next-line no-console
-          console.log(`could not create doctor: ${err}`);
-        }
-      }
-    }
-  }
+          //console.log(`could not create doctor: ${err}`);
+        //}
+      //}
+    //}
+  //}
 
   // patients
 
@@ -865,7 +866,7 @@ export class CollectClient extends LitElement {
 
   async _updatePatientsList() {
     if (this._user.isEnabled) {
-      // clear doctors list
+      // clear patients list
       this._patients = [];
       // eslint-disable-next-line no-console
       // console.log('updating patients list ...');
@@ -897,7 +898,7 @@ export class CollectClient extends LitElement {
     // console.log(JSON.stringify(e.detail, null, 2));
     this._currentEditPatient = { ...e.detail };
     // eslint-disable-next-line no-console
-    // console.log(this._currentEditDoctor);
+    // console.log(this._currentEditPatient);
     this._loadShowPatientForm();
   }
 
@@ -1287,7 +1288,7 @@ export class CollectClient extends LitElement {
                 >
                   Usuários
                 </a>
-                <a
+                <!-- <a
                   class="navbar-item"
                   href="/doctorsview"
                   @click="${() => {
@@ -1296,7 +1297,7 @@ export class CollectClient extends LitElement {
                   }}"
                 >
                   Médicos
-                </a>
+                  </a> -->
                 <a
                   class="navbar-item"
                   href="/procedurestypesview"
@@ -1387,14 +1388,14 @@ export class CollectClient extends LitElement {
             'is-hidden': this._page !== 'usersview' || !this._isAdmin,
           })}"
         ></users-view>
-        <doctors-view
+        <!-- <doctors-view
           id="doctorsview"
           .doctors="${this._doctors}"
           class="${classMap({
             'is-hidden': this._page !== 'doctorsview' || !this._isAdmin,
           })}"
         >
-        </doctors-view>
+          </doctors-view> -->
         <proctypes-view
           id="procedurestypesview"
           .procedures="${this._proceduresTypes}"
@@ -1490,7 +1491,6 @@ export class CollectClient extends LitElement {
         ?activate="${this._showProcedureForm}"
         .user="${this._user}"
         .procedure="${this._currentProcedure}"
-        .doctors="${this._doctors}"
         .patients="${this._patients}"
         .proctypes="${this._proceduresTypes}"
       ></proc-form>
@@ -1509,11 +1509,11 @@ export class CollectClient extends LitElement {
         ?activate="${this._showUserProfileForm}"
         .user="${this._currentEditUser}"
       ></uprofile-form>
-      <doctor-form
+      <!-- <doctor-form
         class="${classMap({ 'is-hidden': !this._showDoctorForm })}"
         ?activate="${this._showDoctorForm}"
         .doctor="${this._currentEditDoctor}"
-      ></doctor-form>
+      ></doctor-form> -->
       <proctype-form
         class="${classMap({ 'is-hidden': !this._showProcTypeForm })}"
         ?activate="${this._showProcTypeForm}"
