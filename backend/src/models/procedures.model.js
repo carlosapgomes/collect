@@ -58,18 +58,78 @@ module.exports = function (app) {
       type: DataTypes.STRING,
       allowNull: false,
     },
-    userName: {
+    user1Name: {
       type: DataTypes.STRING,
       allowNull: false
     },
-    userLicenceNumber: {
+    user1LicenceNumber: {
       type: DataTypes.STRING,
       allowNull: false
     },
-    userID: {
+    user1ID: {
       type: DataTypes.STRING,
       allowNull: false
     },
+    user2Name: {
+      type: DataTypes.STRING,
+      allowNull: true
+    },
+    user2LicenceNumber: {
+      type: DataTypes.STRING,
+      allowNull: true
+    },
+    user2ID: {
+      type: DataTypes.STRING,
+      allowNull: true
+    },    
+    user3Name: {
+      type: DataTypes.STRING,
+      allowNull: true
+    },
+    user3LicenceNumber: {
+      type: DataTypes.STRING,
+      allowNull: true
+    },
+    user3ID: {
+      type: DataTypes.STRING,
+      allowNull: true
+    },    
+    user4Name: {
+      type: DataTypes.STRING,
+      allowNull: true
+    },
+    user4LicenceNumber: {
+      type: DataTypes.STRING,
+      allowNull: true
+    },
+    user4ID: {
+      type: DataTypes.STRING,
+      allowNull: true
+    },
+    user5Name: {
+      type: DataTypes.STRING,
+      allowNull: true
+    },
+    user5LicenceNumber: {
+      type: DataTypes.STRING,
+      allowNull: true
+    },
+    user5ID: {
+      type: DataTypes.STRING,
+      allowNull: true
+    },    
+    user6Name: {
+      type: DataTypes.STRING,
+      allowNull: true
+    },
+    user6LicenceNumber: {
+      type: DataTypes.STRING,
+      allowNull: true
+    },
+    user6ID: {
+      type: DataTypes.STRING,
+      allowNull: true
+    },    
     createdByUserName: {
       type: DataTypes.STRING,
       allowNull: false
