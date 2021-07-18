@@ -54,7 +54,7 @@ module.exports = function (app) {
       type: DataTypes.STRING,
       allowNull: true
     },
-    docTeam:{
+    team:{
       type: DataTypes.STRING,
       allowNull: false,
     },
