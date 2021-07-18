@@ -16,7 +16,14 @@ module.exports = function (app) {
     code: {
       type: DataTypes.STRING,
       allowNull: false
-    }}, {
+    },
+    // is a surgical report required?
+    requireSurgReport: {
+      type: DataTypes.BOOLEAN,
+      allowNull: false
+    }
+  }, 
+  {
     hooks: {
       beforeCount(options) {
         options.raw = true;

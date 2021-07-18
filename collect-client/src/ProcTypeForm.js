@@ -13,6 +13,7 @@ export class ProcTypeForm extends LitElement {
       activate: { type: Boolean },
       _descr: { type: String, state: true },
       _code: { type: String, state: true },
+      _requireSurgReport: { type: Boolean, state: true },
     };
   }
 
@@ -22,6 +23,7 @@ export class ProcTypeForm extends LitElement {
     this.activate = false;
     this._descr = '';
     this._code = '';
+    this._requireSurgReport = false;
   }
 
   updated(changedProperties) {
@@ -29,6 +31,7 @@ export class ProcTypeForm extends LitElement {
       if (this.proceduretype) {
         this._descr = this.proceduretype.descr ? this.proceduretype.descr : '';
         this._code = this.proceduretype.code ? this.proceduretype.code : '';
+        this._requireSurgReport = ( this.proceduretype.requireSurgReport && true );
       }
     }
   }
@@ -51,6 +54,7 @@ export class ProcTypeForm extends LitElement {
     document.getElementById('proctype-form').reset();
     this._descr = '';
     this._code = '';
+    this._requireSurgReport = false;
   }
 
   _saveForm(e) {
@@ -65,12 +69,13 @@ export class ProcTypeForm extends LitElement {
     const p = {
       descr: this._descr,
       code: this._code,
+      requireSurgReport: this._requireSurgReport,
     };
     if (this.proceduretype && this.proceduretype.id) {
       p.id = this.proceduretype.id;
     }
     // eslint-disable-next-line no-console
-    // console.log(p);
+     console.log(p);
     // fire event to save/update doctor
     this.dispatchEvent(
       new CustomEvent('save-procedure-type-form', {
@@ -122,6 +127,19 @@ export class ProcTypeForm extends LitElement {
                     this._code = e.target.value;
                   }}"
                 />
+              </div>
+              <div class="field">
+              <label class="checkbox">
+                <input 
+                  type="checkbox"
+                  id="requireSurgReport"
+                  ?checked="${this._requireSurgReport}"
+                  @change="${ () => { 
+                  this._requireSurgReport = !this._requireSurgReport; 
+                   } 
+                  }">
+                Necessita de ficha operatória
+              </label>
               </div>
             </form>
           </section>

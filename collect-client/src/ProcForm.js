@@ -32,6 +32,7 @@ export class ProcForm extends LitElement {
       _currentProcType: { type: Object, state: true },
       _procTypeDescr: { type: String, state: true },
       _activateProcTypeSearchDropDown: { type: Boolean, state: true },
+      _showRequiredSurgReport: {type: Boolean, state: true },
       user: { type: Object },
       users: { type: Array },
     };
@@ -55,6 +56,7 @@ export class ProcForm extends LitElement {
     this.proctypes = [];
     this._procTypeDescr = '';
     this._activateProcTypeSearchDropDown = false;
+    this._showRequiredSurgReport = false;
   }
 
   firstUpdated() {
@@ -143,6 +145,7 @@ export class ProcForm extends LitElement {
     this._procedureName = '';
     this._procTypeDescr = '';
     this._activateProcTypeSearchDropDown = false;
+    this._showRequiredSurgReport = false;
     this._patientName = '';
     this._currentPatient = {};
     this._activatePatientSearchDropDown = false;
@@ -302,6 +305,7 @@ export class ProcForm extends LitElement {
     this._currentProcType = { ...p };
     this._procTypeDescr = p.descr;
     this._activateProcTypeSearchDropDown = false;
+    this._showRequiredSurgReport = p.requireSurgReport;
   }
 
   _addPatient(e) {
@@ -448,6 +452,9 @@ export class ProcForm extends LitElement {
                   </div>
                 </div>
               </div>
+              <p class="has-text-danger ${classMap({
+                  'is-hidden': !this._showRequiredSurgReport,
+                })}">Este procedimento necessita de ficha operatória no prontuário</p>
               <br />
               <br />
 
