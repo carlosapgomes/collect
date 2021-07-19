@@ -36,7 +36,8 @@ module.exports = function (app) {
     },
     changePassword: {
       type: DataTypes.BOOLEAN,
-    }, profBoardName: {
+    }, 
+    profBoardName: {
       type: DataTypes.STRING,
       allowNull: true,
     },

@@ -19,7 +19,7 @@ export class UserForm extends LitElement {
       _isEnabled: { type: Boolean, state: true },
       _isAdmin: { type: Boolean, state: true },
       _changePassword: { type: Boolean, state: true },
-      _isDoctor: { type: Boolean, state: true },
+      _profBoardName: { type: String, state: true },
       _docLicenceNumber: { type: String, state: true },
     };
   }
@@ -36,8 +36,8 @@ export class UserForm extends LitElement {
     this._isEnabled = false;
     this._isAdmin = false;
     this._changePassword = false;
-    this._isDoctor = false;
-    this._docLicenceNumber = 'teste';
+    this._profBoardName = '';
+    this._licenceNumber = '';
   }
 
   updated(changedProperties) {
@@ -52,9 +52,10 @@ export class UserForm extends LitElement {
           : false;
         this._isEnabled = this.user.isEnabled ? this.user.isEnabled : false;
         this._isAdmin = this.user.isAdmin ? this.user.isAdmin : false;
-        this._isDoctor = this.user.isDoctor ? this.user.isDoctor : false;
-        this._docLicenceNumber = this.user.docLicenceNumber
-          ? this.user.docLicenceNumber
+        this._profBoardName = this.user.profBoardName 
+          ? this.user.profBoardName : '';
+        this._licenceNumber = this.user.licenceNumber
+          ? this.user.licenceNumber
           : '';
       }
     }
@@ -81,8 +82,8 @@ export class UserForm extends LitElement {
     this._isEnabled = false;
     this._isAdmin = false;
     this._changePassword = false;
-    this._isDoctor = false;
-    this._docLicenceNumber = '';
+    this._profBoardName = '';
+    this._licenceNumber = '';
   }
 
   _saveForm(e) {
@@ -103,8 +104,8 @@ export class UserForm extends LitElement {
       isEnabled: this._isEnabled,
       isAdmin: this._isAdmin,
       changePassword: this._changePassword,
-      isDoctor: this._isDoctor,
-      docLicenceNumber: this._docLicenceNumber,
+      profBoardName: this._profBoardName,
+      licenceNumber: this._docLicenceNumber,
     };
     if (this.user.id) {
       u.id = this.user.id;
@@ -127,8 +128,11 @@ export class UserForm extends LitElement {
     if (this._email === '') {
       delete u.email;
     }
-    if (this._docLicenceNumber === '') {
-      delete u.docLicenceNumber;
+    if (this._licenceNumber === '') {
+      delete u.licenceNumber;
+    }
+    if (this._profBoardName === '') {
+      delete u.profBoardName;
     }
 
     // eslint-disable-next-line no-console
@@ -160,67 +164,137 @@ export class UserForm extends LitElement {
           </header>
           <section class="modal-card-body">
             <form id="user-form">
-              <div class="field">
-                <input
-                  class="input"
-                  id="name"
-                  type="text"
-                  placeholder="Nome"
-                  .value="${this._name}"
-                  @input="${e => {
-                    this._name = e.target.value;
-                  }}"
-                  required
-                />
-              </div>
-              <div class="field">
-                <input
-                  class="input"
-                  id="user-email-address"
-                  type="email"
-                  placeholder="Email"
-                  .value="${this._email}"
-                  @input="${e => {
+              <div class="field is-horizontal">
+                <div class="field-label is-normal">
+                  <label class="lable">Nome</label>
+                </div>
+                <div class="field-body"><div class="field">
+                  <p class="control">
+                    <input
+                      class="input"
+                      id="name"
+                      type="text"
+                      placeholder="Nome"
+                      .value="${this._name}"
+                      @input="${e => {
+                      this._name = e.target.value;
+                      }}"
+                      required
+                    />
+                  </p>
+                </div></div></div>
+              <div class="field is-horizontal">
+                <div class="field-label is-normal">
+                  <label class="lable">Email</label>
+                </div>
+                <div class="field-body"><div class="field">
+                  <input
+                    class="input"
+                    id="user-email-address"
+                    type="email"
+                    placeholder="Email"
+                    .value="${this._email}"
+                    @input="${e => {
                     this._email = e.target.value;
-                  }}"
-                />
+                    }}"
+                  />
+                </div>
+                </div>
               </div>
-              <div class="field">
-                <input
-                  class="input"
-                  id="user-phone"
-                  type="text"
-                  placeholder="Telefone"
-                  .value="${this._phone}"
-                  @input="${e => {
+              <div class="field is-horizontal">
+                <div class="field-label is-normal">
+                  <label class="lable">Tel.</label>
+                </div>
+                <div class="field-body"><div class="field">
+                  <input
+                    class="input"
+                    id="user-phone"
+                    type="text"
+                    placeholder="Telefone"
+                    .value="${this._phone}"
+                    @input="${e => {
                     this._phone = e.target.value;
-                  }}"
-                />
+                    }}"
+                  />
+                </div>
+                </div>
               </div>
-              <div class="field">
-                <input
-                  class="input"
-                  id="login-username"
-                  type="text"
-                  placeholder="Username"
-                  @input="${e => {
-                    this._username = e.target.value;
-                  }}"
-                  .value="${this._username}"
-                  required
-                />
+              <div class="field is-horizontal">
+                <div class="field-label is-normal">
+                  <label class="lable">Username</label>
+                </div>
+                <div class="field-body">              
+                  <div class="field">
+                    <input
+                      class="input"
+                      id="login-username"
+                      type="text"
+                      placeholder="Username"
+                      @input="${e => {
+                      this._username = e.target.value;
+                      }}"
+                      .value="${this._username}"
+                      required
+                    />
+                  </div>
+                </div>
               </div>
-              <div class="field">
-                <input
-                  class="input"
-                  id="login-password"
-                  type="password"
-                  placeholder="Senha"
-                  .value="${this._password}"
-                  @input="${e => {
-                    this._password = e.target.value;
-                  }}"
-                />
+              <div class="field is-horizontal">
+                <div class="field-label is-normal">
+                  <label class="lable">Senha</label>
+                </div>
+                <div class="field-body">    
+                  <div class="field">
+                    <input
+                      class="input"
+                      id="login-password"
+                      type="password"
+                      placeholder="Senha"
+                      .value="${this._password}"
+                      @input="${e => {
+                      this._password = e.target.value;
+                      }}"
+                    />
+                  </div>
+                </div>
+              </div>
+              <div class="field is-horizontal">
+                <div class="field-label is-normal">
+                  <label class="lable">Conselho</label>
+                </div>
+                <div class="field-body">    
+                  <div class="field">
+                    <input
+                      class="input"
+                      id="prof-board"
+                      type="text"
+                      placeholder="Crm/Coren/Crefito"
+                      .value="${this._profBoardName}"
+                      @input="${e => {
+                      this._profBoardName = e.target.value;
+                      }}"
+                    />
+                  </div>
+                </div>
+              </div>
+              <div class="field is-horizontal">
+                <div class="field-label is-normal">
+                  <label class="lable">N.Licença</label>
+                </div>
+                <div class="field-body">    
+                  <div class="field">
+                    <input
+                      class="input"
+                      id="licence-number"
+                      type="text"
+                      placeholder="no. do Crm/Coren/Crefito"
+                      .value="${this._licenceNumber}"
+                      @input="${e => {
+                      this._licenceNumber = e.target.value;
+                      }}"
+                    />
+                  </div>
+                </div>
               </div>
               <div
                 class="is-flex 
@@ -233,59 +307,35 @@ export class UserForm extends LitElement {
                     type="checkbox"
                     ?checked="${this._changePassword}"
                     @input="${e => {
-                      this._changePassword = e.target.checked;
+                    this._changePassword = e.target.checked;
                     }}"
                   />
                   Atualizar senha</label
-                >
+                  >
                 <label class="checkbox">
                   <input
                     id="user-is-enabled"
                     type="checkbox"
                     ?checked="${this._isEnabled}"
                     @input="${e => {
-                      this._isEnabled = e.target.checked;
+                    this._isEnabled = e.target.checked;
                     }}"
                   />
                   Habilitado</label
-                >
+                  >
                 <label class="checkbox">
                   <input
                     id="user-is-admin"
                     type="checkbox"
                     ?checked="${this._isAdmin}"
                     @input="${e => {
-                      this._isAdmin = e.target.checked;
+                    this._isAdmin = e.target.checked;
                     }}"
                   />
                   Admin</label
-                >
-                <label class="checkbox">
-                  <input
-                    id="user-is-doctor"
-                    type="checkbox"
-                    ?checked="${this._isDoctor}"
-                    @input="${e => {
-                      this._isDoctor = e.target.checked;
-                    }}"
-                  />
-                  Médico</label
-                >
+                  >
               </div>
-              <div class="field">
-                <input
-                  class="input ${classMap({
-                    'is-hidden': !this._isDoctor,
-                  })}"
-                  id="doctor-licence-number"
-                  type="text"
-                  placeholder="CRM"
-                  .value="${this._docLicenceNumber}"
-                  @input="${e => {
-                    this._docLicenceNumber = e.target.value;
-                  }}"
-                />
-              </div>
+
             </form>
           </section>
           <footer class="modal-card-foot">
