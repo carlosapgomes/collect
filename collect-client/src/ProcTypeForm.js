@@ -147,7 +147,7 @@ export class ProcTypeForm extends LitElement {
             <button class="button is-success" @click="${this._saveForm}">
               Gravar
             </button>
-            <button class="button is-warning" @click="${this._closeForm}">
+            <button class="button" @click="${this._closeForm}">
               Cancelar
             </button>
           </footer>
