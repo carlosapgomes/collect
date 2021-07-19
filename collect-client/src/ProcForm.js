@@ -35,6 +35,8 @@ export class ProcForm extends LitElement {
       _showRequiredSurgReport: {type: Boolean, state: true },
       user: { type: Object },
       users: { type: Array },
+      _maxUsersCount: {type: Number, state: true},
+      _currentProcUsers: {type: Array, state: true},
     };
   }
 
@@ -57,6 +59,8 @@ export class ProcForm extends LitElement {
     this._procTypeDescr = '';
     this._activateProcTypeSearchDropDown = false;
     this._showRequiredSurgReport = false;
+    this._maxUsersCount = 5;
+    this._currentProcUsers = [];
   }
 
   firstUpdated() {
@@ -120,6 +124,58 @@ export class ProcForm extends LitElement {
         this._userName = this.procedure.userName;
         this.users = [{ ...this._currentUser }];
 
+        this._currentProcUsers = [];
+        this._currentProcUsers.push({
+          name: this.procedure.user1Name,
+          id: this.procedure.user1ID,
+          licenceNumber: this.procedure.user1LicenceNumber,
+        });
+
+        if (this.procedure.user2Name !== '' &&
+        this.procedure.user2ID !== '' &&
+            this.procedure.user2LicenceNumber !== '') {
+            this._currentProcUsers.push({
+            name: this.procedure.user2Name,
+            id: this.procedure.user2ID,
+            licenceNumber: this.procedure.user2LicenceNumber,
+          });
+        }
+        if (this.procedure.user3Name !== '' &&
+        this.procedure.user3ID !== '' &&
+            this.procedure.user3LicenceNumber !== '') {
+            this._currentProcUsers.push({
+            name: this.procedure.user3Name,
+            id: this.procedure.user3ID,
+            licenceNumber: this.procedure.user3LicenceNumber,
+          });
+        }
+        if (this.procedure.user4Name !== '' &&
+        this.procedure.user4ID !== '' &&
+            this.procedure.user4LicenceNumber !== '') {
+            this._currentProcUsers.push({
+            name: this.procedure.user4Name,
+            id: this.procedure.user4ID,
+            licenceNumber: this.procedure.user4LicenceNumber,
+          });
+        }
+        if (this.procedure.user5Name !== '' &&
+        this.procedure.user5ID !== '' &&
+            this.procedure.user5LicenceNumber !== '') {
+            this._currentProcUsers.push({
+            name: this.procedure.user5Name,
+            id: this.procedure.user5ID,
+            licenceNumber: this.procedure.user5LicenceNumber,
+          });
+        } 
+        if (this.procedure.user6Name !== '' &&
+        this.procedure.user6ID !== '' &&
+            this.procedure.user6LicenceNumber !== '') {
+            this._currentProcUsers.push({
+            name: this.procedure.user6Name,
+            id: this.procedure.user6ID,
+            licenceNumber: this.procedure.user6LicenceNumber,
+          });
+        }        
         this._bed = this.procedure.ptBed;
         this._ward = this.procedure.ptWard;
         this._procExecPlace = this.procedure.execPlace;
@@ -155,6 +211,8 @@ export class ProcForm extends LitElement {
     this._currentDoc = {};
     this._userName = '';
     this._activateUserSearchDropDown = false;
+    this._currentProcUsers = [];
+    this._maxUsersCount = 5;
   }
 
   _saveForm(e) {
@@ -206,9 +264,24 @@ export class ProcForm extends LitElement {
       ptWard: this._ward,
       ptBed: this._bed,
       team: this._team,
-      docName: this._currentDoc.name,
-      docLicenceNumber: this._currentDoc.licenceNumber,
-      docID: this._currentDoc.id,
+      user1Name: '',
+      user1ID: '',
+      user1LicenceNumber: '',
+      user2Name: '',
+      user2ID: '',
+      user2LicenceNumber: '',
+      user3Name: '',
+      user3ID: '',
+      user3LicenceNumber:  '',
+      user4Name: '',
+      user4ID:  '',
+      user4LicenceNumber: '',
+      user5Name: '',
+      user5ID: '',
+      user5LicenceNumber: '',
+      user6Name: '',
+      user6ID: '',
+      user6LicenceNumber: '',
       updatedByUserName: this.user.name,
       updatedByUserID: this.user.id,
     };
@@ -220,6 +293,44 @@ export class ProcForm extends LitElement {
       p.createdByUserName = this.user.name;
       p.createdByUserID = this.user.id;
     }
+
+    if(this._currentProcUsers.length > 0){
+      const u = this._currentProcUsers.shift();
+      p.user1Name = u.name;
+      p.user1ID = u.id;
+      p.user1LicenceNumber = u.licenceNumber;
+    }
+    if(this._currentProcUsers.length > 0){
+      const u = this._currentProcUsers.shift();
+      p.user2Name = u.name;
+      p.user2ID = u.id;
+      p.user2LicenceNumber = u.licenceNumber;
+    }    
+    if(this._currentProcUsers.length > 0){
+      const u = this._currentProcUsers.shift();
+      p.user3Name = u.name;
+      p.user3ID = u.id;
+      p.user3LicenceNumber = u.licenceNumber;
+    }    
+    if(this._currentProcUsers.length > 0){
+      const u = this._currentProcUsers.shift();
+      p.user4Name = u.name;
+      p.user4ID = u.id;
+      p.user4LicenceNumber = u.licenceNumber;
+    }   
+    if(this._currentProcUsers.length > 0){
+      const u = this._currentProcUsers.shift();
+      p.user5Name = u.name;
+      p.user5ID = u.id;
+      p.user5LicenceNumber = u.licenceNumber;
+    }   
+    if(this._currentProcUsers.length > 0){
+      const u = this._currentProcUsers.shift();
+      p.user6Name = u.name;
+      p.user6ID = u.id;
+      p.user6LicenceNumber = u.licenceNumber;
+    }        
+
     // fire event to save/update procedure
     this.dispatchEvent(
       new CustomEvent('save-procedure-form', {
@@ -249,11 +360,14 @@ export class ProcForm extends LitElement {
     }
   }
 
-  _docSelected(d) {
+  _userSelected(u) {
     // eslint-disable-next-line no-console
-    console.log(JSON.stringify(d, null, 2));
-    this._currentUser = { ...d };
-    this._userName = d.name;
+    console.log(JSON.stringify(u, null, 2));
+    if (this._maxUsersCount >= 0) {
+      this._currentProcUsers.push(u);
+      this._maxUsersCount -= 1;
+    };
+    this._userName = u.name;
     this._activateUserSearchDropDown = false;
   }
 
@@ -638,48 +752,62 @@ export class ProcForm extends LitElement {
                 </div>
               </div>
 
-              <!-- users dropdown search -->
-              <div
-                class="dropdown is-up is-expanded ${classMap({
-                  'is-active': this._activateUserSearchDropDown,
-                })}"
-              >
-                <div class="dropdown-trigger">
-                  <div class="field">
-                    <label class="label">Executante</label>
-                    <div class="control is-expanded has-icons-right">
-                      <input
-                        class="input"
-                        type="search"
-                        @keyup="${this._searchUser}"
-                        .value="${this._userName}"
-                        placeholder="buscar pelo nome ou registro de classe"
-                      />
-                      <icon-search></icon-search>
+              <div class="card">
+                <div class="card-content">
+                  <div class="content"><!-- users dropdown search -->
+                  <div
+                    class="dropdown is-up is-expanded ${classMap({
+                    'is-active': this._activateUserSearchDropDown,
+                    })}"
+                  >
+                    <div class="dropdown-trigger">
+                      <div class="field">
+                        <label class="label">Executante</label>
+                        <div class="control is-expanded has-icons-right">
+                          <input
+                            class="input"
+                            type="search"
+                            @keyup="${this._searchUser}"
+                            .value="${this._userName}"
+                            placeholder="buscar pelo nome ou registro de classe"
+                          />
+                          <icon-search></icon-search>
+                        </div>
+                      </div>
+                    </div>
+                    <div class="dropdown-menu" id="dropdown-menu" role="menu">
+                      <div class="dropdown-content">
+                        ${this.users
+                          ? this.users.map(
+                            u => html`
+                              <a
+                                href="#"
+                                  class="dropdown-item"
+                                    @click="${e => {
+                                      e.preventDefault();
+                                        this._userSelected(u);
+                                          }}"
+                                            @keydown="${e => {
+                                              e.preventDefault();
+                                                this._userSelected(u);
+                                                  }}"
+                              >${u.name} - ${u.licenceNumber}</a
+                      >
+                            `
+                          )
+                          : html`<p></p>`}
+                      </div>
                     </div>
                   </div>
-                </div>
-                <div class="dropdown-menu" id="dropdown-menu" role="menu">
-                  <div class="dropdown-content">
-                    ${this.users
-                      ? this.users.map(
-                          u => html`
-                            <a
-                              href="#"
-                              class="dropdown-item"
-                              @click="${e => {
-                                e.preventDefault();
-                                this._userSelected(u);
-                              }}"
-                              @keydown="${e => {
-                                e.preventDefault();
-                                this._userSelected(u);
-                              }}"
-                              >${u.name} - ${u.licenceNumber}</a
-                            >
-                          `
-                        )
-                      : html`<p></p>`}
+                  <div>
+                  ${this._currentProcUsers ?
+                      this._currentProcUsers.map((u,i)=>
+                        html`
+                          <p> ${u.name}  - índice: ${i} </p>
+                        `
+                      ) : html`<p></p>`
+                    }
+                  </div>
                   </div>
                 </div>
               </div>
