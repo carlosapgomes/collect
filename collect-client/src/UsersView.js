@@ -45,18 +45,18 @@ export class UsersView extends LitElement {
         .user-card {
           margin-bottom: 0.3em;
         }
-        svg {
-          margin: 0.4em;
-          overflow: visible;
+          svg {
+            margin: 0.4em;
+            overflow: visible;
         }
       </style>
-      <section id="users" class="section">
-        <div class="column is-6 is-offset-3">
-          <div class="container">
-            <h1 class="subtitle has-text-centered is-3">Usuários</h1>
-            <br />
-            ${this.users
-              ? this.users.map(
+        <section id="users" class="section">
+          <div class="column is-6 is-offset-3">
+            <div class="container">
+              <h1 class="subtitle has-text-centered is-3">Usuários</h1>
+              <br />
+              ${this.users
+                ? this.users.map(
                   u => html`
                     <div class="card user-card">
                       <div class="card-content">
@@ -65,10 +65,10 @@ export class UsersView extends LitElement {
                           <div
                             class="button is-white is-pulled-right"
                             @click="${() => {
-                              this._edit(u);
+                            this._edit(u);
                             }}"
                             @keydown="${() => {
-                              this._edit(u);
+                            this._edit(u);
                             }}"
                           >
                             <span class="icon is-small is-right">
@@ -110,14 +110,6 @@ export class UsersView extends LitElement {
                           <label class="checkbox">
                             <input
                               type="checkbox"
-                              ?checked="${u.isDoctor}"
-                              disabled
-                            />
-                            Médico
-                          </label>
-                          <label class="checkbox">
-                            <input
-                              type="checkbox"
                               ?checked="${u.changePassword}"
                               disabled
                             />
@@ -128,15 +120,15 @@ export class UsersView extends LitElement {
                     </div>
                   `
                 )
-              : html`</p>`}
+                : html`</p>`}
+            </div>
           </div>
-        </div>
-        <btn-fab
-          @click="${() => {
+          <btn-fab
+            @click="${() => {
             this._addUser();
-          }}"
-        ></btn-fab>
-      </section>
+            }}"
+          ></btn-fab>
+        </section>
     `;
   }
 }
