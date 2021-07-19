@@ -118,48 +118,92 @@ export class UserProfileForm extends LitElement {
             ></button>
           </header>
           <section class="modal-card-body">
-            <p>Nome: ${this.user.name}</p>
-            <p>Username: ${this.user.username}</p>
-            <form id="user-profile-form">
-              <div class="field">
-                <label for="user-email-address">Email:</label>
-                <input
-                  class="input"
-                  id="user-email-address"
-                  type="email"
-                  placeholder="Email"
-                  .value="${this._email}"
-                  @input="${e => {
-                    this._email = e.target.value;
-                  }}"
-                />
+            <div class="field is-horizontal">
+              <div class="field-label is-normal">
+                <label class="lable">Nome</label>
               </div>
-              <div class="field">
-                <label for="user-phone">Tel.:</label>
-                <input
-                  class="input"
-                  id="user-phone"
-                  type="text"
-                  placeholder="Telefone"
-                  .value="${this._phone}"
-                  @input="${e => {
-                    this._phone = e.target.value;
-                  }}"
-                />
+              <div class="field-body">    
+                <div class="field">
+                  <input
+                    class="input is-static"
+                    type="text"
+                    .value="${this.user.name}"
+                  />
+                </div>
+              </div>
+            </div>
+            <div class="field is-horizontal">
+              <div class="field-label is-normal">
+                <label class="lable">Username</label>
+              </div>
+              <div class="field-body">    
+                <div class="field">
+                  <input
+                    class="input is-static"
+                    type="text"
+                    .value="${this.user.username}"
+                  />
+                </div>
+              </div>
+            </div>
+            <form id="user-profile-form">
+              <div class="field is-horizontal">
+                <div class="field-label is-normal">
+                  <label class="lable">Email</label>
+                </div>
+                <div class="field-body">    
+                  <div class="field">
+                    <input
+                      class="input"
+                      id="user-email-address"
+                      type="email"
+                      placeholder="Email"
+                      .value="${this._email}"
+                      @input="${e => {
+                      this._email = e.target.value;
+                      }}"
+                    />
+                  </div>
+                </div>
+              </div>
+              <div class="field is-horizontal">
+                <div class="field-label is-normal">
+                  <label class="lable">Tel.</label>
+                </div>
+                <div class="field-body">    
+                  <div class="field">
+                    <input
+                      class="input"
+                      id="user-phone"
+                      type="text"
+                      placeholder="Telefone"
+                      .value="${this._phone}"
+                      @input="${e => {
+                      this._phone = e.target.value;
+                      }}"
+                    />
+                  </div>
+                </div>
               </div>
 
-              <div class="field">
-                <label for="login-password">Senha:</label>
-                <input
-                  class="input"
-                  id="login-password"
-                  type="password"
-                  placeholder="Senha"
-                  .value="${this._password}"
-                  @input="${e => {
-                    this._password = e.target.value;
-                  }}"
-                />
+              <div class="field is-horizontal">
+                <div class="field-label is-normal">
+                  <label class="lable">Senha</label>
+                </div>
+                <div class="field-body">    
+                  <div class="field">
+                    <input
+                      class="input"
+                      id="login-password"
+                      type="password"
+                      placeholder="Senha"
+                      .value="${this._password}"
+                      @input="${e => {
+                      this._password = e.target.value;
+                      }}"
+                    />
+                  </div>
+                </div>
               </div>
             </form>
           </section>
