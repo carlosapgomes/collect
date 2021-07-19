@@ -279,7 +279,7 @@ export class UserForm extends LitElement {
               </div>
               <div class="field is-horizontal">
                 <div class="field-label is-normal">
-                  <label class="lable">N.Licença</label>
+                  <label class="lable">No. Conselho</label>
                 </div>
                 <div class="field-body">    
                   <div class="field">

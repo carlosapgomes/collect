@@ -34,6 +34,12 @@ export class UserProfileForm extends LitElement {
         this._changePassword = this.user.changePassword
           ? this.user.changePassword
           : false;
+        this._profBoardName = this.user.profBoardName 
+          ? this.user.profBoardName 
+          : '';
+        this._licenceNumber = this.user.licenceNumber
+          ? this.user.licenceNumber
+          : '';
       }
     }
   }
@@ -74,6 +80,8 @@ export class UserProfileForm extends LitElement {
       phone: this._phone,
       password: this._password,
       changePassword: false,
+      profBoardName: this._profBoardName,
+      licenceNumber: this._licenceNumber,
     };
 
     if (u.password === '' && typeof u.id !== 'undefined') {
@@ -89,6 +97,14 @@ export class UserProfileForm extends LitElement {
     if (this._email === '') {
       delete u.email;
     }
+
+    if (this._profBoardName === '') {
+      delete u.profBoardName;
+    }
+
+    if (this._licenceNumber === '') {
+      delete u.licenceNumber;
+    }    
 
     // eslint-disable-next-line no-console
     console.log(u);
@@ -146,7 +162,35 @@ export class UserProfileForm extends LitElement {
                 </div>
               </div>
             </div>
-            <form id="user-profile-form">
+            <div class="field is-horizontal">
+              <div class="field-label is-normal">
+                <label class="lable">Conselho</label>
+              </div>
+              <div class="field-body">    
+                <div class="field">
+                  <input
+                    class="input is-static"
+                    type="text"
+                    .value="${this.user.profBoardName}"
+                  />
+                </div>
+              </div>
+            </div>
+            <div class="field is-horizontal">
+              <div class="field-label is-normal">
+                <label class="lable">No. Conselho</label>
+              </div>
+              <div class="field-body">    
+                <div class="field">
+                  <input
+                    class="input is-static"
+                    type="text"
+                    .value="${this.user.licenceNumber}"
+                  />
+                </div>
+              </div>
+            </div>            
+              <form id="user-profile-form">
               <div class="field is-horizontal">
                 <div class="field-label is-normal">
                   <label class="lable">Email</label>
