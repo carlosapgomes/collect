@@ -20,7 +20,7 @@ export class UserForm extends LitElement {
       _isAdmin: { type: Boolean, state: true },
       _changePassword: { type: Boolean, state: true },
       _profBoardName: { type: String, state: true },
-      _docLicenceNumber: { type: String, state: true },
+      _licenceNumber: { type: String, state: true },
     };
   }
 
@@ -105,7 +105,7 @@ export class UserForm extends LitElement {
       isAdmin: this._isAdmin,
       changePassword: this._changePassword,
       profBoardName: this._profBoardName,
-      licenceNumber: this._docLicenceNumber,
+      licenceNumber: this._licenceNumber,
     };
     if (this.user.id) {
       u.id = this.user.id;
