@@ -23,8 +23,12 @@ export default function sheets (procedures,user){
     'Setor',
     'Leito',
     'Equipe',
-    'Executante',
-    'N.licença(crm/coren)',
+    'Usuário1',
+    'Usuário2',
+    'Usuário3',
+    'Usuário4',
+    'Usuário5',
+    'Usuário6',
   ];
   const rows = procedures.map((p)=>
     [
@@ -40,8 +44,12 @@ export default function sheets (procedures,user){
       p.ptWard,
       p.ptBed,
       p.team,
-      p.userName,
-      p.userLicenceNumber,
+      p.user1Name,
+      p.user2Name,
+      p.user3Name,
+      p.user4Name,
+      p.user5Name,
+      p.user6Name,
     ] 
   );
   const wsData = [header,...rows];
