@@ -781,20 +781,16 @@ export class ProcForm extends LitElement {
                           ? this.users.map(
                             u => html`
                               <a
-                                href="#"
-                                  class="dropdown-item"
-                                    @click="${e => {
-                                      e.preventDefault();
-                                        this._userSelected(u);
-                                          }}"
-                                            @keydown="${e => {
-                                              e.preventDefault();
-                                                this._userSelected(u);
-                                                  }}"
-                              >${u.name} - ${u.licenceNumber}</a
-                      >
-                            `
-                          )
+                               href="#"
+                               class="dropdown-item"
+                               @click="${e => {
+                                 e.preventDefault();
+                                 this._userSelected(u);
+                                }}"
+                               @keydown="${e => {
+                                 e.preventDefault();
+                                 this._userSelected(u);
+                               }}"> ${u.name} - ${u.licenceNumber}</a>`)
                           : html`<p></p>`}
                       </div>
                     </div>
