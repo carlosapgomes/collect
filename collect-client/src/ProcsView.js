@@ -159,7 +159,7 @@ export class ProcsView extends LitElement {
                   id="procs-date"
                   class="input"
                   type="date"
-                  .value="${this.date.toISODate()}"
+                  .value="${DateTime.local(this.date).toISODate()}"
                   @input="${(e)=>{
                   this.date = DateTime.fromISO(e.target.value);
                   }}"
