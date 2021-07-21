@@ -19,7 +19,6 @@ export class ProcsView extends LitElement {
       _searchByDate : { type: String, state: true },
       _searchByPersonTeam: { type: String, state: true },
       _userName: { type: String, state: true },
-      _team: { type: String, state: true },
       _currentSearchUserID: { type: String, state: true },
       _currentSearchTeam: { type: String, state: true },
       _toggleUserOrTeamSearch: { type: Boolean, state: true },
@@ -29,11 +28,11 @@ export class ProcsView extends LitElement {
   constructor() {
     super();
     this.procedures = [];
-    this.date = '';
+    this.date = DateTime.local();
     this._searchByDate =  'day';
     this._searchByPersonTeam =  'person';
     this._userName = '';
-    this._team = '';
+    this._currentSearchTeam = '';
     this._toggleUserOrTeamSearch = true;
     this._currentSearchTeam = 'all';
     this._currentSearchUserID = '';
@@ -46,6 +45,8 @@ export class ProcsView extends LitElement {
         composed: true,
       })
     );
+    this._userName = this.user.name;
+    this._currentSearchUserID = this.user.id;
   }
 
   _edit(p) {
@@ -65,12 +66,13 @@ export class ProcsView extends LitElement {
   }
 
   _updateProcedures() {
+      const dt = this.date.toISO();
       this.dispatchEvent(
         new CustomEvent('update-procedures-list', {
           detail: { 
             searchByDate: this._searchByDate,
             searchByPersonTeam: this._searchByPersonTeam,
-            date: this.date.toISO(),
+            date: dt,
             searchID: this._currentSearchUserID,
             searchTeam: this._currentSearchTeam,
           },
@@ -82,7 +84,7 @@ export class ProcsView extends LitElement {
 
   _searchUser(e) {
     // eslint-disable-next-line no-console
-    console.log(e.target.value);
+    // console.log(e.target.value);
     // fire event to hide procedure form from parent's view
 
     if (e.target.value.length > 2) {
@@ -178,6 +180,7 @@ export class ProcsView extends LitElement {
                             name="searchByPersonTeam"
                             @click="${() => {
                             this._searchByPersonTeam = 'person';
+                            this._currentSearchUserID = this.user.id;
                             this._toggleUserOrTeamSearch = true;}}"/>
                           Indivíduo 
                         </label>
@@ -249,9 +252,9 @@ export class ProcsView extends LitElement {
                         <select
                           id="team"
                           name="team"
-                          .value="${this._team}"
+                          .value="${this._currentSearchTeam}"
                           @blur="${e => {
-                          this._team = e.target.value;
+                          this._currentSearchTeam = e.target.value;
                           }}"
                         >
                           <option value="all">Todas</option>
