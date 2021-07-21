@@ -347,17 +347,22 @@ export class CollectClient extends LitElement {
       // defaults to today's procedures
       let startDateTime = DateTime.local().startOf('day');
       let endDateTime = DateTime.local().endOf('day');
-      // if a property queryByDate was set on event
-      if (e.detail && e.detail.queryByDate) {
-        startDateTime = DateTime.fromISO(e.detail.queryByDate).startOf('day');
-        endDateTime = DateTime.fromISO(e.detail.queryByDate).endOf('day');
+
+      if (e.detail && e.detail.searchByDate === 'day') {
+        startDateTime = DateTime.fromISO(e.detail.date).startOf('day');
+        endDateTime = DateTime.fromISO(startDateTime).endOf('day');
       }
-      // if a property queryByMonth was set on event
-      if (e.detail && e.detail.queryByMonth) {
-        // update query
-        startDateTime = DateTime.local(e.detail.queryByMonth).startOf('month');
+
+      if (e.detail && e.detail.searchByDate === 'month') {
+        startDateTime = DateTime.local(e.detail.date).startOf('week');
+        endDateTime = DateTime.local(startDateTime).endOf('week');
+      }
+     
+      if (e.detail && e.detail.searchByDate === 'month') {
+        startDateTime = DateTime.local(e.detail.date).startOf('month');
         endDateTime = DateTime.local(startDateTime).endOf('month');
       }
+
       this._currentProceduresDate = startDateTime.toISODate();
       // eslint-disable-next-line no-console
       console.log(`_currentProceduresDate: ${this._currentProceduresDate}`);
@@ -374,9 +379,32 @@ export class CollectClient extends LitElement {
           $lte: endDateTime.toISO(),
         },
       };
-      if (!this._user.isAdmin && this._user.docLicenceNumber ) {
-        query.docLicenceNumber = this._user.docLicenceNumber;
+
+
+      if (e.detail && e.detail.searchByPersonTeam === 'person') {
+        const id = e.detail.searchID;
+        query.$or = [
+          { user1ID:  id},
+          { user2ID:  id},
+          { user3ID:  id},
+          { user4ID:  id},
+          { user5ID:  id},
+          { user6ID:  id},
+        ];
+       }
+      if (e.detail && e.detail.searchByPersonTeam === 'team') {
+        const team = e.detail.searchTeam;
+        if (team !== 'all'){
+          query.team = team;
+        }
       }
+      
+        startDateTime = DateTime.local(e.detail.date).startOf('month');
+        endDateTime = DateTime.local(startDateTime).endOf('month');
+
+      //if (!this._user.isAdmin && this._user.docLicenceNumber ) {
+        //query.docLicenceNumber = this._user.docLicenceNumber;
+      //}
       try {
         const procsList = await this.client.service('procedures').find({
           query: { ...query },
@@ -1370,6 +1398,7 @@ export class CollectClient extends LitElement {
           class="${classMap({
             'is-hidden': this._page !== 'procsview',
           })}"
+          .user="$this._user"
           .procedures="${this._procedures}"
           .date="${this._currentProceduresDate}"
         ></procs-view>
