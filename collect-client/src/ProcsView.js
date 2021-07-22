@@ -153,10 +153,7 @@ export class ProcsView extends LitElement {
                         </div>
                       </div>
                     </div>
-              </div>
-              <div class="is-flex 
-                flex-direction-row
-                is-justify-content-space-between">
+              <div>
                 <input
                   id="procs-date"
                   class="input"
@@ -166,8 +163,8 @@ export class ProcsView extends LitElement {
                   this.date = DateTime.fromISO(e.target.value);
                   }}"
                 />
-              </div>            
-              <br/>
+              </div></div>
+                          
                 <div class="field is-horizontal">
                   <div class="field-body">    
                     <div class="field">
@@ -182,7 +179,7 @@ export class ProcsView extends LitElement {
                             this._searchByPersonTeam = 'person';
                             this._currentSearchUserID = this.user.id;
                             this._toggleUserOrTeamSearch = true;}}"/>
-                          Indivíduo 
+                          Usuário 
                         </label>
                         <label class="radio">
                           <input 
@@ -197,9 +194,7 @@ export class ProcsView extends LitElement {
                     </div>
                   </div>
                 </div>
-                <div class="is-flex 
-                  flex-direction-row is-justify-content-space-between">
-                  <div class="is-flex-grow-2">
+                <div class="is-flex is-flex-direction-column is-align-items-stretch">
                     <!-- users dropdown search -->
                     <div
                       class="dropdown is-up is-expanded ${classMap({
@@ -248,8 +243,9 @@ export class ProcsView extends LitElement {
                     <div class="${classMap({
                       'is-hidden': this._toggleUserOrTeamSearch,
                       })}">
-                      <div class="select">
+                      <div class="select" style="width: 100%">
                         <select
+                          style="width: 100%"
                           id="team"
                           name="team"
                           .value="${this._currentSearchTeam}"
@@ -270,15 +266,20 @@ export class ProcsView extends LitElement {
                         </select>
                       </div></div>
                   </div>
-                  <button class="button is-light is-flex-grow-1"
+                  <div class="is-flex pt-3
+                  flex-direction-row is-justify-content-space-evenly">
+                  
+                  <button class="button is-light"
                     @click="${this._updateProcedures}">
-                    <icon-reload class="has-tooltip-arrow has-tooltip-top"
+                    <span>Pesquisar</span>
+                    <icon-reload class="has-tooltip-arrow pl-3 has-tooltip-top"
                       data-tooltip="Recarregar"></icon-reload>
                   </button>
-                  <button class="button is-success is-flex-grow-1"
+                  <button class="button is-success"
                     @click="${this._getSpreadsheet}">
+                    <span>Baixar</span>
                     <icon-download
-                      class="has-tooltip-arrow has-tooltip-top"
+                      class="has-tooltip-arrow pl-3 has-tooltip-top"
                       data-tooltip="Baixar"></icon-download>
                   </button>
                 </div> 
@@ -297,7 +298,7 @@ export class ProcsView extends LitElement {
                                 locale: 'pt-BR',
                               }).toLocaleString(DateTime.DATETIME_SHORT)}<br />
                               Paciente: ${p.ptName}<br />
-                              Médico: ${p.docName}
+                              Médico: ${p.user1Name}
                             </small>
                           </div>
                           <div
