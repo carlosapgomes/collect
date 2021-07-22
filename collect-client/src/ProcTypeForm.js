@@ -75,7 +75,7 @@ export class ProcTypeForm extends LitElement {
       p.id = this.proceduretype.id;
     }
     // eslint-disable-next-line no-console
-     console.log(p);
+    console.log(p);
     // fire event to save/update doctor
     this.dispatchEvent(
       new CustomEvent('save-procedure-type-form', {
@@ -103,56 +103,70 @@ export class ProcTypeForm extends LitElement {
           </header>
           <section class="modal-card-body">
             <form id="proctype-form">
-              <div class="field">
-                <input
-                  class="input"
-                  id="proctype"
-                  type="text"
-                  placeholder="Procedimento"
-                  .value="${this._descr}"
-                  required
-                  @input="${e => {
-                    this._descr = e.target.value;
-                  }}"
-                />
+              <div class="field is-horizontal">
+                <div class="field-label is-normal">
+                  <label class="lable">Nome/Descr.</label>
+                </div>
+                <div class="field-body">
+                  <div class="field">
+                    <input
+                      class="input"
+                      id="proctype"
+                      type="text"
+                      placeholder="nome/descr."
+                      .value="${this._descr}"
+                      required
+                      @input="${e => {
+                      this._descr = e.target.value;
+                      }}"
+                    />
+                  </div>
+                </div>
+              </div>
+              <div class="field is-horizontal">
+                <div class="field-label is-normal">
+                  <label class="lable">Cód. SUS</label>
+                </div>
+                <div class="field-body">
+                  <div class="field">
+                    <input
+                      class="input"
+                      id="code"
+                      type="text"
+                      placeholder="xx.xx.xx.xxx-x"
+                      .value="${this._code}"
+                      @input="${e => {
+                      this._code = e.target.value;
+                      }}"
+                    />
+                  </div>
+                </div>
               </div>
               <div class="field">
-                <input
-                  class="input"
-                  id="code"
-                  type="text"
-                  placeholder="código SUS (xx.xx.xx.xxx-x)"
-                  .value="${this._code}"
-                  @input="${e => {
-                    this._code = e.target.value;
-                  }}"
-                />
-              </div>
-              <div class="field">
-              <label class="checkbox">
-                <input 
-                  type="checkbox"
-                  id="requireSurgReport"
-                  ?checked="${this._requireSurgReport}"
-                  @change="${ () => { 
-                  this._requireSurgReport = !this._requireSurgReport; 
-                   } 
-                  }">
-                Necessita de ficha operatória
-              </label>
-              </div>
-            </form>
-          </section>
-          <footer class="modal-card-foot">
-            <button class="button is-success" @click="${this._saveForm}">
-              Gravar
-            </button>
-            <button class="button" @click="${this._closeForm}">
-              Cancelar
-            </button>
-          </footer>
+                <label class="checkbox">
+                  <input 
+                    type="checkbox"
+                    id="requireSurgReport"
+                    ?checked="${this._requireSurgReport}"
+                    @change="${ () => { 
+                    this._requireSurgReport = !this._requireSurgReport; 
+                    } 
+                    }">
+                    Necessita de ficha operatória
+                  </label>
+                </div>
+              </form>
+            </section>
+                    <footer class="modal-card-foot">
+                      <button class="button is-success" @click="${this._saveForm}">
+                        Gravar
+                      </button>
+                      <button class="button" @click="${this._closeForm}">
+                        Cancelar
+                      </button>
+                    </footer>
+          </div>
         </div>
-      </div>
-    `;
-  }
-}
+                    `;
+                    }
+                    }
