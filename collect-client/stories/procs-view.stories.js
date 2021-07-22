@@ -12,17 +12,22 @@ function Template() {
     {
       descr: "procedure 1",
       ptName: "Patient Name 1",
-      docName: "Doctor Name 1",
+      user1Name: "Doctor Name 1",
       procDateTime: Date('now'),
     },
     {
       descr: "procedure 2",
       ptName: "Patient Name 2",
-      docName: "Doctor Name 2",
+      user1Name: "Doctor Name 2",
       procDateTime: Date('now'),
     },
   ];
-  return html` <procs-view .procedures="${procs}"> </procs-view> `;
+  const user = {
+    name: "user1",
+    licenceNumber: "123412",
+  };
+
+  return html` <procs-view .user="${user}" .procedures="${procs}"> </procs-view> `;
 }
 
 export const App = Template.bind({});
