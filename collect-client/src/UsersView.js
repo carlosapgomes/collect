@@ -1,5 +1,6 @@
 import { html, LitElement } from 'lit-element';
 import './btn-fab.js';
+import './icons/icon-edit.js';
 
 export class UsersView extends LitElement {
   // use lightDOM
@@ -63,7 +64,10 @@ export class UsersView extends LitElement {
                         <div class="content">
                           <strong>${u.name}</strong> - ${u.email}<br />
                           <div
-                            class="button is-white is-pulled-right"
+                            class="button is-white is-pulled-right
+                            has-tooltip-arrow
+                            has-tooltip-right"
+                            data-tooltip="Editar"
                             @click="${() => {
                             this._edit(u);
                             }}"
@@ -71,24 +75,7 @@ export class UsersView extends LitElement {
                             this._edit(u);
                             }}"
                           >
-                            <span class="icon is-small is-right">
-                              <svg
-                                id="i-edit"
-                                xmlns="http://www.w3.org/2000/svg"
-                                viewBox="0 0 32 32"
-                                width="16"
-                                height="16"
-                                fill="none"
-                                stroke="currentcolor"
-                                stroke-linecap="round"
-                                stroke-linejoin="round"
-                                stroke-width="2"
-                              >
-                                <path
-                                  d="M30 7 L25 2 5 22 3 29 10 27 Z M21 6 L26 11 Z M5 22 L10 27 Z"
-                                />
-                              </svg>
-                            </span>
+                            <icon-edit></icon-edit>
                           </div>
 
                           <label class="checkbox">
