@@ -1,5 +1,6 @@
 import { html } from 'lit-html';
 import '../src/procs-view.js';
+import { DateTime } from 'luxon';
 
 export default {
   title: 'ProcsView',
@@ -13,13 +14,13 @@ function Template() {
       descr: "procedure 1",
       ptName: "Patient Name 1",
       user1Name: "Doctor Name 1",
-      procDateTime: Date('now'),
+      procDateTime: DateTime.local().toSQL(),
     },
     {
       descr: "procedure 2",
       ptName: "Patient Name 2",
       user1Name: "Doctor Name 2",
-      procDateTime: Date('now'),
+      procDateTime: DateTime.local().toSQL(),
     },
   ];
   const user = {
