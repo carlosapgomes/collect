@@ -105,7 +105,7 @@ export class ProcTypeForm extends LitElement {
             <form id="proctype-form">
               <div class="field is-horizontal">
                 <div class="field-label is-normal">
-                  <label class="lable">Nome/Descr.</label>
+                  <label><b>Nome/Descr.</b></label>
                 </div>
                 <div class="field-body">
                   <div class="field">
@@ -125,7 +125,7 @@ export class ProcTypeForm extends LitElement {
               </div>
               <div class="field is-horizontal">
                 <div class="field-label is-normal">
-                  <label class="lable">Cód. SUS</label>
+                  <label><b>Cód. SUS</b></label>
                 </div>
                 <div class="field-body">
                   <div class="field">

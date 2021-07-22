@@ -168,7 +168,8 @@ export class UserForm extends LitElement {
                 <div class="field-label is-normal">
                   <label class="lable">Nome</label>
                 </div>
-                <div class="field-body"><div class="field">
+                <div class="field-body">
+                  <div class="field">
                   <p class="control">
                     <input
                       class="input"
