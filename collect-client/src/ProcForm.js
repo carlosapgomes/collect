@@ -670,12 +670,12 @@ export class ProcForm extends LitElement {
                   'is-active': this._activatePatientSearchDropDown,
                   })}"
                 >
-                    <div class="field is-flex-grow-5 is-horizontal">
-                      <div style="padding-right: 20px; padding-top: 8px;" class="label is-normal">
-                        <label><b>Paciente</b></label>
-                      </div>
-                      <div class="field-body">
-                  <div class="dropdown-trigger">
+                  <div class="field is-flex-grow-5 is-horizontal">
+                    <div style="padding-right: 20px; padding-top: 8px;" class="label is-normal">
+                      <label><b>Paciente</b></label>
+                    </div>
+                    <div class="field-body">
+                      <div class="dropdown-trigger">
                         <div class="field">
                           <div class="control is-expanded has-icons-right">
                             <input
@@ -802,31 +802,32 @@ export class ProcForm extends LitElement {
 
               <div class="card">
                 <div class="card-content">
-                  <div class="content"><!-- users dropdown search -->
+                  <div class="content">
+                    <!-- users dropdown search -->
                     <div
                       class="dropdown is-up is-expanded ${classMap({
                       'is-active': this._activateUserSearchDropDown,
                       })}"
                     >
                       <div class="dropdown-trigger">
-                  <div class="field is-horizontal">
-                    <div class="field-label is-normal">
-                      <label><b>Executante(s)</b></label>
-                    </div>
-                    <div class="field-body">                  
-                        <div class="field">
-                          <div class="control is-expanded has-icons-right">
-                            <input
-                              class="input"
-                              type="search"
-                              @keyup="${this._searchUser}"
-                              .value="${this._userName}"
-                              placeholder="buscar pelo nome ou registro de classe"
-                            />
-                            <icon-search></icon-search>
+                        <div class="field is-horizontal">
+                          <div class="field-label is-normal">
+                            <label><b>Executante(s)</b></label>
                           </div>
-                        </div>
-                        </div>
+                          <div class="field-body">                  
+                            <div class="field">
+                              <div class="control is-expanded has-icons-right">
+                                <input
+                                  class="input"
+                                  type="search"
+                                  @keyup="${this._searchUser}"
+                                  .value="${this._userName}"
+                                  placeholder="buscar pelo nome ou registro de classe"
+                                />
+                                <icon-search></icon-search>
+                              </div>
+                            </div>
+                          </div>
                         </div>
                       </div>
                       <div class="dropdown-menu" id="dropdown-menu" role="menu">
