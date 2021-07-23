@@ -1179,6 +1179,7 @@ export class CollectClient extends LitElement {
           class="${classMap({
             'is-hidden': this._page !== 'procsview',
           })}"
+          .users="${this._users}"
           .user="${this._user}"
           .procedures="${this._procedures}"
         ></procs-view>
