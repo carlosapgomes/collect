@@ -284,6 +284,7 @@ export class ProcForm extends LitElement {
       user6LicenceNumber: '',
       updatedByUserName: this.user.name,
       updatedByUserID: this.user.id,
+      createdByUserID: this.procedure.createdByUserID,
     };
     if (this.procedure && this.procedure.id) {
       // it is a procedure edit
