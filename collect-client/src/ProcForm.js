@@ -555,6 +555,7 @@ export class ProcForm extends LitElement {
                             @keyup="${this._searchProcType}"
                             .value="${this._procTypeDescr}"
                             placeholder="buscar pelo nome"
+                            required
                           />
                           <icon-search></icon-search>
                         </div>
@@ -684,6 +685,7 @@ export class ProcForm extends LitElement {
                               @keyup="${this._searchPatient}"
                               .value="${this._patientName}"
                               placeholder="buscar pelo nome ou registro"
+                              required
                             />
                             <icon-search></icon-search>
                           </div>
