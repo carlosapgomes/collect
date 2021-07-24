@@ -8,20 +8,21 @@ export default {
 };
 
 function Template(activate) {
-  const doctors = [
+  const users = [
     {
-      name: 'doc1',
+      name: 'user1',
       id: 'id1',
+      licenceNumber: '1111',
+      profBoardName: 'crm',
     },
     {
-      name: 'doc2',
+      name: 'user2',
       id: 'id2',
+      licenceNumber: '2222',
+      profBoardName: 'crm',
     },
   ];
-  return html`<proc-form
-    .doctors=${doctors}
-    ?activate=${activate}
-  ></proc-form>`;
+  return html`<proc-form .users=${users} ?activate=${activate}></proc-form>`;
 }
 
 export const App = Template.bind({});
