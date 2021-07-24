@@ -6,6 +6,7 @@ import './icons/icon-download.js';
 import './icons/icon-reload.js';
 import './icons/icon-edit.js';
 import './icons/icon-trash.js';
+import './icons/icon-search.js';
 
 export class ProcsView extends LitElement {
   // use lightDOM
