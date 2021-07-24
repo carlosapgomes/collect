@@ -20,9 +20,10 @@ module.exports = function (app) {
     // is a surgical report required?
     requireSurgReport: {
       type: DataTypes.BOOLEAN,
+      defaultValue: false,
       allowNull: false
     }
-  }, 
+  },
   {
     hooks: {
       beforeCount(options) {
