@@ -305,18 +305,17 @@ export class ProcsView extends LitElement {
               <div class="is-flex pt-3
                 flex-direction-row is-justify-content-space-evenly">
 
-                <button class="button is-light"
+                <button class="button is-light has-tooltip-arrow has-tooltip-top"
+                    data-tooltip="Atualiza pesquisa"
                   @click="${this._updateProcedures}">
                   <span>Pesquisar</span>
-                  <icon-reload class="has-tooltip-arrow pl-3 has-tooltip-top"
-                    data-tooltip="Recarregar"></icon-reload>
+                  <icon-reload class="pl-3"></icon-reload>
                 </button>
-                <button class="button is-success"
+                <button class="button is-success has-tooltip-arrow has-tooltip-top"
+                    data-tooltip="Baixar resultado atual"
                   @click="${this._getSpreadsheet}">
                   <span>Baixar</span>
-                  <icon-download
-                    class="has-tooltip-arrow pl-3 has-tooltip-top"
-                    data-tooltip="Baixar"></icon-download>
+                  <icon-download class="pl-3"></icon-download>
                 </button>
               </div> 
               <br />
@@ -334,7 +333,8 @@ export class ProcsView extends LitElement {
                                 locale: 'pt-BR',
                               }).toLocaleString(DateTime.DATETIME_SHORT)}<br />
                               Paciente: ${p.ptName}<br />
-                              Equipe: ${ProcsView._getTeamNames(p)}
+                              Equipe: ${p.team} <br />
+                              Executante(s): ${ProcsView._getTeamNames(p)}
                             </small>
                           </div>
                           <div
