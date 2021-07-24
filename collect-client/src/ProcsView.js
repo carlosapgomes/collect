@@ -20,7 +20,7 @@ export class ProcsView extends LitElement {
       user: { type: Object },
       users: { type: Array, state: true },
       date: { type: String },
-      _searchByDate : { type: String, state: true },
+      _searchByDate: { type: String, state: true },
       _searchByPersonTeam: { type: String, state: true },
       _userName: { type: String, state: true },
       _currentSearchUserID: { type: String, state: true },
@@ -33,8 +33,8 @@ export class ProcsView extends LitElement {
     super();
     this.procedures = [];
     this.date = DateTime.local();
-    this._searchByDate =  'day';
-    this._searchByPersonTeam =  'person';
+    this._searchByDate = 'day';
+    this._searchByPersonTeam = 'person';
     this._userName = '';
     this._currentSearchTeam = '';
     this._toggleUserOrTeamSearch = true;
@@ -51,7 +51,7 @@ export class ProcsView extends LitElement {
     );
     this._userName = this.user.name;
     this._currentSearchUserID = this.user.id;
-    console.log(JSON.stringify(this.user,null,2));
+    console.log(JSON.stringify(this.user, null, 2));
   }
 
   _edit(p) {
@@ -79,20 +79,20 @@ export class ProcsView extends LitElement {
   }
 
   _updateProcedures() {
-      const dt = this.date.toISO();
-      this.dispatchEvent(
-        new CustomEvent('update-procedures-list', {
-          detail: { 
-            searchByDate: this._searchByDate,
-            searchByPersonTeam: this._searchByPersonTeam,
-            date: dt,
-            searchID: this._currentSearchUserID,
-            searchTeam: this._currentSearchTeam,
-          },
-          bubbles: true,
-          composed: true,
-        })
-      );
+    const dt = this.date.toISO();
+    this.dispatchEvent(
+      new CustomEvent('update-procedures-list', {
+        detail: {
+          searchByDate: this._searchByDate,
+          searchByPersonTeam: this._searchByPersonTeam,
+          date: dt,
+          searchID: this._currentSearchUserID,
+          searchTeam: this._currentSearchTeam,
+        },
+        bubbles: true,
+        composed: true,
+      })
+    );
   }
 
   _searchUser(e) {
@@ -112,40 +112,40 @@ export class ProcsView extends LitElement {
     }
   }
 
-  _getSpreadsheet(){
+  _getSpreadsheet() {
     this.dispatchEvent(
-      new CustomEvent('get-spreadsheet',{
+      new CustomEvent('get-spreadsheet', {
         bubbles: true,
-        composed:true, 
+        composed: true,
       })
     );
   }
 
-  static _getShortName(n){
+  static _getShortName(n) {
     const d = n.split(' ');
-    if (d.length > 1){
-      return [d[0], d[d.length -1]].join(' ');
+    if (d.length > 1) {
+      return [d[0], d[d.length - 1]].join(' ');
     }
-      return n;
+    return n;
   }
 
-  static _getTeamNames(p){
+  static _getTeamNames(p) {
     const team = [];
     team.push(ProcsView._getShortName(p.user1Name));
-    if(p.user2Name.length > 1){
-    team.push(ProcsView._getShortName(p.user2Name));
+    if (p.user2Name && p.user2Name.length > 1) {
+      team.push(ProcsView._getShortName(p.user2Name));
     }
-    if(p.user3Name.length > 1){
-    team.push(ProcsView._getShortName(p.user3Name));
+    if (p.user3Name && p.user3Name.length > 1) {
+      team.push(ProcsView._getShortName(p.user3Name));
     }
-    if(p.user4Name.length > 1){
-    team.push(ProcsView._getShortName(p.user4Name));
+    if (p.user4Name && p.user4Name.length > 1) {
+      team.push(ProcsView._getShortName(p.user4Name));
     }
-    if(p.user5Name.length > 1){
-    team.push(ProcsView._getShortName(p.user5Name));
+    if (p.user5Name && p.user5Name.length > 1) {
+      team.push(ProcsView._getShortName(p.user5Name));
     }
-    if(p.user6Name.length > 1){
-    team.push(ProcsView._getShortName(p.user6Name));
+    if (p.user6Name && p.user6Name.length > 1) {
+      team.push(ProcsView._getShortName(p.user6Name));
     }
     return team.join(' | ');
   }
@@ -175,21 +175,27 @@ export class ProcsView extends LitElement {
                           type="radio" 
                           checked
                           name="searchByDate"
-                          @click="${() => {this._searchByDate = 'day';}}"/>
+                          @click="${() => {
+                            this._searchByDate = 'day';
+                          }}"/>
                         Dia
                       </label>
                       <label class="radio">
                         <input 
                           type="radio" 
                           name="searchByDate"
-                          @click="${() => {this._searchByDate = 'week';}}"/>
+                          @click="${() => {
+                            this._searchByDate = 'week';
+                          }}"/>
                         Semana
                       </label>
                       <label class="radio">
                         <input 
                           type="radio" 
                           name="searchByDate"
-                          @click="${() => {this._searchByDate = 'month';}}"/>
+                          @click="${() => {
+                            this._searchByDate = 'month';
+                          }}"/>
                         Mês
                       </label>
                     </div>
@@ -201,8 +207,8 @@ export class ProcsView extends LitElement {
                     class="input"
                     type="date"
                     .value="${DateTime.local(this.date).toISODate()}"
-                    @input="${(e)=>{
-                    this.date = DateTime.fromISO(e.target.value);
+                    @input="${e => {
+                      this.date = DateTime.fromISO(e.target.value);
                     }}"
                   />
                 </div></div>
@@ -218,8 +224,9 @@ export class ProcsView extends LitElement {
                           checked
                           name="searchByPersonTeam"
                           @click="${() => {
-                          this._searchByPersonTeam = 'person';
-                          this._toggleUserOrTeamSearch = true;}}"/>
+                            this._searchByPersonTeam = 'person';
+                            this._toggleUserOrTeamSearch = true;
+                          }}"/>
                         Usuário 
                       </label>
                       <label class="radio">
@@ -227,8 +234,9 @@ export class ProcsView extends LitElement {
                           type="radio" 
                           name="searchByPersonTeam"
                           @click="${() => {
-                          this._searchByPersonTeam = 'team';
-                          this._toggleUserOrTeamSearch = false;}}"/>
+                            this._searchByPersonTeam = 'team';
+                            this._toggleUserOrTeamSearch = false;
+                          }}"/>
                         Equipe 
                       </label>
                     </div>
@@ -238,8 +246,8 @@ export class ProcsView extends LitElement {
                 <!-- users dropdown search -->
                 <div
                   class="dropdown is-expanded ${classMap({
-                  'is-hidden': !this._toggleUserOrTeamSearch,
-                  'is-active': this._activateUserSearchDropDown,
+                    'is-hidden': !this._toggleUserOrTeamSearch,
+                    'is-active': this._activateUserSearchDropDown,
                   })}"
                 >
                   <div class="dropdown-trigger">
@@ -258,28 +266,34 @@ export class ProcsView extends LitElement {
                   </div>
                   <div class="dropdown-menu" id="dropdown-menu" role="menu">
                     <div class="dropdown-content">
-                      ${this.users
-                        ? this.users.map(
-                          u => html`
-                            <a
-                              href="#"
-                              class="dropdown-item"
-                              @click="${e => {
-                                e.preventDefault();
-                                this._userSelected(u);
-                              }}"
-                              @keydown="${e => {
-                               e.preventDefault();
-                               this._userSelected(u);
-                               }}"
-                            > ${u.name} - ${u.licenceNumber}</a>
-                          `) : html`<p></p>`}
+                      ${
+                        this.users
+                          ? this.users.map(
+                              u => html`
+                                <a
+                                  href="#"
+                                  class="dropdown-item"
+                                  @click="${e => {
+                                    e.preventDefault();
+                                    this._userSelected(u);
+                                  }}"
+                                  @keydown="${e => {
+                                    e.preventDefault();
+                                    this._userSelected(u);
+                                  }}"
+                                >
+                                  ${u.name} - ${u.licenceNumber}</a
+                                >
+                              `
+                            )
+                          : html`<p></p>`
+                      }
                     </div>
                   </div>
                 </div>    
                 <div class="${classMap({
                   'is-hidden': this._toggleUserOrTeamSearch,
-                  })}">
+                })}">
                   <div class="select" style="width: 100%">
                     <select
                       style="width: 100%"
@@ -287,7 +301,7 @@ export class ProcsView extends LitElement {
                       name="team"
                       .value="${this._currentSearchTeam}"
                       @blur="${e => {
-                      this._currentSearchTeam = e.target.value;
+                        this._currentSearchTeam = e.target.value;
                       }}"
                     >
                       <option value="all">Todas</option>
@@ -320,79 +334,93 @@ export class ProcsView extends LitElement {
                 </button>
               </div> 
               <br />
-              ${this.procedures
-                ? this.procedures.map(
-                  p => html`
-                    <div class="card proc-card">
-                      <div class="card-content">
-                        <div class="content is-flex is-flex-direction-row">
-                          <div class="is-align-self-flex-start is-flex-grow-4">
-                            <strong>${p.descr}</strong>
-                            <small>
-                              Data:
-                              ${DateTime.fromSQL(p.procDateTime, {
-                                locale: 'pt-BR',
-                              }).toLocaleString(DateTime.DATETIME_SHORT)}<br />
-                              Paciente: ${p.ptName}<br />
-                              Equipe: ${p.team} <br />
-                              Executante(s): ${ProcsView._getTeamNames(p)}
-                            </small>
-                          </div>
-                          <div
-                            class="is-flex 
+              ${
+                this.procedures
+                  ? this.procedures.map(
+                      p => html`
+                        <div class="card proc-card">
+                          <div class="card-content">
+                            <div class="content is-flex is-flex-direction-row">
+                              <div
+                                class="is-align-self-flex-start is-flex-grow-4"
+                              >
+                                <strong>${p.descr}</strong>
+                                <small>
+                                  Data:
+                                  ${DateTime.fromSQL(p.procDateTime, {
+                                    locale: 'pt-BR',
+                                  }).toLocaleString(
+                                    DateTime.DATETIME_SHORT
+                                  )}<br />
+                                  Paciente: ${p.ptName}<br />
+                                  Equipe: ${p.team} <br />
+                                  Executante(s): ${ProcsView._getTeamNames(p)}
+                                </small>
+                              </div>
+                              <div
+                                class="is-flex 
                             is-align-self-flex-end
                             is-flex-grow-1
                             is-flex-direction-column"
-                          >
-                            <div
-                              class="button is-white
+                              >
+                                <div
+                                  class="button is-white
                               is-align-self-flex-end
                               has-tooltip-arrow
                               has-tooltip-right
                               ${classMap({
-                              'is-hidden': !((this.user.isAdmin) || 
-                              (this.user.id.toString() === p.createdByUserID))})}"
-                              data-tooltip="Editar"
-                              @click="${() => {
-                              this._edit(p);
-                              }}"
-                              @keydown="${() => {
-                              this._edit(p);
-                              }}"
-                            >
-                              <icon-edit></icon-edit>
-                            </div>
-                            <div
-                              class="button is-white
+                                    'is-hidden': !(
+                                      this.user.isAdmin ||
+                                      this.user.id.toString() ===
+                                        p.createdByUserID
+                                    ),
+                                  })}"
+                                  data-tooltip="Editar"
+                                  @click="${() => {
+                                    this._edit(p);
+                                  }}"
+                                  @keydown="${() => {
+                                    this._edit(p);
+                                  }}"
+                                >
+                                  <icon-edit></icon-edit>
+                                </div>
+                                <div
+                                  class="button is-white
                               is-align-self-flex-end
                               has-tooltip-arrow
                               has-tooltip-right
                               ${classMap({
-                              'is-hidden': !((this.user.isAdmin) || 
-                              (this.user.id.toString() === p.createdByUserID))})}"
-                              data-tooltip="Remover"
-                              @click="${() => {
-                              this._remove(p);
-                              }}"
-                              @keydown="${() => {
-                              this._remove(p);
-                              }}"
-                            >
-                              <icon-trash></icon-trash>
+                                    'is-hidden': !(
+                                      this.user.isAdmin ||
+                                      this.user.id.toString() ===
+                                        p.createdByUserID
+                                    ),
+                                  })}"
+                                  data-tooltip="Remover"
+                                  @click="${() => {
+                                    this._remove(p);
+                                  }}"
+                                  @keydown="${() => {
+                                    this._remove(p);
+                                  }}"
+                                >
+                                  <icon-trash></icon-trash>
+                                </div>
+                              </div>
                             </div>
                           </div>
                         </div>
-                      </div>
-                    </div>
-                  `
-                )
-                : html`</p>`}
+                      `
+                    )
+                  : html`</p>`
+              }
             </div>
           </div>
 
           <btn-fab
             @click="${() => {
-            this._addProc();
+              this._addProc();
             }}"
           ></btn-fab>
         </section>

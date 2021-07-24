@@ -11,24 +11,28 @@ export default {
 function Template() {
   const procs = [
     {
-      descr: "procedure 1",
-      ptName: "Patient Name 1",
-      user1Name: "Doctor Name 1",
+      descr: 'procedure 1',
+      ptName: 'Patient Name 1',
+      user1Name: 'Doctor Name 1',
       procDateTime: DateTime.local().toSQL(),
     },
     {
-      descr: "procedure 2",
-      ptName: "Patient Name 2",
-      user1Name: "Doctor Name 2",
+      descr: 'procedure 2',
+      ptName: 'Patient Name 2',
+      user1Name: 'Doctor Name 2',
       procDateTime: DateTime.local().toSQL(),
     },
   ];
   const user = {
-    name: "user1",
-    licenceNumber: "123412",
+    name: 'user1',
+    id: 1,
+    licenceNumber: '123412',
+    isAdmin: true,
   };
 
-  return html` <procs-view .user="${user}" .procedures="${procs}"> </procs-view> `;
+  return html`
+    <procs-view .user="${user}" .procedures="${procs}"> </procs-view>
+  `;
 }
 
 export const App = Template.bind({});
