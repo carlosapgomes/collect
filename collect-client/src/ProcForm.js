@@ -460,6 +460,7 @@ export class ProcForm extends LitElement {
                         @input="${e => {
                         this._currentProcDate = e.target.value;
                         }}"
+                        required
                       />
                     </div>
                   </div>
@@ -825,6 +826,7 @@ export class ProcForm extends LitElement {
                                   @keyup="${this._searchUser}"
                                   .value="${this._userName}"
                                   placeholder="buscar pelo nome ou registro de classe"
+                                  required
                                 />
                                 <icon-search></icon-search>
                               </div>
