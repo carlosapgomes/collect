@@ -24,7 +24,7 @@ export class PatientForm extends LitElement {
     this.patient = {};
     this.activate = false;
     this._name = '';
-    this._gender = '';
+    this._gender = 'D';
     this._dateOfBirth = DateTime.local().toISODate();
     this._recNumber = '';
   }
@@ -56,7 +56,7 @@ export class PatientForm extends LitElement {
     // @ts-ignore
     document.getElementById('patient-form').reset();
     this._name = '';
-    this._gender = '';
+    this._gender = 'D';
     this._dateOfBirth = DateTime.local().toISODate();
     this._recNumber = '';
   }
@@ -151,6 +151,29 @@ export class PatientForm extends LitElement {
                   />
                   F
                 </label>
+                <label class="radio">
+                  <input
+                    type="radio"
+                    name="gender"
+                    checked
+                    ?checked="${this._gender === 'D'}"
+                    @input="${() => {
+                      this._gender = 'F';
+                    }}"
+                  />
+                  Desconhecido
+                </label>
+                <label class="radio">
+                  <input
+                    type="radio"
+                    name="gender"
+                    ?checked="${this._gender === 'NA'}"
+                    @input="${() => {
+                      this._gender = 'F';
+                    }}"
+                  />
+                  Não se aplica
+                </label>
               </div>
               <div class="field">
                 <label class="label">DN:</label>
@@ -162,6 +185,7 @@ export class PatientForm extends LitElement {
                   @input="${e => {
                     this._dateOfBirth = e.target.value;
                   }}"
+                  required
                 />
               </div>
               <div class="field">
@@ -175,6 +199,7 @@ export class PatientForm extends LitElement {
                   @input="${e => {
                     this._recNumber = e.target.value;
                   }}"
+                  required
                 />
               </div>
             </form>
