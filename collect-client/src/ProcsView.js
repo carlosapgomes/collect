@@ -51,6 +51,7 @@ export class ProcsView extends LitElement {
     );
     this._userName = this.user.name;
     this._currentSearchUserID = this.user.id;
+    console.log(JSON.stringify(this.user,null,2));
   }
 
   _edit(p) {
@@ -347,7 +348,10 @@ export class ProcsView extends LitElement {
                               class="button is-white
                               is-align-self-flex-end
                               has-tooltip-arrow
-                              has-tooltip-right"
+                              has-tooltip-right
+                              ${classMap({
+                              'is-hidden': !((this.user.isAdmin) || 
+                              (this.user.id.toString() === p.createdByUserID))})}"
                               data-tooltip="Editar"
                               @click="${() => {
                               this._edit(p);
@@ -362,7 +366,10 @@ export class ProcsView extends LitElement {
                               class="button is-white
                               is-align-self-flex-end
                               has-tooltip-arrow
-                              has-tooltip-right"
+                              has-tooltip-right
+                              ${classMap({
+                              'is-hidden': !((this.user.isAdmin) || 
+                              (this.user.id.toString() === p.createdByUserID))})}"
                               data-tooltip="Remover"
                               @click="${() => {
                               this._remove(p);
