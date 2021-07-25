@@ -227,12 +227,19 @@ export class ProcForm extends LitElement {
 
   _saveForm(e) {
     e.preventDefault();
-    // @ts-ignore
-    if (
-      this._currentProcUsers.length > 0 &&
-      document.getElementById('procedure-form').reportValidity()
-    ) {
-      this._handleSaveForm();
+    if (document.getElementById('procedure-form').reportValidity()) {
+      if (this._currentProcUsers.length > 0) {
+        this._handleSaveForm();
+      }
+      if (this._currentProcUsers.length === 0) {
+        this.dispatchEvent(
+          new CustomEvent('show-modal-message', {
+            detail: { msg: 'Busque e selecione pelo menos um executante' },
+            bubbles: true,
+            composed: true,
+          })
+        );
+      }
     }
   }
 
@@ -297,11 +304,11 @@ export class ProcForm extends LitElement {
       user6LicenceNumber: '',
       updatedByUserName: this.user.name,
       updatedByUserID: this.user.id,
-      createdByUserID: this.procedure.createdByUserID,
     };
     if (this.procedure && this.procedure.id) {
       // it is a procedure edit
       p.id = this.procedure.id;
+      p.createdByUserID = this.procedure.createdByUserID;
     } else {
       // it is a new procedure
       p.createdByUserName = this.user.name;
@@ -496,6 +503,7 @@ export class ProcForm extends LitElement {
                       <div class="select">
                         <select
                           id="hours"
+                          required
                           .value="${this._currentProcHour}"
                           @blur="${e => {
                             this._currentProcHour = e.target.value;
@@ -532,7 +540,7 @@ export class ProcForm extends LitElement {
                       <div class="select">
                         <select
                           id="minutes"
-                          name="minutes"
+                          required
                           .value="${this._currentProcMinute}"
                           @blur="${e => {
                             this._currentProcMinute = e.target.value;
@@ -637,6 +645,7 @@ export class ProcForm extends LitElement {
                           <select
                             id="execplace"
                             name="execplace"
+                            required
                             .value="${this._procExecPlace}"
                             @blur="${e => {
                               this._procExecPlace = e.target.value;
@@ -665,6 +674,7 @@ export class ProcForm extends LitElement {
                           <select
                             id="team"
                             name="team"
+                            required
                             .value="${this._team}"
                             @blur="${e => {
                               this._team = e.target.value;
@@ -862,6 +872,7 @@ export class ProcForm extends LitElement {
                             <div class="field">
                               <div class="control is-expanded has-icons-right">
                                 <input
+                                  id="procusers"
                                   class="input"
                                   type="search"
                                   @keyup="${this._searchUser}"
