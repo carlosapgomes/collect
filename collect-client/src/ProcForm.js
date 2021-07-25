@@ -25,8 +25,6 @@ export class ProcForm extends LitElement {
       _ward: { type: String, state: true },
       _bed: { type: String, state: true },
       _team: { type: String, state: true },
-      _currentUser: { type: Object, state: true },
-      _userName: { type: String, state: true },
       _activateUserSearchDropDown: { type: Boolean, state: true },
       proctypes: { type: Array },
       _currentProcType: { type: Object, state: true },
@@ -35,6 +33,8 @@ export class ProcForm extends LitElement {
       _showRequiredSurgReport: { type: Boolean, state: true },
       user: { type: Object },
       users: { type: Array },
+      _currentUser: { type: Object, state: true },
+      _userName: { type: String, state: true },
       _maxUsersCount: { type: Number, state: true },
       _currentProcUsers: { type: Array, state: true },
     };
@@ -67,7 +67,7 @@ export class ProcForm extends LitElement {
     const d = DateTime.local().toISODate();
     this._currentProcDate = d;
     // eslint-disable-next-line no-console
-    console.log(JSON.stringify(d, null, 2));
+    // console.log(JSON.stringify(d, null, 2));
     this._currentProcHour = '00';
     this._currentProcMinute = '00';
   }
@@ -78,12 +78,12 @@ export class ProcForm extends LitElement {
   updated(changedProperties) {
     if (changedProperties.has('procedure')) {
       // eslint-disable-next-line no-console
-      console.log('entering updated');
+      // console.log('entering updated');
       if (this.procedure && this.procedure.procDateTime) {
         // eslint-disable-next-line no-console
-        console.log('procedure changed and is defined');
+        // console.log('procedure changed and is defined');
         // eslint-disable-next-line no-console
-        console.log(JSON.stringify(this.procedure, null, 2));
+        // console.log(JSON.stringify(this.procedure, null, 2));
         const procDateTime = DateTime.fromSQL(this.procedure.procDateTime);
         this._currentProcDate = procDateTime.toISODate();
         // eslint-disable-next-line no-console
@@ -101,7 +101,7 @@ export class ProcForm extends LitElement {
         this.proctypes = [{ ...this._currentProcType }];
         this._procTypeDescr = this.procedure.descr;
         // eslint-disable-next-line no-console
-        console.log(`this._procTypeDescr: ${this._procTypeDescr}`);
+        // console.log(`this._procTypeDescr: ${this._procTypeDescr}`);
 
         this._currentPatient = {
           name: this.procedure.ptName,
@@ -111,8 +111,8 @@ export class ProcForm extends LitElement {
           gender: this.procedure.ptGender,
         };
         // eslint-disable-next-line no-console
-        console.log(`this._currentPatient:\n 
-        ${JSON.stringify(this._currentPatient, null, 2)}`);
+        // console.log(`this._currentPatient:\n
+        // ${JSON.stringify(this._currentPatient, null, 2)}`);
         this.patients = [{ ...this._currentPatient }];
         this._patientName = this._currentPatient.name;
 
@@ -218,11 +218,14 @@ export class ProcForm extends LitElement {
     this._ward = '';
     this._bed = '';
     this._team = '';
-    this._currentDoc = {};
     this._userName = '';
     this._activateUserSearchDropDown = false;
     this._currentProcUsers = [];
     this._maxUsersCount = 5;
+    // try to circunvent a race condition with the above procedure-form reset
+    setTimeout(() => {
+      this._currentProcDate = DateTime.local().toISODate();
+    }, 2000);
   }
 
   _saveForm(e) {
@@ -245,30 +248,30 @@ export class ProcForm extends LitElement {
 
   _handleSaveForm() {
     // eslint-disable-next-line no-console
-    console.log(
-      `currentProcDate: ${this._currentProcDate}\n 
-      currentProcHour: ${this._currentProcHour}\n
-      currentProcMinute: ${this._currentProcMinute}`
-    );
+    // console.log(
+    // `currentProcDate: ${this._currentProcDate}\n
+    // currentProcHour: ${this._currentProcHour}\n
+    // currentProcMinute: ${this._currentProcMinute}`
+    // );
 
     const dateTime = DateTime.fromISO(
       `${this._currentProcDate}T${this._currentProcHour}:${this._currentProcMinute}:00.000-03:00`
     );
     // eslint-disable-next-line no-console
-    console.log(JSON.stringify(dateTime, null, 2));
+    // console.log(JSON.stringify(dateTime, null, 2));
     // eslint-disable-next-line no-console
-    console.log(`pt dateOfBirth: ${this._currentPatient.dateOfBirth}`);
+    // console.log(`pt dateOfBirth: ${this._currentPatient.dateOfBirth}`);
     const ptDOB = DateTime.fromSQL(this._currentPatient.dateOfBirth);
     // eslint-disable-next-line no-console
-    console.log(`ptDOB: ${ptDOB}`);
+    // console.log(`ptDOB: ${ptDOB}`);
     const ageObj = dateTime.diff(ptDOB, 'years').toObject();
     const age = parseInt(ageObj.years, 10);
     // eslint-disable-next-line no-console
-    console.log(`age: ${age} years`);
+    // console.log(`age: ${age} years`);
     // eslint-disable-next-line no-console
-    console.log(`dateTime.format: ${dateTime.toISO()}`);
+    // console.log(`dateTime.format: ${dateTime.toISO()}`);
     // eslint-disable-next-line no-console
-    console.log(`pt dateOfBirth: ${ptDOB.toISO()}`);
+    // console.log(`pt dateOfBirth: ${ptDOB.toISO()}`);
 
     const p = {
       descr: this._currentProcType.descr,
@@ -366,7 +369,7 @@ export class ProcForm extends LitElement {
 
   _searchUser(e) {
     // eslint-disable-next-line no-console
-    console.log(e.target.value);
+    // console.log(e.target.value);
     // fire event to hide procedure form from parent's view
 
     if (e.target.value.length > 2) {
@@ -384,7 +387,7 @@ export class ProcForm extends LitElement {
   _userSelected(u) {
     this._userName = u.name;
     // eslint-disable-next-line no-console
-    console.log(JSON.stringify(u, null, 2));
+    // console.log(JSON.stringify(u, null, 2));
     if (this._maxUsersCount >= 0) {
       this._currentProcUsers.push(u);
       this._maxUsersCount -= 1;
@@ -394,7 +397,7 @@ export class ProcForm extends LitElement {
 
   _searchPatient(e) {
     // eslint-disable-next-line no-console
-    console.log(e.target.value);
+    // console.log(e.target.value);
     // fire event to hide procedure form from parent's view
 
     if (e.target.value.length > 2) {
@@ -411,7 +414,7 @@ export class ProcForm extends LitElement {
 
   _patientSelected(p) {
     // eslint-disable-next-line no-console
-    console.log(JSON.stringify(p, null, 2));
+    // console.log(JSON.stringify(p, null, 2));
     this._currentPatient = { ...p };
     this._patientName = p.name;
     this._activatePatientSearchDropDown = false;
@@ -419,7 +422,7 @@ export class ProcForm extends LitElement {
 
   _searchProcType(e) {
     // eslint-disable-next-line no-console
-    console.log(e.target.value);
+    // console.log(e.target.value);
     // fire event to hide procedure form from parent's view
 
     if (e.target.value.length > 2) {
@@ -436,7 +439,7 @@ export class ProcForm extends LitElement {
 
   _procTypeSelected(p) {
     // eslint-disable-next-line no-console
-    console.log(JSON.stringify(p, null, 2));
+    // console.log(JSON.stringify(p, null, 2));
     this._currentProcType = { ...p };
     this._procTypeDescr = p.descr;
     this._activateProcTypeSearchDropDown = false;
