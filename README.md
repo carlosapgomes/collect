@@ -11,17 +11,20 @@ Pré-requisitos:
 - Acesso root
 - git
 
+Instale o `git`:
+
 `apt -y install git`
 
-Após logar como `root`:
+Após logar como `root`
 
 Clone o projeto atual:
-
 `git clone https://github.com/carlosapgomes/collect.git`
 
+Vá ao diretório do projeto,
 
 `cd collect`
 
+e execute o instalador:
  `bash ./install.sh`.
 
 Ele vai:
