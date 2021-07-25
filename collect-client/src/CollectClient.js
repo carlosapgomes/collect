@@ -82,7 +82,8 @@ export class CollectClient extends LitElement {
     installRouter(location => this._locationChanged(location));
     // grab the global feathers object imported on index.html
     this.client = window.feathers();
-    this.rest = window.feathers.rest('http://localhost:3030');
+
+    this.rest = window.feathers.rest(`${window.location.href}api`);
     this.client.configure(this.rest.superagent(window.superagent));
     this.client.configure(
       window.feathers.authentication({

@@ -775,10 +775,10 @@ export class ProcForm extends LitElement {
                 <div class="">
                   <button
                     class="button 
-                    is-ghost 
+                    is-ghost
                     has-tooltip-arrow
                     has-tooltip-top"
-                    data-tooltip="Adicionar"
+                    data-tooltip="Criar"
                     @click="${this._addPatient}"
                     @keydown="${this._addPatient}"
                   >
