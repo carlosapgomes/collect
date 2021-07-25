@@ -98,6 +98,7 @@ export class CollectClient extends LitElement {
     this.addEventListener('get-spreadsheet', this._getSpreadsheet);
     this.addEventListener('edit-procedure', this._editProcedure);
     this.addEventListener('add-procedure', this._loadShowProcForm);
+    this.addEventListener('remove-procedure', this._removeProcedure);
     this.addEventListener('save-procedure-form', this._saveProcedure);
     this.addEventListener('close-procedure-form', () => {
       this._currentProcedure = null;
@@ -161,6 +162,18 @@ export class CollectClient extends LitElement {
     this.addEventListener('hide-spinner', () => {
       this._spinnerHidden = true;
     });
+
+    // add modal message event listener
+    this.addEventListener('show-modal-message', this._showModalMessage);
+  }
+
+  _showModalMessage(e) {
+    console.log('entering showModalMessage');
+    if (e.detail && e.detail.msg) {
+      console.log(`show message ${e.detail.msg}`);
+      this._modalMsg = e.detail.msg;
+      this._toggleModal = true;
+    }
   }
 
   async _handleLoginEvent(e) {
@@ -349,21 +362,20 @@ export class CollectClient extends LitElement {
         },
       };
 
-
       if (e.detail && e.detail.searchByPersonTeam === 'person') {
         const id = e.detail.searchID;
         query.$or = [
-          { user1ID:  id},
-          { user2ID:  id},
-          { user3ID:  id},
-          { user4ID:  id},
-          { user5ID:  id},
-          { user6ID:  id},
+          { user1ID: id },
+          { user2ID: id },
+          { user3ID: id },
+          { user4ID: id },
+          { user5ID: id },
+          { user6ID: id },
         ];
       }
       if (e.detail && e.detail.searchByPersonTeam === 'team') {
         const team = e.detail.searchTeam;
-        if (team !== 'all'){
+        if (team !== 'all') {
           query.team = team;
         }
       }
@@ -386,8 +398,8 @@ export class CollectClient extends LitElement {
     }
   }
 
-  _getSpreadsheet(){
-    sheets([ ...this._procedures ],{ ...this._user });
+  _getSpreadsheet() {
+    sheets([...this._procedures], { ...this._user });
   }
 
   _editProcedure(e) {
@@ -397,6 +409,60 @@ export class CollectClient extends LitElement {
     // eslint-disable-next-line no-console
     // console.log(this._currentProcedure);
     this._loadShowProcForm();
+  }
+
+  _removeProcedure(e) {
+    this._confirmModalObject = { ...e.detail };
+    this._confirmModalFunction = this._removeCurrentProcedure;
+    this._confirmationModalMsg = `Confirma a remoção do procedimento: 
+    ${e.detail.descr}, realizado por ${e.detail.user1Name}?`;
+    this._toggleConfirmationModal = true;
+  }
+
+  async _removeCurrentProcedure(p) {
+    if (this._user.isEnabled) {
+      this.dispatchEvent(new CustomEvent('show-spinner'));
+      if (p.id) {
+        try {
+          // eslint-disable-next-line no-console
+          console.log('removing procedure');
+          // verify if current user isAdmin or has created this
+          // procedure himself
+          if (
+            this._user.isAdmin ||
+            this._user.id.toString() === p.createdByUserID
+          ) {
+            await this.client.service('procedures').remove(p.id);
+            this._spinnerHidden = true;
+            this._modalMsg = 'Procedimento removido com sucesso!';
+            this._toggleModal = true;
+            this.dispatchEvent(
+              new CustomEvent('update-procedures-list', {
+                bubbles: true,
+                composed: true,
+              })
+            );
+          } else {
+            throw new Error('Current user can not remove this procedure');
+          }
+        } catch (err) {
+          // eslint-disable-next-line no-console
+          console.log(`could not remove procedure: ${err}`);
+        }
+      } else {
+        this._spinnerHidden = true;
+        this._modalMsg = 'Erro ao remover o procedimento';
+        this._toggleModal = true;
+        this.dispatchEvent(
+          new CustomEvent('update-procedures-list', {
+            bubbles: true,
+            composed: true,
+          })
+        );
+        // eslint-disable-next-line no-console
+        console.log(`could not remove procedure: missing id`);
+      }
+    }
   }
 
   async _saveProcedure(e) {
@@ -411,8 +477,10 @@ export class CollectClient extends LitElement {
           console.log('updating procedure');
           // verify if current user isAdmin or has created this
           // procedure himself
-          if(this._user.isAdmin || 
-            (this._user.id.toString() === p.createdByUserID)){
+          if (
+            this._user.isAdmin ||
+            this._user.id.toString() === p.createdByUserID
+          ) {
             // remove procedure's property that must never changed
             delete p.createdByUserID;
             await this.client.service('procedures').patch(p.id, { ...p });
@@ -427,9 +495,9 @@ export class CollectClient extends LitElement {
                 bubbles: true,
                 composed: true,
               })
-            );   
-          }else{
-            throw new Error("Current user can not update this procedure");
+            );
+          } else {
+            throw new Error('Current user can not update this procedure');
           }
         } catch (err) {
           // eslint-disable-next-line no-console
@@ -921,10 +989,6 @@ export class CollectClient extends LitElement {
     this._toggleConfirmationModal = true;
   }
 
-  _confirmModalAction() {
-    this._confirmModalFunction(this._confirmModalObject);
-  }
-
   async _removeCurrentProctype(p) {
     if (this._isAdmin && this._user.isEnabled) {
       // eslint-disable-next-line no-console
@@ -1025,13 +1089,17 @@ export class CollectClient extends LitElement {
     }
   }
 
+  _confirmModalAction() {
+    this._confirmModalFunction(this._confirmModalObject);
+  }
+
   render() {
     return html`
       <nav
         id="navbar"
-          class="navbar is-primary is-fixed-top"
-            role="navigation"
-              aria-label="main navigation"
+        class="navbar is-primary is-fixed-top"
+        role="navigation"
+        aria-label="main navigation"
       >
         <div class="navbar-brand">
           <a
@@ -1045,7 +1113,7 @@ export class CollectClient extends LitElement {
           <a
             role="button"
             class="navbar-burger burger ${classMap({
-            'is-active': this._burgerActive,
+              'is-active': this._burgerActive,
             })}"
             id="navbarburger"
             aria-label="menu"
@@ -1071,7 +1139,7 @@ export class CollectClient extends LitElement {
               class="navbar-item"
               href="/procsview"
               @click="${() => {
-              this._burgerActive = false;
+                this._burgerActive = false;
               }}"
             >
               Procedimentos
@@ -1080,7 +1148,7 @@ export class CollectClient extends LitElement {
               class="navbar-item"
               href="/ptsview"
               @click="${() => {
-              this._burgerActive = false;
+                this._burgerActive = false;
               }}"
             >
               Pacientes
@@ -1089,17 +1157,17 @@ export class CollectClient extends LitElement {
             <div
               id="adminmenu"
               class="navbar-item has-dropdown ${classMap({
-              'is-hidden': !this._isAdmin,
-              'is-active': this._adminDropDownOpen,
+                'is-hidden': !this._isAdmin,
+                'is-active': this._adminDropDownOpen,
               })}"
             >
               <a
                 class="navbar-link"
                 @click="${() => {
-                this._adminDropDownOpen = !this._adminDropDownOpen;
+                  this._adminDropDownOpen = !this._adminDropDownOpen;
                 }}"
                 @keydown="${() => {
-                this._adminDropDownOpen = !this._adminDropDownOpen;
+                  this._adminDropDownOpen = !this._adminDropDownOpen;
                 }}"
               >
                 Admin
@@ -1110,8 +1178,8 @@ export class CollectClient extends LitElement {
                   class="navbar-item"
                   href="/usersview"
                   @click="${() => {
-                  this._adminDropDownOpen = false;
-                  this._burgerActive = false;
+                    this._adminDropDownOpen = false;
+                    this._burgerActive = false;
                   }}"
                 >
                   Usuários
@@ -1137,7 +1205,7 @@ export class CollectClient extends LitElement {
                   id="logoutbtn"
                   href="/home"
                   class="button is-light ${classMap({
-                  'is-hidden': !this._loggedIn,
+                    'is-hidden': !this._loggedIn,
                   })}"
                   @click="${this._logoutClicked}"
                 >
@@ -1147,7 +1215,7 @@ export class CollectClient extends LitElement {
                   id="loginbtn"
                   href="/loginform"
                   class="button is-light ${classMap({
-                  'is-hidden': this._loggedIn,
+                    'is-hidden': this._loggedIn,
                   })}"
                   @click=${() => {
                     this._burgerActive = false;
@@ -1160,180 +1228,174 @@ export class CollectClient extends LitElement {
           </div>
         </div>
       </nav>
-        <main id="maincontent">
-          <section
-            id="home"
-            class="section container has-text-centered ${classMap({
+      <main id="maincontent">
+        <section
+          id="home"
+          class="section container has-text-centered ${classMap({
             'is-hidden': this._page !== '/',
-            })}"
-          >
-            <div>
-              <br />
-              <br />
-              <br />
-              <br />
-              <h1 class="title">Coleta de Procedimentos</h1>
-            </div>
-          </section>
+          })}"
+        >
+          <div>
+            <br />
+            <br />
+            <br />
+            <br />
+            <h1 class="title">Coleta de Procedimentos</h1>
+          </div>
+        </section>
 
-          <login-form
-            id="loginform"
-            class="${classMap({
+        <login-form
+          id="loginform"
+          class="${classMap({
             'is-hidden': this._page !== 'loginform',
-            })}"
-          ></login-form>
+          })}"
+        ></login-form>
 
-          <procs-view
-            id="procsview"
-            class="${classMap({
+        <procs-view
+          id="procsview"
+          class="${classMap({
             'is-hidden': this._page !== 'procsview',
-            })}"
-            .users="${this._users}"
-            .user="${this._user}"
-            .procedures="${this._procedures}"
-          ></procs-view>
-          <patients-view
-            id="ptsview"
-            class="${classMap({
+          })}"
+          .users="${this._users}"
+          .user="${this._user}"
+          .procedures="${this._procedures}"
+        ></procs-view>
+        <patients-view
+          id="ptsview"
+          class="${classMap({
             'is-hidden': this._page !== 'ptsview',
-            })}"
-            .patients="${this._patients}"
-          >
-          </patients-view>
-          <users-view
-            id="usersview"
-            .users="${this._users}"
-            class="${classMap({
+          })}"
+          .patients="${this._patients}"
+        >
+        </patients-view>
+        <users-view
+          id="usersview"
+          .users="${this._users}"
+          class="${classMap({
             'is-hidden': this._page !== 'usersview' || !this._isAdmin,
-            })}"
-          ></users-view>
-          <proctypes-view
-            id="procedurestypesview"
-            .procedures="${this._proceduresTypes}"
-            class="${classMap({
+          })}"
+        ></users-view>
+        <proctypes-view
+          id="procedurestypesview"
+          .procedures="${this._proceduresTypes}"
+          class="${classMap({
             'is-hidden': this._page !== 'procedurestypesview' || !this._isAdmin,
-            })}"
-          ></proctypes-view>
-        </main>
-          <footer
-            class="navbar is-fixed-bottom has-background-light
+          })}"
+        ></proctypes-view>
+      </main>
+      <footer
+        class="navbar is-fixed-bottom has-background-light
               has-text-centered is-vcentered"
-          >
-            <div class="column">&copy; <small>CG 2021</small></div>
+      >
+        <div class="column">&copy; <small>CG 2021</small></div>
+      </footer>
+
+      <!-- dynamic elements -->
+      <proc-form
+        class="${classMap({ 'is-hidden': !this._showProcedureForm })}"
+        ?activate="${this._showProcedureForm}"
+        .user="${this._user}"
+        .users="${this._users}"
+        .procedure="${this._currentProcedure}"
+        .patients="${this._patients}"
+        .proctypes="${this._proceduresTypes}"
+      ></proc-form>
+      <user-form
+        class="${classMap({ 'is-hidden': !this._showUserForm })}"
+        ?activate="${this._showUserForm}"
+        .user="${this._currentEditUser}"
+      ></user-form>
+      <patient-form
+        class="${classMap({ 'is-hidden': !this._showPatientForm })}"
+        ?activate="${this._showPatientForm}"
+        .patient="${this._currentEditPatient}"
+      ></patient-form>
+      <uprofile-form
+        class="${classMap({ 'is-hidden': !this._showUserProfileForm })}"
+        ?activate="${this._showUserProfileForm}"
+        .user="${this._currentEditUser}"
+      ></uprofile-form>
+      <proctype-form
+        class="${classMap({ 'is-hidden': !this._showProcTypeForm })}"
+        ?activate="${this._showProcTypeForm}"
+        .proceduretype="${this._currentEditProcType}"
+      ></proctype-form>
+      <spinner-loader
+        class="${classMap({ 'is-hidden': this._spinnerHidden })}"
+      ></spinner-loader>
+      <!-- dynamic modal dialog -->
+      <div
+        id="modalmsg"
+        class="modal ${classMap({ 'is-active': this._toggleModal })}"
+      >
+        <div
+          class="modal-background"
+          @click="${() => {
+            this._toggleModal = false;
+          }}"
+          @keydown="${() => {
+            this._toggleModal = false;
+          }}"
+        ></div>
+        <div class="modal-content">
+          <div class="box container has-text-centered">${this._modalMsg}</div>
+        </div>
+        <button
+          class="modal-close is-large"
+          @click="${() => {
+            this._toggleModal = false;
+          }}"
+          aria-label="close"
+        ></button>
+      </div>
+
+      <div
+        id="confirmationmodal"
+        class="modal ${classMap({
+          'is-active': this._toggleConfirmationModal,
+        })}"
+      >
+        <div
+          class="modal-background"
+          @click="${() => {
+            this._toggleConfirmationModal = false;
+          }}"
+          @keydown="${() => {
+            this._toggleConfirmationModal = false;
+          }}"
+        ></div>
+        <div class="modal-card">
+          <section class="modal-card-body">
+            ${this._confirmationModalMsg}
+          </section>
+          <footer class="modal-card-foot">
+            <button
+              class="button is-danger"
+              @click="${() => {
+                this._toggleConfirmationModal = false;
+                this._confirmModalAction();
+              }}"
+            >
+              Sim
+            </button>
+            <button
+              class="button is-success"
+              @click="${() => {
+                this._toggleConfirmationModal = false;
+              }}"
+            >
+              Não
+            </button>
           </footer>
-
-                <!-- dynamic modal dialog -->
-                  <div
-                    id="modalmsg"
-                      class="modal ${classMap({ 'is-active': this._toggleModal })}"
-                  >
-                    <div
-                      class="modal-background"
-                      @click="${() => {
-                      this._toggleModal = false;
-                      }}"
-                      @keydown="${() => {
-                      this._toggleModal = false;
-                      }}"
-                    ></div>
-                    <div class="modal-content">
-                      <div class="box container has-text-centered">${this._modalMsg}</div>
-                    </div>
-                    <button
-                      class="modal-close is-large"
-                      @click="${() => {
-                      this._toggleModal = false;
-                      }}"
-                      aria-label="close"
-                    ></button>
-                  </div>
-
-                    <div
-                      id="confirmationmodal"
-                        class="modal ${classMap({
-                          'is-active': this._toggleConfirmationModal,
-                            })}"
-                    >
-                      <div
-                        class="modal-background"
-                        @click="${() => {
-                        this._toggleConfirmationModal = false;
-                        }}"
-                        @keydown="${() => {
-                        this._toggleConfirmationModal = false;
-                        }}"
-                      ></div>
-                      <div class="modal-card">
-                        <section class="modal-card-body">
-                          ${this._confirmationModalMsg}
-                        </section>
-                        <footer class="modal-card-foot">
-                          <button
-                            class="button is-danger"
-                            @click="${() => {
-                            this._toggleConfirmationModal = false;
-                            this._confirmModalAction();
-                            }}"
-                          >
-                            Sim
-                          </button>
-                          <button
-                            class="button is-success"
-                            @click="${() => {
-                            this._toggleConfirmationModal = false;
-                            }}"
-                          >
-                            Não
-                          </button>
-                        </footer>
-                      </div>
-                      <button
-                        class="modal-close is-large"
-                        @click="${() => {
-                        this._toggleModal = false;
-                        }}"
-                        aria-label="close"
-                      ></button>
-                    </div>
-
-                            <!-- dynamic elements -->
-                              <proc-form
-                                class="${classMap({ 'is-hidden': !this._showProcedureForm })}"
-                                  ?activate="${this._showProcedureForm}"
-                                    .user="${this._user}"
-                                      .users="${this._users}"
-                                        .procedure="${this._currentProcedure}"
-                                          .patients="${this._patients}"
-                                            .proctypes="${this._proceduresTypes}"
-                              ></proc-form>
-                                <user-form
-                                  class="${classMap({ 'is-hidden': !this._showUserForm })}"
-                                    ?activate="${this._showUserForm}"
-                                      .user="${this._currentEditUser}"
-                                ></user-form>
-                                  <patient-form
-                                    class="${classMap({ 'is-hidden': !this._showPatientForm })}"
-                                      ?activate="${this._showPatientForm}"
-                                        .patient="${this._currentEditPatient}"
-                                  ></patient-form>
-                                    <uprofile-form
-                                      class="${classMap({ 'is-hidden': !this._showUserProfileForm })}"
-                                        ?activate="${this._showUserProfileForm}"
-                                          .user="${this._currentEditUser}"
-                                    ></uprofile-form>
-                <!-- <doctor-form
-                  class="${classMap({ 'is-hidden': !this._showDoctorForm })}"
-                    ?activate="${this._showDoctorForm}"
-                      .doctor="${this._currentEditDoctor}"
-                ></doctor-form> -->
-                  <proctype-form
-                    class="${classMap({ 'is-hidden': !this._showProcTypeForm })}"
-                      ?activate="${this._showProcTypeForm}"
-                        .proceduretype="${this._currentEditProcType}"
-                  ></proctype-form>
-                    <spinner-loader
-                      class="${classMap({ 'is-hidden': this._spinnerHidden })}"
-                    ></spinner-loader>
+        </div>
+        <button
+          class="modal-close is-large"
+          @click="${() => {
+            this._toggleModal = false;
+          }}"
+          aria-label="close"
+        ></button>
+      </div>
     `;
   }
 }
