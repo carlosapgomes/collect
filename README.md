@@ -44,8 +44,16 @@ O Ansible vai:
 - instalar e configurar o Nginx como proxy reverso do frontend e do backend
 - inserir o primeiro usuário `admin` no banco de dados
 
-Ao final da instalação, tente acessar o sistema remotamente como
-usuário `admin` e senha `1234`.
+Ao final da instalação, verifique o `status` dos serviços instalados com os
+comando:
+
+`systemctl status collect`
+
+`systemctl status nginx`
+
+Tente acessar o sistema remotamente navegando no browser para o endereço
+`http://ip_do_servidor` utilizando `admin` como login e `1234` como senha.
+
 
 
 

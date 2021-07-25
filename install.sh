@@ -37,7 +37,7 @@ cd ../../../../../../
 
 echo "run ansible playbook"
 ansible-playbook \
-    --connection=local, \
+    --connection=local \
     --inventory 127.0.0.1, \
     --limit 127.0.0.1 \
     -i ./ansible/ansible_inv.yml ./ansible/provisioning/playbook.yml

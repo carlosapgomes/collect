@@ -26,5 +26,8 @@
    mode: 0644
   notify: Reload NGINX
 
-# remove default nginx config enabled-sites
+- name: Add default admin account
+  shell:
+    cmd: /usr/bin/cat /opt/collect/createAdmin.sql | /usr/bin/sqlite3 /opt/collect/collect.sqlite 
+    
 
