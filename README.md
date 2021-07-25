@@ -40,7 +40,7 @@ O Ansible vai:
 
 - instalar os arquivos do backend no servidor e configura-lo
   como um serviço do `systemd`
-- copiar os arquivos do frontend para o diretório `/www/collect/html`
+- copiar os arquivos do frontend para o diretório `/www/var/collect/html`
 - instalar e configurar o Nginx como proxy reverso do frontend e do backend
 - inserir o primeiro usuário `admin` no banco de dados
 
