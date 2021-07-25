@@ -51,7 +51,6 @@ export class ProcsView extends LitElement {
     );
     this._userName = this.user.name;
     this._currentSearchUserID = this.user.id;
-    console.log(JSON.stringify(this.user, null, 2));
   }
 
   _edit(p) {
@@ -148,6 +147,16 @@ export class ProcsView extends LitElement {
       team.push(ProcsView._getShortName(p.user6Name));
     }
     return team.join(' | ');
+  }
+
+  _remove(p) {
+    this.dispatchEvent(
+      new CustomEvent('remove-procedure', {
+        detail: { ...p },
+        bubbles: true,
+        composed: true,
+      })
+    );
   }
 
   render() {
