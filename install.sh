@@ -16,7 +16,7 @@ npm install --global yarn
 
 echo "copy backend code to ansible folder tree"
 mkdir -p ansible/provisioning/roles/backend/files/opt/collect
-cp backend/* ansible/provisioning/roles/backend/files/opt/collect/
+rsync -a backend/ ansible/provisioning/roles/backend/files/opt/collect
 
 echo "install backend dependencies"
 cd ansible/provisioning/roles/backend/files/opt/collect
@@ -25,7 +25,7 @@ cd ../../../../../../../
 
 echo "copy frontend code to ansible folder tree"
 mkdir -p ansible/provisioning/roles/frontend/files/collect
-cp collect-client/* ansible/provisioning/roles/frontend/files/collect/
+rsync -a collect-client/ ansible/provisioning/roles/frontend/files/collect
 
 echo "install frontend dependencies"
 cd ansible/provisioning/roles/frontend/files/collect/
