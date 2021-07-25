@@ -168,9 +168,7 @@ export class CollectClient extends LitElement {
   }
 
   _showModalMessage(e) {
-    console.log('entering showModalMessage');
     if (e.detail && e.detail.msg) {
-      console.log(`show message ${e.detail.msg}`);
       this._modalMsg = e.detail.msg;
       this._toggleModal = true;
     }
