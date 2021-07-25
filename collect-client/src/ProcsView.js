@@ -71,7 +71,7 @@ export class ProcsView extends LitElement {
 
   _userSelected(u) {
     // eslint-disable-next-line no-console
-    console.log(JSON.stringify(u, null, 2));
+    // console.log(JSON.stringify(u, null, 2));
     this._currentSearchUserID = u.id;
     this._userName = u.name;
     this._activateUserSearchDropDown = false;

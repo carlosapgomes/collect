@@ -34,8 +34,8 @@ export class UserProfileForm extends LitElement {
         this._changePassword = this.user.changePassword
           ? this.user.changePassword
           : false;
-        this._profBoardName = this.user.profBoardName 
-          ? this.user.profBoardName 
+        this._profBoardName = this.user.profBoardName
+          ? this.user.profBoardName
           : '';
         this._licenceNumber = this.user.licenceNumber
           ? this.user.licenceNumber
@@ -104,10 +104,10 @@ export class UserProfileForm extends LitElement {
 
     if (this._licenceNumber === '') {
       delete u.licenceNumber;
-    }    
+    }
 
     // eslint-disable-next-line no-console
-    console.log(u);
+    // console.log(u);
     // fire event to save/update user
     this.dispatchEvent(
       new CustomEvent('save-user-profile', {
@@ -138,7 +138,7 @@ export class UserProfileForm extends LitElement {
               <div class="field-label is-normal">
                 <label class="lable">Nome</label>
               </div>
-              <div class="field-body">    
+              <div class="field-body">
                 <div class="field">
                   <input
                     class="input is-static"
@@ -152,7 +152,7 @@ export class UserProfileForm extends LitElement {
               <div class="field-label is-normal">
                 <label class="lable">Username</label>
               </div>
-              <div class="field-body">    
+              <div class="field-body">
                 <div class="field">
                   <input
                     class="input is-static"
@@ -166,7 +166,7 @@ export class UserProfileForm extends LitElement {
               <div class="field-label is-normal">
                 <label class="lable">Conselho</label>
               </div>
-              <div class="field-body">    
+              <div class="field-body">
                 <div class="field">
                   <input
                     class="input is-static"
@@ -180,7 +180,7 @@ export class UserProfileForm extends LitElement {
               <div class="field-label is-normal">
                 <label class="lable">No. Conselho</label>
               </div>
-              <div class="field-body">    
+              <div class="field-body">
                 <div class="field">
                   <input
                     class="input is-static"
@@ -189,13 +189,13 @@ export class UserProfileForm extends LitElement {
                   />
                 </div>
               </div>
-            </div>            
-              <form id="user-profile-form">
+            </div>
+            <form id="user-profile-form">
               <div class="field is-horizontal">
                 <div class="field-label is-normal">
                   <label class="lable">Email</label>
                 </div>
-                <div class="field-body">    
+                <div class="field-body">
                   <div class="field">
                     <input
                       class="input"
@@ -204,7 +204,7 @@ export class UserProfileForm extends LitElement {
                       placeholder="Email"
                       .value="${this._email}"
                       @input="${e => {
-                      this._email = e.target.value;
+                        this._email = e.target.value;
                       }}"
                     />
                   </div>
@@ -214,7 +214,7 @@ export class UserProfileForm extends LitElement {
                 <div class="field-label is-normal">
                   <label class="lable">Tel.</label>
                 </div>
-                <div class="field-body">    
+                <div class="field-body">
                   <div class="field">
                     <input
                       class="input"
@@ -223,7 +223,7 @@ export class UserProfileForm extends LitElement {
                       placeholder="Telefone"
                       .value="${this._phone}"
                       @input="${e => {
-                      this._phone = e.target.value;
+                        this._phone = e.target.value;
                       }}"
                     />
                   </div>
@@ -234,7 +234,7 @@ export class UserProfileForm extends LitElement {
                 <div class="field-label is-normal">
                   <label class="lable">Senha</label>
                 </div>
-                <div class="field-body">    
+                <div class="field-body">
                   <div class="field">
                     <input
                       class="input"
@@ -243,7 +243,7 @@ export class UserProfileForm extends LitElement {
                       placeholder="Senha"
                       .value="${this._password}"
                       @input="${e => {
-                      this._password = e.target.value;
+                        this._password = e.target.value;
                       }}"
                     />
                   </div>

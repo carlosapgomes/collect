@@ -41,7 +41,7 @@ export class ProcTypesView extends LitElement {
 
   _remove(p) {
     // eslint-disable-next-line no-console
-    console.log(p);
+    // console.log(p);
     this.dispatchEvent(
       new CustomEvent('remove-procedure-type', {
         detail: p,

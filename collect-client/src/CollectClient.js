@@ -323,7 +323,7 @@ export class CollectClient extends LitElement {
       // eslint-disable-next-line no-console
       console.log('updating procedures list ...');
       // eslint-disable-next-line no-console
-      console.log(JSON.stringify(e.detail, null, 2));
+      // console.log(JSON.stringify(e.detail, null, 2));
       this._spinnerHidden = false;
       // defaults to today's procedures
       let startDateTime = DateTime.local().startOf('day');
@@ -346,11 +346,11 @@ export class CollectClient extends LitElement {
 
       this._currentProceduresDate = startDateTime.toISODate();
       // eslint-disable-next-line no-console
-      console.log(`_currentProceduresDate: ${this._currentProceduresDate}`);
+      // console.log(`_currentProceduresDate: ${this._currentProceduresDate}`);
       // eslint-disable-next-line no-console
-      console.log(`startDateTime: ${startDateTime}`);
+      // console.log(`startDateTime: ${startDateTime}`);
       // eslint-disable-next-line no-console
-      console.log(`endDateTime: ${endDateTime}`);
+      // console.log(`endDateTime: ${endDateTime}`);
       const query = {
         $sort: {
           procDateTime: 1,
@@ -384,7 +384,7 @@ export class CollectClient extends LitElement {
           query: { ...query },
         });
         // eslint-disable-next-line no-console
-        console.log(procsList.data);
+        // console.log(procsList.data);
         if (procsList.data.length > 0) {
           this._procedures = [...procsList.data];
         }
@@ -403,7 +403,7 @@ export class CollectClient extends LitElement {
 
   _editProcedure(e) {
     // eslint-disable-next-line no-console
-    console.log(JSON.stringify(e.detail, null, 2));
+    // console.log(JSON.stringify(e.detail, null, 2));
     this._currentProcedure = { ...e.detail };
     // eslint-disable-next-line no-console
     // console.log(this._currentProcedure);
@@ -532,7 +532,7 @@ export class CollectClient extends LitElement {
 
   _editUser(e) {
     // eslint-disable-next-line no-console
-    console.log(JSON.stringify(e.detail, null, 2));
+    // console.log(JSON.stringify(e.detail, null, 2));
     this._currentEditUser = { ...e.detail };
     // eslint-disable-next-line no-console
     // console.log(this._currentEditUser);
@@ -556,7 +556,7 @@ export class CollectClient extends LitElement {
           },
         });
         // eslint-disable-next-line no-console
-        console.log(usersList.data);
+        // console.log(usersList.data);
         if (usersList.data.length > 0) {
           this._users = [...usersList.data];
         }
@@ -598,12 +598,12 @@ export class CollectClient extends LitElement {
       try {
         // eslint-disable-next-line no-console
         console.log('updating user');
-        const res = await this.client.service('users').patch(u.id, { ...u });
+        await this.client.service('users').patch(u.id, { ...u });
         this._spinnerHidden = true;
         this._modalMsg = 'Perfil atualizado com sucesso!';
         this._toggleModal = true;
         // eslint-disable-next-line no-console
-        console.log(`User updated: ${JSON.stringify(res, null, 2)}`);
+        // console.log(`User updated: ${JSON.stringify(res, null, 2)}`);
         this.dispatchEvent(
           new CustomEvent('update-users-list', {
             bubbles: true,
@@ -624,19 +624,19 @@ export class CollectClient extends LitElement {
   async _saveUser(e) {
     if (this._isAdmin && this._user.isEnabled) {
       // eslint-disable-next-line no-console
-      console.log(JSON.stringify(e.detail, null, 2));
+      // console.log(JSON.stringify(e.detail, null, 2));
       this._spinnerHidden = false;
       const u = { ...e.detail };
       if (u.id) {
         try {
           // eslint-disable-next-line no-console
           console.log('updating user');
-          const res = await this.client.service('users').patch(u.id, { ...u });
+          await this.client.service('users').patch(u.id, { ...u });
           this._spinnerHidden = true;
           this._modalMsg = 'Usuário gravado com sucesso!';
           this._toggleModal = true;
           // eslint-disable-next-line no-console
-          console.log(`User updated: ${JSON.stringify(res, null, 2)}`);
+          // console.log(`User updated: ${JSON.stringify(res, null, 2)}`);
           this.dispatchEvent(
             new CustomEvent('update-users-list', {
               bubbles: true,
@@ -651,12 +651,12 @@ export class CollectClient extends LitElement {
         try {
           // eslint-disable-next-line no-console
           console.log('creating user');
-          const res = await this.client.service('users').create({ ...u });
+          await this.client.service('users').create({ ...u });
           this._spinnerHidden = true;
           this._modalMsg = 'Usuário gravado com sucesso!';
           this._toggleModal = true;
           // eslint-disable-next-line no-console
-          console.log(JSON.stringify(res, null, 2));
+          // console.log(JSON.stringify(res, null, 2));
           this.dispatchEvent(
             new CustomEvent('update-users-list', {
               bubbles: true,
@@ -676,7 +676,7 @@ export class CollectClient extends LitElement {
       // clear doctors list
       this._users = [];
       // eslint-disable-next-line no-console
-      console.log(`searching for users: ${e.detail}`);
+      // console.log(`searching for users: ${e.detail}`);
       this._spinnerHidden = false;
       try {
         const usersList = await this.client.service('users').find({
@@ -696,7 +696,7 @@ export class CollectClient extends LitElement {
           },
         });
         // eslint-disable-next-line no-console
-        console.log(usersList.data);
+        // console.log(usersList.data);
         if (usersList.data.length > 0) {
           this._users = [...usersList.data];
         }
@@ -746,7 +746,7 @@ export class CollectClient extends LitElement {
           },
         });
         // eslint-disable-next-line no-console
-        console.log(patientsList.data);
+        // console.log(patientsList.data);
         if (patientsList.data.length > 0) {
           this._patients = [...patientsList.data];
         }

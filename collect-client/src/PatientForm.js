@@ -71,7 +71,7 @@ export class PatientForm extends LitElement {
 
   _handleSaveForm() {
     // eslint-disable-next-line no-console
-    console.log(this._dateOfBirth);
+    // console.log(this._dateOfBirth);
     const p = {
       name: this._name,
       gender: this._gender,
@@ -79,13 +79,13 @@ export class PatientForm extends LitElement {
       recNumber: this._recNumber,
     };
     // eslint-disable-next-line no-console
-    console.log(`Saving patient: ${JSON.stringify(p, null, 2)}`);
+    // console.log(`Saving patient: ${JSON.stringify(p, null, 2)}`);
     if (this.patient && this.patient.id) {
       p.id = this.patient.id;
     }
 
     // eslint-disable-next-line no-console
-    console.log(p);
+    // console.log(p);
     // fire event to save/update.patient
     this.dispatchEvent(
       new CustomEvent('save-patient-form', {

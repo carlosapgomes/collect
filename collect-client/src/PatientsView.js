@@ -28,16 +28,16 @@ export class PatientsView extends LitElement {
     );
   }
 
-  updated(changedProperties) {
-    if (changedProperties.has('patients')) {
-      // eslint-disable-next-line no-console
-      console.log(JSON.stringify(this.patients, null, 2));
-    }
-  }
+  // updated(changedProperties) {
+  // if (changedProperties.has('patients')) {
+  // eslint-disable-next-line no-console
+  // console.log(JSON.stringify(this.patients, null, 2));
+  // }
+  // }
 
   _edit(p) {
     // eslint-disable-next-line no-console
-    console.log(p);
+    // console.log(p);
     this.dispatchEvent(
       new CustomEvent('edit-patient', {
         detail: p,
@@ -49,7 +49,7 @@ export class PatientsView extends LitElement {
 
   _remove(p) {
     // eslint-disable-next-line no-console
-    console.log(p);
+    // console.log(p);
     this.dispatchEvent(
       new CustomEvent('remove-patient', {
         detail: p,
@@ -90,8 +90,8 @@ export class PatientsView extends LitElement {
                           <div class="is-align-self-flex-start is-flex-grow-4">
                             <strong>${p.name}</strong> - DN:
                             ${DateTime.fromSQL(p.dateOfBirth, {
-                                locale: 'pt-BR',
-                              }).toLocaleString(DateTime.SHORT)}
+                              locale: 'pt-BR',
+                            }).toLocaleString(DateTime.SHORT)}
                             - Registro: ${p.recNumber}
                           </div>
                           <div

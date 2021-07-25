@@ -52,8 +52,9 @@ export class UserForm extends LitElement {
           : false;
         this._isEnabled = this.user.isEnabled ? this.user.isEnabled : false;
         this._isAdmin = this.user.isAdmin ? this.user.isAdmin : false;
-        this._profBoardName = this.user.profBoardName 
-          ? this.user.profBoardName : '';
+        this._profBoardName = this.user.profBoardName
+          ? this.user.profBoardName
+          : '';
         this._licenceNumber = this.user.licenceNumber
           ? this.user.licenceNumber
           : '';
@@ -136,7 +137,7 @@ export class UserForm extends LitElement {
     }
 
     // eslint-disable-next-line no-console
-    console.log(u);
+    // console.log(u);
     // fire event to save/update user
     this.dispatchEvent(
       new CustomEvent('save-user-form', {
@@ -170,61 +171,65 @@ export class UserForm extends LitElement {
                 </div>
                 <div class="field-body">
                   <div class="field">
-                  <p class="control">
-                    <input
-                      class="input"
-                      id="name"
-                      type="text"
-                      placeholder="Nome"
-                      .value="${this._name}"
-                      @input="${e => {
-                      this._name = e.target.value;
-                      }}"
-                      required
-                    />
-                  </p>
-                </div></div></div>
+                    <p class="control">
+                      <input
+                        class="input"
+                        id="name"
+                        type="text"
+                        placeholder="Nome"
+                        .value="${this._name}"
+                        @input="${e => {
+                          this._name = e.target.value;
+                        }}"
+                        required
+                      />
+                    </p>
+                  </div>
+                </div>
+              </div>
               <div class="field is-horizontal">
                 <div class="field-label is-normal">
                   <label class="lable">Email</label>
                 </div>
-                <div class="field-body"><div class="field">
-                  <input
-                    class="input"
-                    id="user-email-address"
-                    type="email"
-                    placeholder="Email"
-                    .value="${this._email}"
-                    @input="${e => {
-                    this._email = e.target.value;
-                    }}"
-                  />
-                </div>
+                <div class="field-body">
+                  <div class="field">
+                    <input
+                      class="input"
+                      id="user-email-address"
+                      type="email"
+                      placeholder="Email"
+                      .value="${this._email}"
+                      @input="${e => {
+                        this._email = e.target.value;
+                      }}"
+                    />
+                  </div>
                 </div>
               </div>
               <div class="field is-horizontal">
                 <div class="field-label is-normal">
                   <label class="lable">Tel.</label>
                 </div>
-                <div class="field-body"><div class="field">
-                  <input
-                    class="input"
-                    id="user-phone"
-                    type="text"
-                    placeholder="Telefone"
-                    .value="${this._phone}"
-                    @input="${e => {
-                    this._phone = e.target.value;
-                    }}"
-                  />
-                </div>
+                <div class="field-body">
+                  <div class="field">
+                    <input
+                      class="input"
+                      id="user-phone"
+                      type="text"
+                      placeholder="Telefone"
+                      .value="${this._phone}"
+                      @input="${e => {
+                        this._phone = e.target.value;
+                      }}"
+                    />
+                  </div>
                 </div>
               </div>
               <div class="field is-horizontal">
                 <div class="field-label is-normal">
                   <label class="lable">Username</label>
                 </div>
-                <div class="field-body">              
+                <div class="field-body">
                   <div class="field">
                     <input
                       class="input"
@@ -232,7 +237,7 @@ export class UserForm extends LitElement {
                       type="text"
                       placeholder="Username"
                       @input="${e => {
-                      this._username = e.target.value;
+                        this._username = e.target.value;
                       }}"
                       .value="${this._username}"
                       required
@@ -244,7 +249,7 @@ export class UserForm extends LitElement {
                 <div class="field-label is-normal">
                   <label class="lable">Senha</label>
                 </div>
-                <div class="field-body">    
+                <div class="field-body">
                   <div class="field">
                     <input
                       class="input"
@@ -253,7 +258,7 @@ export class UserForm extends LitElement {
                       placeholder="Senha"
                       .value="${this._password}"
                       @input="${e => {
-                      this._password = e.target.value;
+                        this._password = e.target.value;
                       }}"
                     />
                   </div>
@@ -263,7 +268,7 @@ export class UserForm extends LitElement {
                 <div class="field-label is-normal">
                   <label class="lable">Conselho</label>
                 </div>
-                <div class="field-body">    
+                <div class="field-body">
                   <div class="field">
                     <input
                       class="input"
@@ -272,7 +277,7 @@ export class UserForm extends LitElement {
                       placeholder="Crm/Coren/Crefito"
                       .value="${this._profBoardName}"
                       @input="${e => {
-                      this._profBoardName = e.target.value;
+                        this._profBoardName = e.target.value;
                       }}"
                     />
                   </div>
@@ -282,7 +287,7 @@ export class UserForm extends LitElement {
                 <div class="field-label is-normal">
                   <label class="lable">No. Conselho</label>
                 </div>
-                <div class="field-body">    
+                <div class="field-body">
                   <div class="field">
                     <input
                       class="input"
@@ -291,7 +296,7 @@ export class UserForm extends LitElement {
                       placeholder="no. do Crm/Coren/Crefito"
                       .value="${this._licenceNumber}"
                       @input="${e => {
-                      this._licenceNumber = e.target.value;
+                        this._licenceNumber = e.target.value;
                       }}"
                     />
                   </div>
@@ -308,35 +313,34 @@ export class UserForm extends LitElement {
                     type="checkbox"
                     ?checked="${this._changePassword}"
                     @input="${e => {
-                    this._changePassword = e.target.checked;
+                      this._changePassword = e.target.checked;
                     }}"
                   />
                   Atualizar senha</label
-                  >
+                >
                 <label class="checkbox">
                   <input
                     id="user-is-enabled"
                     type="checkbox"
                     ?checked="${this._isEnabled}"
                     @input="${e => {
-                    this._isEnabled = e.target.checked;
+                      this._isEnabled = e.target.checked;
                     }}"
                   />
                   Habilitado</label
-                  >
+                >
                 <label class="checkbox">
                   <input
                     id="user-is-admin"
                     type="checkbox"
                     ?checked="${this._isAdmin}"
                     @input="${e => {
-                    this._isAdmin = e.target.checked;
+                      this._isAdmin = e.target.checked;
                     }}"
                   />
                   Admin</label
-                  >
+                >
               </div>
-
             </form>
           </section>
           <footer class="modal-card-foot">
