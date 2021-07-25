@@ -1,14 +1,5 @@
 ---
 # tasks file for collect
-- name: Install yarn
-  ansible.builtin.shell: npm install --global yarn
-
-- name: Install required packages
-  ansible.builtin.shell: 
-    chdir: ../../../../../backend
-    cmd: yarn install
-    chdir: ../ansible/provisioning/roles/backend/tasks
-
 - name: Add unprivileged system user
   user:
     name: "{{ item }}"
