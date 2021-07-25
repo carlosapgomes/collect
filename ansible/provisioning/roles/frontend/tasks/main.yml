@@ -1,0 +1,10 @@
+---
+# tasks file for frontend
+- name: Copy site content
+  copy:
+    dest: "/var/www/collect/html/"
+    src: "../../../../../collect-client/dist/"
+    owner: root
+    group: root
+    mode: 0755
+

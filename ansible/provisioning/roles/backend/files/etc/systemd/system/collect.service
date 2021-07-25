@@ -1,0 +1,16 @@
+[Unit]
+Description=Collect service
+After=network.target
+
+[Service]
+Type=simple
+Restart=on-failure
+User=collect
+ExecStart=/opt/collect/collect
+StandardOutput=append:/var/log/collect/app.log
+StandardError=append:/var/log/collect/error.log
+WorkingDirectory=/opt/collect
+
+[Install]
+WantedBy=multi-user.target
+

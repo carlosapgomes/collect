@@ -1,0 +1,76 @@
+---
+# tasks file for collect
+- name: Install yarn
+  ansible.builtin.shell: npm install --global yarn
+
+- name: Install required packages
+  ansible.builtin.shell: 
+    chdir: ../../../../../backend
+    cmd: yarn install
+    chdir: ../ansible/provisioning/roles/backend/tasks
+
+- name: Add unprivileged system user
+  user:
+    name: "{{ item }}"
+    create_home: no
+    expires: -1
+    generate_ssh_key: no
+    shell: /usr/sbin/nologin
+    system: yes
+    state: present
+  with_items:
+    - collect
+
+- name: create collect home folder
+  file:
+    path: "/opt/{{ item }}"
+    state: directory
+    owner: "{{ item }}"
+    group: "{{ item }}"
+    mode: 0700
+  with_items:
+    - collect
+
+- name: create collect log folder
+  file:
+    path: "/var/log/{{ item }}"
+    state: directory
+    owner: "{{ item }}"
+    group: "{{ item }}"
+    mode: 0700
+  with_items:
+    - collect
+
+- name: Copy collect backend to guest
+  copy:
+    src: "../../../../../backend/"
+    dest: "/opt/collect/"
+    owner: collect
+    group: collect
+    mode: 0700
+
+- name: Copy collect systemd unit file to guest
+  copy:
+    src: etc/systemd/system/collect.service
+    dest: /etc/systemd/system/collect.service
+    owner: root
+    group: root
+
+- name: Create collect override folder
+  file:
+    path: /etc/systemd/system/collect.service.d
+    state: directory
+    owner: root
+    group: root
+    mode: 0600
+
+- name: just force systemd to reread configs (2.4 and above)
+  systemd: 
+    daemon_reload=yes
+
+- name: Enable collect service
+  systemd:
+    name: collect
+    enabled: yes
+    state: restarted
+
