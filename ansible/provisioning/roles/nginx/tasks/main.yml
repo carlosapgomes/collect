@@ -26,4 +26,5 @@
    mode: 0644
   notify: Reload NGINX
 
+# remove default nginx config enabled-sites
 

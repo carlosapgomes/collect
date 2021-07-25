@@ -33,12 +33,17 @@
     - collect
 
 - name: Copy collect backend to guest
-  copy:
-    src: "../../../../../backend/"
-    dest: "/opt/collect/"
+  synchronize:
+    src: opt/collect/
+    dest: /opt/collect
+
+- name: Set permissions
+  file:
+    dest: /opt/collect
     owner: collect
     group: collect
     mode: 0700
+    recurse: yes
 
 - name: Copy collect systemd unit file to guest
   copy:

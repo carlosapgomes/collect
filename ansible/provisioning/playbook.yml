@@ -1,6 +1,5 @@
 ---
 - hosts: all
-  become: true
   vars_files:
     - vars/default.yml
 
@@ -8,5 +7,4 @@
     - role: backend
     - role: frontend
     - role: nginx
-    - role: dbdata
 
