@@ -9,9 +9,7 @@ module.exports = function (app) {
     paginate: {
       'default': 10,
       'max': 10
-=======
     },
->>>>>>> pagination
   };
 
   // Initialize our service with any options it requires
