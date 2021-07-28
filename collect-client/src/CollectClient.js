@@ -31,6 +31,7 @@ export class CollectClient extends LitElement {
       _loggedIn: { type: Boolean, state: true },
       _isAdmin: { type: Boolean, state: true },
       // patients
+      _patientsRes: {type: Object, state: true},
       _patients: { type: Array, state: true },
       _currentEditPatient: { type: Object, state: true },
       _showPatientForm: { type: Boolean, state: true },
@@ -83,7 +84,8 @@ export class CollectClient extends LitElement {
     // grab the global feathers object imported on index.html
     this.client = window.feathers();
 
-    this.rest = window.feathers.rest(`${window.location.href}api`);
+    //this.rest = window.feathers.rest(`${window.location.href}api`);
+    this.rest = window.feathers.rest('http://localhost:3030');
     this.client.configure(this.rest.superagent(window.superagent));
     this.client.configure(
       window.feathers.authentication({
@@ -594,11 +596,13 @@ export class CollectClient extends LitElement {
   async _saveUserProfile(e) {
     this._spinnerHidden = false;
     const u = { ...e.detail };
+        // eslint-disable-next-line no-console
+        // console.log(`user: ${JSON.stringify(u,null,2)}`);
     if (u.id) {
       try {
         // eslint-disable-next-line no-console
         console.log('updating user');
-        await this.client.service('users').patch(u.id, { ...u });
+        await this.client.service('users').patch(u.id, {...u});
         this._spinnerHidden = true;
         this._modalMsg = 'Perfil atualizado com sucesso!';
         this._toggleModal = true;
@@ -759,28 +763,36 @@ export class CollectClient extends LitElement {
     }
   }
 
-  async _updatePatientsList() {
+  async _updatePatientsList(e) {
     if (this._user.isEnabled) {
       // clear patients list
       this._patients = [];
       // eslint-disable-next-line no-console
       // console.log('updating patients list ...');
       this._spinnerHidden = false;
+      let skip = 0;
+      if(e.detail && e.detail.skip){
+        skip = e.detail.skip;
+      }
       try {
         const patientsList = await this.client.service('patients').find({
           query: {
+            $skip: skip,
             $sort: {
               name: 1,
             },
           },
         });
         // eslint-disable-next-line no-console
-        // console.log(patientsList.data);
+        //console.log(JSON.stringify(patientsList,null,2));
         if (patientsList.data.length > 0) {
+          this._patientsRes = { ...patientsList };
           this._patients = [...patientsList.data];
         }
         this._spinnerHidden = true;
-      } catch (e) {
+      } catch (err) {
+        // eslint-disable-next-line no-console
+        console.log(JSON.stringify(err.message));
         this._spinnerHidden = true;
         this._modalMsg = 'Erro ao buscar lista de pacientes';
         this._toggleModal = true;
@@ -1264,7 +1276,7 @@ export class CollectClient extends LitElement {
           class="${classMap({
             'is-hidden': this._page !== 'ptsview',
           })}"
-          .patients="${this._patients}"
+          .patientsres="${this._patientsRes}"
         >
         </patients-view>
         <users-view

@@ -1,4 +1,5 @@
 import { html, LitElement } from 'lit-element';
+import { classMap } from 'lit-html/directives/class-map.js';
 
 export class PageNav extends LitElement {
   // use lightDOM
@@ -57,7 +58,7 @@ export class PageNav extends LitElement {
     this.dispatchEvent(
       new CustomEvent('paginate', {
         detail: {
-          skip: parseInt((this.total/this.limit),10),
+          skip: parseInt((this.total/this.limit),10)*this.limit,
         },
         bubbles: true,
         composed: true,
@@ -103,12 +104,16 @@ export class PageNav extends LitElement {
     return html`<nav class="pagination is-small" role="navigation" aria-label="pagination">
       <button 
         class="pagination-previous button"
+        ?disabled="${this.skip === 0}"
         @click="${this._gotoPrevPage}">Previous</button>
       <button class="pagination-next button"
+        ?disabled="${this._currentPage === this._lastPage}"
         @click="${this._gotoNextPage}">Next page</button>
       <ul class="pagination-list">
         <li><button 
-          class="pagination-link button" 
+          class="pagination-link button ${classMap({
+              'is-hidden': (this._currentPage === 1),
+            })}" 
           aria-label="Goto page 1"
           @click="${this._gotoFirstPage}"
         >1</button></li>

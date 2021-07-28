@@ -1,6 +1,9 @@
 import { html, LitElement } from 'lit-element';
-import './btn-fab.js';
 import { DateTime } from 'luxon';
+import './btn-fab.js';
+import './page-nav.js';
+import './icons/icon-edit.js';
+import './icons/icon-trash.js';
 
 export class PatientsView extends LitElement {
   // use lightDOM
@@ -10,30 +13,49 @@ export class PatientsView extends LitElement {
 
   static get properties() {
     return {
-      patients: { type: Array },
+      patientsres: {type: Object},
+      _patients: { type: Array, state: true},
+      _total: {type: Number, state: true},
+      _limit: {type: Number, state: true},
+      _skip: {type: Number, state: true},
     };
-  }
-
-  constructor() {
-    super();
-    this.procedures = [];
   }
 
   firstUpdated() {
     this.dispatchEvent(
       new CustomEvent('update-patients-list', {
+        detail:{
+          skip: 0,
+        },
         bubbles: true,
         composed: true,
       })
     );
+    this.addEventListener('paginate',this._paginate);
   }
 
-  // updated(changedProperties) {
-  // if (changedProperties.has('patients')) {
-  // eslint-disable-next-line no-console
-  // console.log(JSON.stringify(this.patients, null, 2));
-  // }
-  // }
+  updated(changedProperties) {
+    if (changedProperties.has('patientsres')) {
+      // eslint-disable-next-line no-console
+      // console.log(JSON.stringify(this.patientsres, null, 2));
+      this._patients = [...this.patientsres.data];
+      this._total = this.patientsres.total;
+      this._limit = this.patientsres.limit;
+      this._skip = this.patientsres.skip;
+    }
+  }
+
+  _paginate(e){
+    e.stopPropagation();
+    this.dispatchEvent(
+      new CustomEvent('update-patients-list', {
+        detail:{
+          skip: e.detail.skip,
+        },
+        bubbles: true,
+        composed: true,
+      })
+    );  }
 
   _edit(p) {
     // eslint-disable-next-line no-console
@@ -71,18 +93,18 @@ export class PatientsView extends LitElement {
         .proc-card {
           margin-bottom: 0.3em;
         }
-        svg {
-          margin: 0.4em;
-          overflow: visible;
+          svg {
+            margin: 0.4em;
+            overflow: visible;
         }
       </style>
-      <section id="patients" class="section">
-        <div class="column is-6 is-offset-3">
-          <div class="container">
-            <h1 class="subtitle has-text-centered is-3">Pacientes</h1>
-            <br />
-            ${this.patients
-              ? this.patients.map(
+        <section id="patients" class="section">
+          <div class="column is-6 is-offset-3">
+            <div class="container">
+              <h1 class="subtitle has-text-centered is-3">Pacientes</h1>
+              <br />
+              ${this._patients
+                ? this._patients.map(
                   p => html`
                     <div class="card proc-card">
                       <div class="card-content">
@@ -107,63 +129,29 @@ export class PatientsView extends LitElement {
                               has-tooltip-right"
                               data-tooltip="Editar"
                               @click="${() => {
-                                this._edit(p);
+                              this._edit(p);
                               }}"
                               @keydown="${() => {
-                                this._edit(p);
+                              this._edit(p);
                               }}"
                             >
-                              <span class="icon is-small is-right">
-                                <svg
-                                  id="i-edit"
-                                  xmlns="http://www.w3.org/2000/svg"
-                                  viewBox="0 0 32 32"
-                                  width="16"
-                                  height="16"
-                                  fill="none"
-                                  stroke="currentcolor"
-                                  stroke-linecap="round"
-                                  stroke-linejoin="round"
-                                  stroke-width="2"
-                                >
-                                  <path
-                                    d="M30 7 L25 2 5 22 3 29 10 27 Z M21 6 L26 11 Z M5 22 L10 27 Z"
-                                  />
-                                </svg>
-                              </span>
+                              <icon-edit></icon-edit>
                             </div>
                             <div
                               class="button 
-                            is-white
-                            is-align-self-flex-end
-                            has-tooltip-arrow
-                            has-tooltip-right"
+                              is-white
+                              is-align-self-flex-end
+                              has-tooltip-arrow
+                              has-tooltip-right"
                               data-tooltip="Remover"
                               @click="${() => {
-                                this._remove(p);
+                              this._remove(p);
                               }}"
                               @keydown="${() => {
-                                this._remove(p);
+                              this._remove(p);
                               }}"
                             >
-                              <span class="icon is small is-right">
-                                <svg
-                                  id="i-trash"
-                                  xmlns="http://www.w3.org/2000/svg"
-                                  viewBox="0 0 32 32"
-                                  width="16"
-                                  height="16"
-                                  fill="none"
-                                  stroke="currentcolor"
-                                  stroke-linecap="round"
-                                  stroke-linejoin="round"
-                                  stroke-width="2"
-                                >
-                                  <path
-                                    d="M28 6 L6 6 8 30 24 30 26 6 4 6 M16 12 L16 24 M21 12 L20 24 M11 12 L12 24 M12 6 L13 2 19 2 20 6"
-                                  />
-                                </svg>
-                              </span>
+                              <icon-trash></icon-trash>
                             </div>
                           </div>
                         </div>
@@ -171,16 +159,21 @@ export class PatientsView extends LitElement {
                     </div>
                   `
                 )
-              : html`</p>`}
+                : html`</p>`}
+              <page-nav
+                .total=${this._total}
+                .limit=${this._limit}
+                .skip=${this._skip}>
+              </page-nav>
+            </div>
           </div>
-        </div>
 
-        <btn-fab
-          @click="${() => {
+          <btn-fab
+            @click="${() => {
             this._addPatient();
-          }}"
-        ></btn-fab>
-      </section>
+            }}"
+          ></btn-fab>
+        </section>
     `;
   }
 }
