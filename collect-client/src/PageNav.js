@@ -112,30 +112,47 @@ export class PageNav extends LitElement {
       <ul class="pagination-list">
         <li><button 
           class="pagination-link button ${classMap({
-              'is-hidden': (this._currentPage === 1),
-            })}" 
+          'is-hidden':  (this._currentPage === 1),
+          })}" 
           aria-label="Goto page 1"
           @click="${this._gotoFirstPage}"
         >1</button></li>
-        <li><span class="pagination-ellipsis">&hellip;</span></li>
+        <li><span class="pagination-ellipsis ${classMap({
+          'is-hidden': ( (this._currentPage === 1)||
+          ((this._currentPage - 1) === 1) || 
+          (this. _prevPage === 2)),
+          })}">&hellip;</span></li>
         <li><button 
-          class="pagination-link button" 
+          class="pagination-link button ${classMap({
+          'is-hidden': ( (this._currentPage === 1) ||
+          ((this._currentPage - 1) === 1)),
+          })}" 
           aria-label="Goto previous page"
           @click="${this._gotoPrevPage}"
         >${this._prevPage}</button></li>
         <li><button 
           class="pagination-link is-current button" 
-          aria-label="Page 46" 
+          aria-label="current page" 
           aria-current="page"
         >${this._currentPage}</button></li>
         <li><button 
-          class="pagination-link button" 
+          class="pagination-link button ${classMap({
+          'is-hidden': (this._currentPage === this._lastPage),
+          })}" 
           aria-label="Goto page 47"
           @click="${this._gotoNextPage}"
         >${this._nextPage}</button></li>
-        <li><span class="pagination-ellipsis">&hellip;</span></li>
+        <li><span class="pagination-ellipsis ${classMap({
+          'is-hidden': ( (this._currentPage === this._lastPage)||
+          this._currentPage === (this._lastPage -1) || (
+          this._nextPage === (this._lastPage - 1)
+          )),
+          })}">&hellip;</span></li>
         <li><button 
-          class="pagination-link button"
+          class="pagination-link button ${classMap({
+          'is-hidden': ( (this._currentPage === this._lastPage)||
+          (this._currentPage === (this._lastPage - 1))),
+          })}"
           aria-label="Goto page 86"
           @click="${this._gotoLastPage}"
         >${this._lastPage}</button></li>
