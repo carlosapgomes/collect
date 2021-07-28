@@ -7,6 +7,6 @@
     - role: backend
     - role: frontend
     - role: nginx
-    - role: data
+    - role: dataseeding
 
 

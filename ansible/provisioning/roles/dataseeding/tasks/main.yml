@@ -1,0 +1,12 @@
+---
+# tasks file for data role
+- name: Add default admin account
+  shell:
+    cmd: /usr/bin/cat /opt/collect/createAdmin.sql | /usr/bin/sqlite3 /opt/collect/collect.sqlite 
+
+- name: Add initial procedures types
+  shell:
+    cmd: /usr/bin/cat /opt/collect/proc_types_data/proctypes.sql | /usr/bin/sqlite3 /opt/collect/collect.sqlite 
+
+
+
