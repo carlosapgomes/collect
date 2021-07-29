@@ -85,8 +85,11 @@ export class CollectClient extends LitElement {
     // grab the global feathers object imported on index.html
     this.client = window.feathers();
 
-    this.rest = window.feathers.rest(`${window.location.href}api`);
-    // this.rest = window.feathers.rest('http://localhost:3030');
+    if (window.location.host.toString().includes('localhost')) {
+      this.rest = window.feathers.rest('http://localhost:3030');
+    } else {
+      this.rest = window.feathers.rest(`${window.location.href}api`);
+    }
     this.client.configure(this.rest.superagent(window.superagent));
     this.client.configure(
       window.feathers.authentication({
@@ -99,7 +102,6 @@ export class CollectClient extends LitElement {
 
     // Procedures
     this.addEventListener('update-procedures-list', this._updateProceduresList);
-    this.addEventListener('get-spreadsheet', this._getSpreadsheet);
     this.addEventListener('edit-procedure', this._editProcedure);
     this.addEventListener('add-procedure', this._loadShowProcForm);
     this.addEventListener('remove-procedure', this._removeProcedure);
@@ -321,8 +323,6 @@ export class CollectClient extends LitElement {
 
   async _updateProceduresList(e) {
     if (this._user.isEnabled) {
-      // clear users list
-      this._procedures = [];
       // eslint-disable-next-line no-console
       console.log('updating procedures list ...');
       // eslint-disable-next-line no-console
@@ -382,26 +382,47 @@ export class CollectClient extends LitElement {
         }
       }
 
+      if (
+        e.detail &&
+        typeof e.detail.$paginate !== 'undefined' &&
+        e.detail.$paginate === false
+      ) {
+        // console.log(e.detail);
+        query.$paginate = false;
+      }
+      // console.log(JSON.stringify(query, null, 2));
+
       try {
         const procsList = await this.client.service('procedures').find({
           query: { ...query },
         });
         // eslint-disable-next-line no-console
         // console.log(procsList.data);
-        if (procsList.data.length > 0) {
+        // eslint-disable-next-line no-console
+        // console.log(JSON.stringify(procsList, null, 2));
+        this._spinnerHidden = true;
+        if (
+          typeof procsList.data !== 'undefined' &&
+          procsList.data.length > 0
+        ) {
+          // we got some data
           this._procedures = [...procsList.data];
         }
-        this._spinnerHidden = true;
+        if (
+          typeof procsList.data === 'undefined' &&
+          e.detail &&
+          typeof e.detail.$paginate !== 'undefined' &&
+          e.detail.$paginate === false
+        ) {
+          // console.log(JSON.stringify(e.detail, null, 2));
+          sheets([...procsList], { ...this._user });
+        }
       } catch (err) {
         this._spinnerHidden = true;
         this._modalMsg = `Erro ao buscar lista de tipos de procedimentos: ${err}`;
         this._toggleModal = true;
       }
     }
-  }
-
-  _getSpreadsheet() {
-    sheets([...this._procedures], { ...this._user });
   }
 
   _editProcedure(e) {
