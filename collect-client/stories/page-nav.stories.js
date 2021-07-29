@@ -15,6 +15,3 @@ function Template() {
 
 export const App = Template.bind({});
 App.args = {};
-
-// <page-nav .total=${ 58 } .limit=${ 10 } .skip=${ 20 }></page-nav>
-// <page-nav></page-nav>

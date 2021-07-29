@@ -25,12 +25,19 @@ export class PageNav extends LitElement {
   }
 
   updated(changedProperties) {
-    if (changedProperties.has('skip')) {
+    if (
+      changedProperties.has('skip') ||
+      changedProperties.has('total') ||
+      changedProperties.has('limit')
+    ) {
       this._updatePages();
     }
   }
 
   _updatePages() {
+    console.log(this.total);
+    console.log(this.limit);
+    console.log(this.skip);
     this._currentPage = parseInt(this.skip / this.limit, 10) + 1;
     this._lastPage = parseInt(this.total / this.limit, 10);
     if (this.total % this.limit !== 0) {
@@ -41,6 +48,9 @@ export class PageNav extends LitElement {
         ? this._lastPage
         : this._currentPage + 1;
     this._prevPage = this._currentPage === 1 ? 1 : this._currentPage - 1;
+    console.log(`_nextPage: ${Number.isNaN(this._nextPage)}`);
+    console.log(`_prevPage: ${Number.isNaN(this._prevPage)}`);
+    console.log(`_lastPage: ${Number.isNaN(this._lastPage)}`);
   }
 
   _gotoFirstPage() {
