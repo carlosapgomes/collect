@@ -108,7 +108,7 @@ export class PageNav extends LitElement {
     >
       <button
         class="pagination-previous button"
-        ?disabled="${this.skip === 0}"
+        ?disabled="${this.skip === 0 || Number.isNaN(this._prevPage)}"
         @click="${this._gotoPrevPage}"
       >
         <span class="icon">
@@ -130,7 +130,8 @@ export class PageNav extends LitElement {
       </button>
       <button
         class="pagination-next button"
-        ?disabled="${this._currentPage === this._lastPage}"
+        ?disabled="${this._currentPage === this._lastPage ||
+        Number.isNaN(this._nextPage)}"
         @click="${this._gotoNextPage}"
       >
         <span class="icon">
@@ -168,7 +169,8 @@ export class PageNav extends LitElement {
               'is-hidden':
                 this._currentPage === 1 ||
                 this._currentPage - 1 === 1 ||
-                this._prevPage === 2,
+                this._prevPage === 2 ||
+                Number.isNaN(this._prevPage),
             })}"
             >&hellip;</span
           >
@@ -177,7 +179,9 @@ export class PageNav extends LitElement {
           <button
             class="pagination-link button ${classMap({
               'is-hidden':
-                this._currentPage === 1 || this._currentPage - 1 === 1,
+                this._currentPage === 1 ||
+                this._currentPage - 1 === 1 ||
+                Number.isNaN(this._prevPage),
             })}"
             aria-label="Goto previous page"
             @click="${this._gotoPrevPage}"
@@ -187,7 +191,9 @@ export class PageNav extends LitElement {
         </li>
         <li>
           <button
-            class="pagination-link is-current button"
+            class="pagination-link is-current button ${classMap({
+              'is-hidden': Number.isNaN(this._currentPage),
+            })}"
             aria-label="current page"
             aria-current="page"
           >
@@ -197,7 +203,9 @@ export class PageNav extends LitElement {
         <li>
           <button
             class="pagination-link button ${classMap({
-              'is-hidden': this._currentPage === this._lastPage,
+              'is-hidden':
+                this._currentPage === this._lastPage ||
+                Number.isNaN(this._nextPage),
             })}"
             aria-label="Goto page 47"
             @click="${this._gotoNextPage}"
@@ -211,7 +219,8 @@ export class PageNav extends LitElement {
               'is-hidden':
                 this._currentPage === this._lastPage ||
                 this._currentPage === this._lastPage - 1 ||
-                this._nextPage === this._lastPage - 1,
+                this._nextPage === this._lastPage - 1 ||
+                Number.isNaN(this._nextPage),
             })}"
             >&hellip;</span
           >
@@ -221,7 +230,8 @@ export class PageNav extends LitElement {
             class="pagination-link button ${classMap({
               'is-hidden':
                 this._currentPage === this._lastPage ||
-                this._currentPage === this._lastPage - 1,
+                this._currentPage === this._lastPage - 1 ||
+                Number.isNaN(this._lastPage),
             })}"
             aria-label="Goto page 86"
             @click="${this._gotoLastPage}"
