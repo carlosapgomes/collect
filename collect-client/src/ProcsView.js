@@ -7,6 +7,7 @@ import './icons/icon-reload.js';
 import './icons/icon-edit.js';
 import './icons/icon-trash.js';
 import './icons/icon-search.js';
+import './page-nav.js';
 
 export class ProcsView extends LitElement {
   // use lightDOM
@@ -16,10 +17,14 @@ export class ProcsView extends LitElement {
 
   static get properties() {
     return {
-      procedures: { type: Array },
+      procsres: { type: Object },
+      _procedures: { type: Array, state: true },
       user: { type: Object },
       users: { type: Array, state: true },
       date: { type: String },
+      _total: { type: Number, state: true },
+      _limit: { type: Number, state: true },
+      _skip: { type: Number, state: true },
       _searchByDate: { type: String, state: true },
       _searchByPersonTeam: { type: String, state: true },
       _userName: { type: String, state: true },
@@ -31,7 +36,7 @@ export class ProcsView extends LitElement {
 
   constructor() {
     super();
-    this.procedures = [];
+    this._procedures = [];
     this.date = DateTime.local();
     this._searchByDate = 'day';
     this._searchByPersonTeam = 'person';
@@ -45,12 +50,40 @@ export class ProcsView extends LitElement {
   firstUpdated() {
     this.dispatchEvent(
       new CustomEvent('update-procedures-list', {
+        detail: {
+          skip: 0,
+        },
         bubbles: true,
         composed: true,
       })
     );
     this._userName = this.user.name;
     this._currentSearchUserID = this.user.id;
+    this.addEventListener('paginate', this._paginate);
+  }
+
+  updated(changedProperties) {
+    if (changedProperties.has('procsres')) {
+      // eslint-disable-next-line no-console
+      // console.log(JSON.stringify(this.procsres, null, 2));
+      this._procedures = [...this.procsres.data];
+      this._total = this.procsres.total;
+      this._limit = this.procsres.limit;
+      this._skip = this.procsres.skip;
+    }
+  }
+
+  _paginate(e) {
+    e.stopPropagation();
+    this.dispatchEvent(
+      new CustomEvent('update-procedures-list', {
+        detail: {
+          skip: e.detail.skip,
+        },
+        bubbles: true,
+        composed: true,
+      })
+    );
   }
 
   _edit(p) {
@@ -355,8 +388,8 @@ export class ProcsView extends LitElement {
               </div> 
               <br />
               ${
-                this.procedures
-                  ? this.procedures.map(
+                this._procedures
+                  ? this._procedures.map(
                       p => html`
                         <div class="card proc-card">
                           <div class="card-content">
@@ -435,6 +468,11 @@ export class ProcsView extends LitElement {
                     )
                   : html`</p>`
               }
+              <page-nav
+                .total=${this._total}
+                .limit=${this._limit}
+                .skip=${this._skip}>
+              </page-nav>
             </div>
           </div>
 

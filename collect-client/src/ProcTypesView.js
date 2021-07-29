@@ -11,26 +11,25 @@ export class ProcTypesView extends LitElement {
 
   static get properties() {
     return {
-      proctypesres: {type: Object},
-      _procedures: { type: Array , state: true},
-      _total: {type: Number, state: true},
-      _limit: {type: Number, state: true},
-      _skip: {type: Number, state: true},
+      proctypesres: { type: Object },
+      _procedures: { type: Array, state: true },
+      _total: { type: Number, state: true },
+      _limit: { type: Number, state: true },
+      _skip: { type: Number, state: true },
     };
   }
-
 
   firstUpdated() {
     this.dispatchEvent(
       new CustomEvent('update-procedures-types-list', {
-        detail:{
+        detail: {
           skip: 0,
         },
         bubbles: true,
         composed: true,
       })
     );
-    this.addEventListener('paginate',this._paginate);
+    this.addEventListener('paginate', this._paginate);
   }
 
   _edit(p) {
@@ -56,19 +55,19 @@ export class ProcTypesView extends LitElement {
     }
   }
 
-  _paginate(e){
+  _paginate(e) {
     e.stopPropagation();
     this.dispatchEvent(
       new CustomEvent('update-procedures-types-list', {
-        detail:{
+        detail: {
           skip: e.detail.skip,
         },
         bubbles: true,
         composed: true,
       })
-    ); 
+    );
   }
-  
+
   _remove(p) {
     // eslint-disable-next-line no-console
     // console.log(p);
@@ -160,11 +159,12 @@ export class ProcTypesView extends LitElement {
                   `
                 )
               : html`</p>`}
-              <page-nav
-                .total=${this._total}
-                .limit=${this._limit}
-                .skip=${this._skip}>
-              </page-nav>
+            <page-nav
+              .total=${this._total}
+              .limit=${this._limit}
+              .skip=${this._skip}
+            >
+            </page-nav>
           </div>
         </div>
         <btn-fab

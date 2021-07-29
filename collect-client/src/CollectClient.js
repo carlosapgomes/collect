@@ -14,6 +14,7 @@ export class CollectClient extends LitElement {
   static get properties() {
     return {
       // procedures
+      _procsres: { type: Object, state: true },
       _procedures: { type: Array, state: true },
       _currentProcedure: { type: Object, state: true },
       _currentProceduresDate: { type: String, state: true },
@@ -328,6 +329,10 @@ export class CollectClient extends LitElement {
       // eslint-disable-next-line no-console
       // console.log(JSON.stringify(e.detail, null, 2));
       this._spinnerHidden = false;
+      let skip = 0;
+      if (e.detail && e.detail.skip) {
+        skip = e.detail.skip;
+      }
       // defaults to today's procedures
       let startDateTime = DateTime.local().startOf('day');
       let endDateTime = DateTime.local().endOf('day');
@@ -355,6 +360,7 @@ export class CollectClient extends LitElement {
       // eslint-disable-next-line no-console
       // console.log(`endDateTime: ${endDateTime}`);
       const query = {
+        $skip: skip,
         $sort: {
           procDateTime: 1,
         },
@@ -389,6 +395,7 @@ export class CollectClient extends LitElement {
       ) {
         // console.log(e.detail);
         query.$paginate = false;
+        delete query.$skip;
       }
       // console.log(JSON.stringify(query, null, 2));
 
@@ -401,12 +408,10 @@ export class CollectClient extends LitElement {
         // eslint-disable-next-line no-console
         // console.log(JSON.stringify(procsList, null, 2));
         this._spinnerHidden = true;
-        if (
-          typeof procsList.data !== 'undefined' &&
-          procsList.data.length > 0
-        ) {
+        if (typeof procsList.data !== 'undefined') {
           // we got some data
-          this._procedures = [...procsList.data];
+          this._procsres = { ...procsList };
+          // this._procedures = [...procsList.data];
         }
         if (
           typeof procsList.data === 'undefined' &&
@@ -1310,7 +1315,7 @@ export class CollectClient extends LitElement {
           })}"
           .users="${this._users}"
           .user="${this._user}"
-          .procedures="${this._procedures}"
+          .procsres="${this._procsres}"
         ></procs-view>
         <patients-view
           id="ptsview"
