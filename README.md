@@ -17,7 +17,7 @@ Instale o `git`:
 
 Após logar como `root`
 
-Clone o projeto atual:
+Clone o projeto:
 `git clone https://github.com/carlosapgomes/collect.git`
 
 Vá ao diretório do projeto,
@@ -30,8 +30,8 @@ e execute o instalador:
 Ele vai:
 
 - atualizar o sistema
-- instalar dependencias de instalação (ansible, curl, sqlite3, rsync)
-- instalar as dependencias do backend e do frontend (Nodejs, yarn
+- instalar dependências de instalação (ansible, curl, sqlite3, rsync)
+- instalar as dependências do backend e do frontend (Nodejs, yarn
   e pacotes de bibliotecas)
 - gerar os arquivos do frontend
 - executar o ansible
@@ -43,6 +43,7 @@ O Ansible vai:
 - copiar os arquivos do frontend para o diretório `/var/www/collect/html`
 - instalar e configurar o Nginx como proxy reverso do frontend e do backend
 - inserir o primeiro usuário `admin` no banco de dados
+- inserir os dados iniciais dos tipos de procedimentos 
 
 Ao final da instalação, verifique o `status` dos serviços instalados com os
 comando:

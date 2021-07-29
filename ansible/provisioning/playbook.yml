@@ -9,4 +9,13 @@
     - role: nginx
     - role: dataseeding
 
-
+  tasks:
+    - name: display post install message
+      debug:
+        msg:
+          - 'Instalação completa'
+          - 'Verifique a execução do Collect e do Nginx com os comandos:'
+          - '- systemctl status collect'
+          - '- systemctl status nginx'
+          - 'Tente acessar o servidor via navegador de internet no endereço:'
+          - '- http://ip.do.servidor'
