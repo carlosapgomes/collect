@@ -77,7 +77,8 @@ export class ProcsView extends LitElement {
     this._activateUserSearchDropDown = false;
   }
 
-  _updateProcedures() {
+  _updateProcedures(e) {
+    e.preventDefault();
     const dt = this.date.toISO();
     this.dispatchEvent(
       new CustomEvent('update-procedures-list', {
@@ -111,9 +112,19 @@ export class ProcsView extends LitElement {
     }
   }
 
-  _getSpreadsheet() {
+  _getSpreadsheet(e) {
+    e.preventDefault();
+    const dt = this.date.toISO();
     this.dispatchEvent(
-      new CustomEvent('get-spreadsheet', {
+      new CustomEvent('update-procedures-list', {
+        detail: {
+          $paginate: false,
+          searchByDate: this._searchByDate,
+          searchByPersonTeam: this._searchByPersonTeam,
+          date: dt,
+          searchID: this._currentSearchUserID,
+          searchTeam: this._currentSearchTeam,
+        },
         bubbles: true,
         composed: true,
       })
