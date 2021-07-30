@@ -26,6 +26,7 @@ export class CollectClient extends LitElement {
       _showProcTypeForm: { type: Boolean, state: true },
       // users
       _user: { type: Object },
+      _usersres: {type: Object, state: true},
       _users: { type: Array, state: true },
       _showUserForm: { type: Boolean, state: true },
       _showUserProfileForm: { type: Boolean, state: true },
@@ -568,17 +569,21 @@ export class CollectClient extends LitElement {
     this._loadShowUserForm();
   }
 
-  async _updateUsersList() {
+  async _updateUsersList(e) {
     if (this._isAdmin && this._user.isEnabled) {
       // clear users list
       this._users = [];
       // eslint-disable-next-line no-console
       console.log('updating users list ...');
       this._spinnerHidden = false;
-      // this.dispatchEvent(new CustomEvent('show-spinner'));
+      let skip = 0;
+      if (e.detail && e.detail.skip) {
+        skip = e.detail.skip;
+      }
       try {
         const usersList = await this.client.service('users').find({
           query: {
+            $skip: skip,
             $sort: {
               name: 1,
             },
@@ -587,10 +592,13 @@ export class CollectClient extends LitElement {
         // eslint-disable-next-line no-console
         // console.log(usersList.data);
         if (usersList.data.length > 0) {
+          this._usersres = {...usersList};
           this._users = [...usersList.data];
         }
         this._spinnerHidden = true;
-      } catch (e) {
+      } catch (err) {
+        // eslint-disable-next-line no-console
+        console.log(JSON.stringify(err.message));
         this._spinnerHidden = true;
         this._modalMsg = 'Erro ao buscar lista de usuários';
         this._toggleModal = true;
@@ -1327,7 +1335,7 @@ export class CollectClient extends LitElement {
         </patients-view>
         <users-view
           id="usersview"
-          .users="${this._users}"
+          .usersres= "${this._usersres}"
           class="${classMap({
             'is-hidden': this._page !== 'usersview' || !this._isAdmin,
           })}"
