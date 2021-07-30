@@ -420,7 +420,7 @@ export class ProcsView extends LitElement {
                                   class="button is-white
                               is-align-self-flex-end
                               has-tooltip-arrow
-                              has-tooltip-right
+                              has-tooltip-top
                               ${classMap({
                                     'is-hidden': !(
                                       this.user.isAdmin ||
@@ -442,7 +442,7 @@ export class ProcsView extends LitElement {
                                   class="button is-white
                               is-align-self-flex-end
                               has-tooltip-arrow
-                              has-tooltip-right
+                              has-tooltip-bottom
                               ${classMap({
                                     'is-hidden': !(
                                       this.user.isAdmin ||

@@ -66,7 +66,7 @@ export class UsersView extends LitElement {
                           <div
                             class="button is-white is-pulled-right
                             has-tooltip-arrow
-                            has-tooltip-right"
+                            has-tooltip-top"
                             data-tooltip="Editar"
                             @click="${() => {
                             this._edit(u);

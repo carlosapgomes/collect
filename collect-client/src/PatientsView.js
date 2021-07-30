@@ -126,7 +126,7 @@ export class PatientsView extends LitElement {
                               class="button is-white 
                               is-align-self-flex-end
                               has-tooltip-arrow
-                              has-tooltip-right"
+                              has-tooltip-top"
                               data-tooltip="Editar"
                               @click="${() => {
                               this._edit(p);
@@ -142,7 +142,7 @@ export class PatientsView extends LitElement {
                               is-white
                               is-align-self-flex-end
                               has-tooltip-arrow
-                              has-tooltip-right"
+                              has-tooltip-bottom"
                               data-tooltip="Remover"
                               @click="${() => {
                               this._remove(p);
