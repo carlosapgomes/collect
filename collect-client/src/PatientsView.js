@@ -1,4 +1,5 @@
 import { html, LitElement } from 'lit-element';
+import { classMap } from 'lit-html/directives/class-map.js';
 import { DateTime } from 'luxon';
 import './btn-fab.js';
 import './page-nav.js';
@@ -100,66 +101,73 @@ export class PatientsView extends LitElement {
       </style>
         <section id="patients" class="section">
           <div class="column is-6 is-offset-3">
-            <div class="container">
               <h1 class="subtitle has-text-centered is-3">Pacientes</h1>
+            <div class="container 
+              is-flex
+              ${classMap({
+              'is-flex-direction-column-reverse': ( window.screen.width < 769 ),
+              'is-flex-direction-column': ( window.screen.width >= 769 ),
+            })}">
+              <div>
               <br />
-              ${this._patients
-                ? this._patients.map(
-                  p => html`
-                    <div class="card proc-card">
-                      <div class="card-content">
-                        <div class="content is-flex is-flex-direction-row">
-                          <div class="is-align-self-flex-start is-flex-grow-4">
-                            <strong>${p.name}</strong> - DN:
-                            ${DateTime.fromSQL(p.dateOfBirth, {
-                              locale: 'pt-BR',
-                            }).toLocaleString(DateTime.SHORT)}
-                            - Registro: ${p.recNumber}
-                          </div>
-                          <div
-                            class="is-flex 
-                            is-align-self-flex-end
-                            is-flex-grow-1
-                            is-flex-direction-column"
-                          >
-                            <div
-                              class="button is-white 
-                              is-align-self-flex-end
-                              has-tooltip-arrow
-                              has-tooltip-top"
-                              data-tooltip="Editar"
-                              @click="${() => {
-                              this._edit(p);
-                              }}"
-                              @keydown="${() => {
-                              this._edit(p);
-                              }}"
-                            >
-                              <icon-edit></icon-edit>
-                            </div>
-                            <div
-                              class="button 
-                              is-white
-                              is-align-self-flex-end
-                              has-tooltip-arrow
-                              has-tooltip-bottom"
-                              data-tooltip="Remover"
-                              @click="${() => {
-                              this._remove(p);
-                              }}"
-                              @keydown="${() => {
-                              this._remove(p);
-                              }}"
-                            >
-                              <icon-trash></icon-trash>
-                            </div>
-                          </div>
-                        </div>
+      ${this._patients
+        ? this._patients.map(
+          p => html`
+                <div class="card proc-card">
+                  <div class="card-content">
+                    <div class="content is-flex is-flex-direction-row">
+                      <div class="is-align-self-flex-start is-flex-grow-4">
+                      <strong>${p.name}</strong> - DN:
+          ${DateTime.fromSQL(p.dateOfBirth, {
+            locale: 'pt-BR',
+                      }).toLocaleString(DateTime.SHORT)}
+                      - Registro: ${p.recNumber}
+                      </div>
+                    <div
+                      class="is-flex 
+                      is-align-self-flex-end
+                      is-flex-grow-1
+                      is-flex-direction-column"
+                    >
+                      <div
+                        class="button is-white 
+                        is-align-self-flex-end
+                        has-tooltip-arrow
+                        has-tooltip-top"
+                        data-tooltip="Editar"
+                        @click="${() => {
+                        this._edit(p);
+                        }}"
+                        @keydown="${() => {
+                        this._edit(p);
+                        }}"
+                      >
+                        <icon-edit></icon-edit>
+                      </div>
+                      <div
+                        class="button 
+                        is-white
+                        is-align-self-flex-end
+                        has-tooltip-arrow
+                        has-tooltip-bottom"
+                        data-tooltip="Remover"
+                        @click="${() => {
+                        this._remove(p);
+                        }}"
+                        @keydown="${() => {
+                        this._remove(p);
+                        }}"
+                      >
+                        <icon-trash></icon-trash>
                       </div>
                     </div>
-                  `
-                )
-                : html`</p>`}
+                    </div>
+                  </div>
+          </div>
+          `
+        )
+              : html`</p>`}
+              </div>
               <page-nav
                 .total=${this._total}
                 .limit=${this._limit}
@@ -167,12 +175,14 @@ export class PatientsView extends LitElement {
               </page-nav>
             </div>
           </div>
-
+          <br />
+          <br />
           <btn-fab
             @click="${() => {
             this._addPatient();
             }}"
           ></btn-fab>
+          <br />
         </section>
     `;
   }
