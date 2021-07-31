@@ -41,6 +41,7 @@
     "pwa-helpers": "^0.9.1",
     "rollup-plugin-copy": "^3.4.0",
     "superagent": "^6.1.0",
+    "trim-newlines": "^3.0.1",
     "xlsx": "^0.17.0"
   },
   "eslintConfig": {
