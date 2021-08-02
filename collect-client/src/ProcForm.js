@@ -403,7 +403,10 @@ export class ProcForm extends LitElement {
     if (e.target.value.length > 2) {
       this.dispatchEvent(
         new CustomEvent('search-patient', {
-          detail: e.target.value,
+          detail: {
+            search: e.target.value,
+            skip: 0,
+          },
           bubbles: true,
           composed: true,
         })
