@@ -766,20 +766,32 @@ export class CollectClient extends LitElement {
       // clear patient list
       this._patients = [];
       // eslint-disable-next-line no-console
-      console.log(`searching for patient: ${e.detail}`);
+      // console.log(`searching for patient: ${JSON.stringify(e.detail,null,2)}`);
       this._spinnerHidden = false;
+      let skip = 0;
+      if (e.detail && e.detail.skip) {
+        skip = e.detail.skip;
+      }
+      let search = '';
+      if (e.detail && e.detail.search){
+        search = e.detail.search;
+      } 
       try {
         const patientsList = await this.client.service('patients').find({
           query: {
+            $skip: skip,
+            $sort: {
+              name: 1,
+            },
             $or: [
               {
                 name: {
-                  $like: `${e.detail}%`,
+                  $like: `${search}%`,
                 },
               },
               {
                 recNumber: {
-                  $like: `${e.detail}%`,
+                  $like: `${search}%`,
                 },
               },
             ],
@@ -788,6 +800,7 @@ export class CollectClient extends LitElement {
         // eslint-disable-next-line no-console
         // console.log(patientsList.data);
         if (patientsList.data.length > 0) {
+          this._patientsRes = { ...patientsList };
           this._patients = [...patientsList.data];
         }
         this._spinnerHidden = true;
