@@ -5,6 +5,7 @@ import './btn-fab.js';
 import './page-nav.js';
 import './icons/icon-edit.js';
 import './icons/icon-trash.js';
+import './icons/icon-reload.js';
 
 export class PatientsView extends LitElement {
   // use lightDOM
@@ -19,7 +20,13 @@ export class PatientsView extends LitElement {
       _total: {type: Number, state: true},
       _limit: {type: Number, state: true},
       _skip: {type: Number, state: true},
+      _searchFor: {type: String, state: true},
     };
+  }
+
+  constructor() {
+    super();
+    this._searchFor = '';
   }
 
   firstUpdated() {
@@ -51,6 +58,7 @@ export class PatientsView extends LitElement {
     this.dispatchEvent(
       new CustomEvent('update-patients-list', {
         detail:{
+          search: this._searchFor,
           skip: e.detail.skip,
         },
         bubbles: true,
@@ -88,6 +96,53 @@ export class PatientsView extends LitElement {
     );
   }
 
+  _searchPatient(e) {
+    // eslint-disable-next-line no-console
+    // console.log(`searching for: ${e.target.value}`);
+    // fire event to hide procedure form from parent's view
+
+    if (e.target.value.length > 2) {
+      this.dispatchEvent(
+        new CustomEvent('search-patient', 
+        {
+          detail: { 
+            search: e.target.value,
+            skip: 0,
+          },
+          bubbles: true,
+          composed: true,
+        })
+      );
+    }
+  }
+
+  _refreshSearch(){
+    if(this._searchFor.length === 0){
+      // just update patients list
+        this.dispatchEvent(
+      new CustomEvent('update-patients-list', {
+        detail:{
+          skip: 0,
+        },
+        bubbles: true,
+        composed: true,
+      })
+    );
+    } else if (this._searchFor.length > 2) {
+      this.dispatchEvent(
+        new CustomEvent('search-patient', {
+          detail: { 
+            search: this._searchFor,
+            skip: 0,
+          },
+          bubbles: true,
+          composed: true,
+        })
+      );
+    }
+
+  }
+
   render() {
     return html`
       <style>
@@ -102,6 +157,36 @@ export class PatientsView extends LitElement {
         <section id="patients" class="section">
           <div class="column is-6 is-offset-3">
             <h1 class="subtitle has-text-centered is-3">Pacientes</h1>
+            <div
+                class="is-flex
+                is-flex-direction-row"
+            >
+              <div class="control is-expanded has-icons-right
+                is-flex-grow-5">
+              <input
+                class="input"
+                type="search"
+                @keyup="${this._searchPatient}"
+                @changed=${(e)=> { this._searchFor = e.target.value }}
+                placeholder="buscar pelo nome ou registro"
+                required
+              />
+              <icon-search></icon-search>
+              </div>          
+                <div class="">
+                  <button
+                    class="button 
+                    is-ghost
+                    has-tooltip-arrow
+                    has-tooltip-top"
+                    data-tooltip="Atualizar"
+                    @click="${this._refreshSearch}"
+                    @keydown="${this._refreshSearch}"
+                  >
+                    <icon-reload></icon-reload>
+                  </button>
+                </div>
+              </div>
             <div class="container 
               is-flex
               ${classMap({
