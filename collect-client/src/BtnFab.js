@@ -2,6 +2,8 @@ import { html, css, LitElement } from 'lit-element';
 
 // got a FAB button from this site
 // http://materialdesignblog.com/creating-a-simple-material-design-action-button-with-css/
+// tooltip from
+// https://www.w3schools.com/css/css_tooltip.asp
 
 export class BtnFab extends LitElement {
   static get styles() {
