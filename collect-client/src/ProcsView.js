@@ -217,7 +217,7 @@ export class ProcsView extends LitElement {
         <section id="procedures" class="section">
           <div class="column is-6 is-offset-3">
             <div class="container">
-              <h1 class="subtitle has-text-centered is-3">Procedimentos</h1>
+              <h1 class="subtitle has-text-centered is-3">Pesquisar Procedimentos</h1>
               <div class="field is-horizontal">
                 <div class="field-body">    
                   <div class="field">
@@ -476,11 +476,11 @@ export class ProcsView extends LitElement {
             </div>
           </div>
 
-          <btn-fab
+<!--          <btn-fab
             @click="${() => {
               this._addProc();
             }}"
-          ></btn-fab>
+          ></btn-fab> -->
         </section>
     `;
   }
