@@ -20,7 +20,7 @@ export class BtnFab extends LitElement {
       .fab {
         width: 70px;
         height: 70px;
-        background-color: blue;
+        background-color: hsl(204, 71%, 39%);
         border-radius: 50%;
         box-shadow: 0 6px 10px 0 #666;
         font-size: 50px;
