@@ -1223,15 +1223,7 @@ export class CollectClient extends LitElement {
             >
               Procedimentos
             </a>
-            <a
-              class="navbar-item"
-              href="/ptsview"
-              @click="${() => {
-                this._burgerActive = false;
-              }}"
-            >
-              Pacientes
-            </a>
+            
 
             <div
               id="adminmenu"
@@ -1253,6 +1245,16 @@ export class CollectClient extends LitElement {
               </a>
 
               <div class="navbar-dropdown is-boxed">
+           <a
+              class="navbar-item"
+              href="/ptsview"
+              @click="${() => {
+                this._adminDropDownOpen = false;
+                this._burgerActive = false;
+              }}"
+            >
+              Pacientes
+            </a>
                 <a
                   class="navbar-item"
                   href="/usersview"
