@@ -4,6 +4,7 @@ import { html, css, LitElement } from 'lit-element';
 // http://materialdesignblog.com/creating-a-simple-material-design-action-button-with-css/
 // tooltip from
 // https://www.w3schools.com/css/css_tooltip.asp
+//        background-color: hsl(204, 71%, 39%);
 
 export class BtnFab extends LitElement {
   static get styles() {
@@ -15,12 +16,11 @@ export class BtnFab extends LitElement {
         position: fixed;
         right: 15%;
         bottom: 10%;
-
       }
       .fab {
         width: 70px;
         height: 70px;
-        background-color: hsl(204, 71%, 39%);
+        background-color: hsl(229, 53%, 53%);
         border-radius: 50%;
         box-shadow: 0 6px 10px 0 #666;
         font-size: 50px;
@@ -37,7 +37,7 @@ export class BtnFab extends LitElement {
       .fab .tooltiptext {
         visibility: hidden;
         width: 40px;
-        height: 30px; 
+        height: 30px;
         line-height: 30px;
         background-color: #555;
         color: #fff;
@@ -53,28 +53,31 @@ export class BtnFab extends LitElement {
         margin-left: -60px;
         opacity: 0;
         transition: opacity 0.3s;
-        }
+      }
       .fab:hover .tooltiptext {
         visibility: visible;
-      opacity: 1;
+        opacity: 1;
       }
       .fab .tooltiptext::after {
-      content: "";
-      position: absolute;
-      top: 100%;
-      left: 50%;
-      margin-left: -5px;
-      border-width: 5px;
-      border-style: solid;
-      border-color: #555 transparent transparent transparent;
+        content: '';
+        position: absolute;
+        top: 100%;
+        left: 50%;
+        margin-left: -5px;
+        border-width: 5px;
+        border-style: solid;
+        border-color: #555 transparent transparent transparent;
       }
-
-`;
+    `;
   }
 
   render() {
-    return html` <div class="container"><div class="fab tooltip"
-    >+<span class="tooltiptext">Adicionar</span></div></div> `;
+    return html`
+      <div class="container">
+        <div class="fab tooltip">
+          +<span class="tooltiptext">Adicionar</span>
+        </div>
+      </div>
+    `;
   }
 }
-
