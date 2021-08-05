@@ -465,256 +465,11 @@ export class ProcForm extends LitElement {
 
   render() {
     return html`
-      <div class="modal ${classMap({ 'is-active': this.activate })}">
-        <div class="modal-background"></div>
-        <div class="modal-card">
-          <header class="modal-card-head">
-            <p class="modal-card-title">Procedimento</p>
-            <button
-              class="delete"
-              aria-label="close"
-              @click="${this._closeForm}"
-            ></button>
-          </header>
-          <section class="modal-card-body">
+      <section class="section">
+        <div class="column is-6 is-offset-3">
+          <div class="container">
+            <h1 class="subtitle has-text-centered is-3">Adicionar Procedimentos</h1>
             <form id="procedure-form">
-              <div
-                class="is-flex is-flex-direction-row is-justify-content-space-between"
-              >
-                <div class="field is-horizontal">
-                  <div class="field-label is-normal">
-                    <label><b>Data</b></label>
-                  </div>
-                  <div class="field-body">
-                    <div class="field">
-                      <input
-                        class="input"
-                        id="date"
-                        type="date"
-                        .value="${this._currentProcDate}"
-                        @input="${e => {
-                          this._currentProcDate = e.target.value;
-                        }}"
-                        required
-                      />
-                    </div>
-                  </div>
-                </div>
-                <div class="field is-horizontal">
-                  <div class="field-label is-normal">
-                    <label><b>Hora</b></label>
-                  </div>
-                  <div class="field-body">
-                    <div class="field">
-                      <div class="select">
-                        <select
-                          id="hours"
-                          required
-                          .value="${this._currentProcHour}"
-                          @blur="${e => {
-                            this._currentProcHour = e.target.value;
-                          }}"
-                          name="hours"
-                        >
-                          <option value="00">00</option>
-                          <option value="01">01</option>
-                          <option value="02">02</option>
-                          <option value="03">03</option>
-                          <option value="04">04</option>
-                          <option value="05">05</option>
-                          <option value="06">06</option>
-                          <option value="07">07</option>
-                          <option value="08">08</option>
-                          <option value="09">09</option>
-                          <option value="10">10</option>
-                          <option value="11">11</option>
-                          <option value="12">12</option>
-                          <option value="13">13</option>
-                          <option value="14">14</option>
-                          <option value="15">15</option>
-                          <option value="16">16</option>
-                          <option value="17">17</option>
-                          <option value="18">18</option>
-                          <option value="19">19</option>
-                          <option value="20">20</option>
-                          <option value="21">21</option>
-                          <option value="22">22</option>
-                          <option value="23">23</option>
-                        </select>
-                      </div>
-                      <span>:</span>
-                      <div class="select">
-                        <select
-                          id="minutes"
-                          required
-                          .value="${this._currentProcMinute}"
-                          @blur="${e => {
-                            this._currentProcMinute = e.target.value;
-                          }}"
-                        >
-                          <option value="00">00</option>
-                          <option value="05">05</option>
-                          <option value="10">10</option>
-                          <option value="15">15</option>
-                          <option value="20">20</option>
-                          <option value="25">25</option>
-                          <option value="30">30</option>
-                          <option value="35">35</option>
-                          <option value="40">40</option>
-                          <option value="45">45</option>
-                          <option value="50">50</option>
-                          <option value="55">55</option>
-                        </select>
-                      </div>
-                    </div>
-                  </div>
-                </div>
-              </div>
-
-              <!-- procedure type dropdown search -->
-              <div
-                class="dropdown is-expanded 
-                ${classMap({
-                  'is-active': this._activateProcTypeSearchDropDown,
-                })}"
-              >
-                <div class="dropdown-trigger">
-                  <div class="field is-horizontal">
-                    <div class="field-label is-normal">
-                      <label><b>Procedimento</b></label>
-                    </div>
-                    <div class="field-body">
-                      <div class="field">
-                        <div class="control is-expanded has-icons-right">
-                          <input
-                            class="input"
-                            type="search"
-                            @keyup="${this._searchProcType}"
-                            .value="${this._procTypeDescr}"
-                            placeholder="buscar pelo nome"
-                            required
-                          />
-                          <icon-search></icon-search>
-                        </div>
-                      </div>
-                    </div>
-                  </div>
-                </div>
-                <div class="dropdown-menu" id="dropdown-menu" role="menu">
-                  <div class="dropdown-content">
-                    ${this.proctypes
-                      ? this.proctypes.map(
-                          p => html`
-                            <a
-                              href="#"
-                              class="dropdown-item"
-                              @click="${e => {
-                                e.preventDefault();
-                                this._procTypeSelected(p);
-                              }}"
-                              @keydown="${e => {
-                                e.preventDefault();
-                                this._procTypeSelected(p);
-                              }}"
-                              >${p.descr}</a
-                            >
-                          `
-                        )
-                      : html`<p></p>`}
-                  </div>
-                </div>
-              </div>
-              <p
-                class="has-text-danger ${classMap({
-                  'is-hidden': !this._showRequiredSurgReport,
-                })}"
-              >
-                Este procedimento necessita de ficha operatória no prontuário
-              </p>
-              <br />
-              <br />
-
-              <!-- place of procedure execution -->
-              <div
-                class="field
-                is-flex is-flex-direction-row
-                is-justify-content-space-between"
-              >
-                <div>
-                  <div class="field is-horizontal">
-                    <div class="field-label is-normal">
-                      <label><b>Local</b></label>
-                    </div>
-                    <div class="field-body">
-                      <div class="field">
-                        <div class="select">
-                          <select
-                            id="execplace"
-                            name="execplace"
-                            required
-                            .value="${this._procExecPlace}"
-                            @blur="${e => {
-                              this._procExecPlace = e.target.value;
-                            }}"
-                          >
-                            <option value="CC">CC</option>
-                            <option value="Hemodinamica">Hemodinamica</option>
-                            <option value="Emergencia">Emergencia</option>
-                            <option value="Enfermaria">Enfermaria</option>
-                            <option value="CHD">CHD</option>
-                            <option value="Bioimagem">Bioimagem</option>
-                          </select>
-                        </div>
-                      </div>
-                    </div>
-                  </div>
-                </div>
-                <div>
-                  <div class="field is-horizontal">
-                    <div class="field-label is-normal">
-                      <label><b>Equipe</b></label>
-                    </div>
-                    <div class="field-body">
-                      <div class="field">
-                        <div class="select">
-                          <select
-                            id="team"
-                            name="team"
-                            required
-                            .value="${this._team}"
-                            @blur="${e => {
-                              this._team = e.target.value;
-                            }}"
-                          >
-                            <option value="Cirurgia Geral">
-                              Cirurgia Geral
-                            </option>
-                            <option value="Cirurgia Plástica">
-                              Cirurgia Plástica
-                            </option>
-                            <option value="Cirurgia Pediátrica">
-                              Cirurgia Pediátrica
-                            </option>
-                            <option value="Cirurgia Vascular">
-                              Cirurgia Vascular
-                            </option>
-                            <option value="Ginecologia Obstetrícia">
-                              Ginecologia Obstetrícia
-                            </option>
-                            <option value="Neurocirurgia">Neurocirurgia</option>
-                            <option value="Proctologia">Proctologia</option>
-                            <option value="Radiointervensão">
-                              Radiointervensão
-                            </option>
-                            <option value="Urologia">Urologia</option>
-                          </select>
-                        </div>
-                      </div>
-                    </div>
-                  </div>
-                </div>
-              </div>
-
               <!-- patients dropdown search -->
               <div
                 class="is-flex
@@ -723,7 +478,7 @@ export class ProcForm extends LitElement {
                 <div
                   class="dropdown 
                   ${classMap({
-                    'is-active': this._activatePatientSearchDropDown,
+                  'is-active': this._activatePatientSearchDropDown,
                   })}"
                 >
                   <div class="field is-flex-grow-5 is-horizontal">
@@ -755,22 +510,22 @@ export class ProcForm extends LitElement {
                     <div class="dropdown-content">
                       ${this.patients
                         ? this.patients.map(
-                            p => html`
-                              <a
-                                href="#"
+                          p => html`
+                            <a
+                              href="#"
                                 class="dropdown-item"
-                                @click="${e => {
-                                  e.preventDefault();
-                                  this._patientSelected(p);
-                                }}"
-                                @keydown="${e => {
-                                  e.preventDefault();
-                                  this._patientSelected(p);
-                                }}"
-                                >${p.name} - Reg: ${p.recNumber}</a
-                              >
-                            `
-                          )
+                                  @click="${e => {
+                                    e.preventDefault();
+                                      this._patientSelected(p);
+                                        }}"
+                                          @keydown="${e => {
+                                            e.preventDefault();
+                                              this._patientSelected(p);
+                                                }}"
+                            >${p.name} - Reg: ${p.recNumber}</a
+                    >
+                          `
+                        )
                         : html`<p></p>`}
                     </div>
                   </div>
@@ -789,7 +544,6 @@ export class ProcForm extends LitElement {
                   </button>
                 </div>
               </div>
-              <br />
               <div
                 class="is-flex is-flex-direction-row
                 is-justify-content-space-between"
@@ -806,7 +560,7 @@ export class ProcForm extends LitElement {
                           name="ward"
                           .value="${this._ward}"
                           @blur="${e => {
-                            this._ward = e.target.value;
+                          this._ward = e.target.value;
                           }}"
                         >
                           <option value="CC">CC</option>
@@ -852,13 +606,251 @@ export class ProcForm extends LitElement {
                         type="text"
                         .value="${this._bed}"
                         @input="${e => {
-                          this._bed = e.target.value;
+                        this._bed = e.target.value;
                         }}"
                       />
                     </div>
                   </div>
                 </div>
               </div>
+              <!-- procedure type dropdown search -->
+              <div
+                class="dropdown is-expanded 
+                ${classMap({
+                'is-active': this._activateProcTypeSearchDropDown,
+                })}"
+              >
+                <div class="dropdown-trigger">
+                  <div class="field is-horizontal">
+                    <div class="field-label is-normal">
+                      <label><b>Procedimento</b></label>
+                    </div>
+                    <div class="field-body">
+                      <div class="field">
+                        <div class="control is-expanded has-icons-right">
+                          <input
+                            class="input"
+                            type="search"
+                            @keyup="${this._searchProcType}"
+                            .value="${this._procTypeDescr}"
+                            placeholder="buscar pelo nome"
+                            required
+                          />
+                          <icon-search></icon-search>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+                <div class="dropdown-menu" id="dropdown-menu" role="menu">
+                  <div class="dropdown-content">
+                    ${this.proctypes
+                      ? this.proctypes.map(
+                        p => html`
+                          <a
+                            href="#"
+                              class="dropdown-item"
+                                @click="${e => {
+                                  e.preventDefault();
+                                    this._procTypeSelected(p);
+                                      }}"
+                                        @keydown="${e => {
+                                          e.preventDefault();
+                                            this._procTypeSelected(p);
+                                              }}"
+                          >${p.descr}</a
+                  >
+                        `
+                      )
+                      : html`<p></p>`}
+                  </div>
+                </div>
+              </div>
+              <p
+                class="has-text-danger ${classMap({
+                'is-hidden': !this._showRequiredSurgReport,
+                })}"
+              >
+                Este procedimento necessita de ficha operatória no prontuário
+              </p>
+              <br />
+              <br />
+              <div
+                class="is-flex is-flex-direction-row is-justify-content-space-between"
+              >
+                <div class="field is-horizontal">
+                  <div class="field-label is-normal">
+                    <label><b>Data</b></label>
+                  </div>
+                  <div class="field-body">
+                    <div class="field">
+                      <input
+                        class="input"
+                        id="date"
+                        type="date"
+                        .value="${this._currentProcDate}"
+                        @input="${e => {
+                        this._currentProcDate = e.target.value;
+                        }}"
+                        required
+                      />
+                    </div>
+                  </div>
+                </div>
+                <div class="field is-horizontal">
+                  <div class="field-label is-normal">
+                    <label><b>Hora</b></label>
+                  </div>
+                  <div class="field-body">
+                    <div class="field">
+                      <div class="select">
+                        <select
+                          id="hours"
+                          required
+                          .value="${this._currentProcHour}"
+                          @blur="${e => {
+                          this._currentProcHour = e.target.value;
+                          }}"
+                          name="hours"
+                        >
+                          <option value="00">00</option>
+                          <option value="01">01</option>
+                          <option value="02">02</option>
+                          <option value="03">03</option>
+                          <option value="04">04</option>
+                          <option value="05">05</option>
+                          <option value="06">06</option>
+                          <option value="07">07</option>
+                          <option value="08">08</option>
+                          <option value="09">09</option>
+                          <option value="10">10</option>
+                          <option value="11">11</option>
+                          <option value="12">12</option>
+                          <option value="13">13</option>
+                          <option value="14">14</option>
+                          <option value="15">15</option>
+                          <option value="16">16</option>
+                          <option value="17">17</option>
+                          <option value="18">18</option>
+                          <option value="19">19</option>
+                          <option value="20">20</option>
+                          <option value="21">21</option>
+                          <option value="22">22</option>
+                          <option value="23">23</option>
+                        </select>
+                      </div>
+                      <span>:</span>
+                      <div class="select">
+                        <select
+                          id="minutes"
+                          required
+                          .value="${this._currentProcMinute}"
+                          @blur="${e => {
+                          this._currentProcMinute = e.target.value;
+                          }}"
+                        >
+                          <option value="00">00</option>
+                          <option value="05">05</option>
+                          <option value="10">10</option>
+                          <option value="15">15</option>
+                          <option value="20">20</option>
+                          <option value="25">25</option>
+                          <option value="30">30</option>
+                          <option value="35">35</option>
+                          <option value="40">40</option>
+                          <option value="45">45</option>
+                          <option value="50">50</option>
+                          <option value="55">55</option>
+                        </select>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              <br />
+
+              <!-- place of procedure execution -->
+              <div
+                class="field
+                is-flex is-flex-direction-row
+                is-justify-content-space-between"
+              >
+                <div>
+                  <div class="field is-horizontal">
+                    <div class="field-label is-normal">
+                      <label><b>Local</b></label>
+                    </div>
+                    <div class="field-body">
+                      <div class="field">
+                        <div class="select">
+                          <select
+                            id="execplace"
+                            name="execplace"
+                            required
+                            .value="${this._procExecPlace}"
+                            @blur="${e => {
+                            this._procExecPlace = e.target.value;
+                            }}"
+                          >
+                            <option value="CC">CC</option>
+                            <option value="Hemodinamica">Hemodinamica</option>
+                            <option value="Emergencia">Emergencia</option>
+                            <option value="Enfermaria">Enfermaria</option>
+                            <option value="CHD">CHD</option>
+                            <option value="Bioimagem">Bioimagem</option>
+                          </select>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+                <div>
+                  <div class="field is-horizontal">
+                    <div class="field-label is-normal">
+                      <label><b>Equipe</b></label>
+                    </div>
+                    <div class="field-body">
+                      <div class="field">
+                        <div class="select">
+                          <select
+                            id="team"
+                            name="team"
+                            required
+                            .value="${this._team}"
+                            @blur="${e => {
+                            this._team = e.target.value;
+                            }}"
+                          >
+                            <option value="Cirurgia Geral">
+                              Cirurgia Geral
+                            </option>
+                            <option value="Cirurgia Plástica">
+                              Cirurgia Plástica
+                            </option>
+                            <option value="Cirurgia Pediátrica">
+                              Cirurgia Pediátrica
+                            </option>
+                            <option value="Cirurgia Vascular">
+                              Cirurgia Vascular
+                            </option>
+                            <option value="Ginecologia Obstetrícia">
+                              Ginecologia Obstetrícia
+                            </option>
+                            <option value="Neurocirurgia">Neurocirurgia</option>
+                            <option value="Proctologia">Proctologia</option>
+                            <option value="Radiointervensão">
+                              Radiointervensão
+                            </option>
+                            <option value="Urologia">Urologia</option>
+                          </select>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
 
               <div class="card">
                 <div class="card-content">
@@ -866,7 +858,7 @@ export class ProcForm extends LitElement {
                     <!-- users dropdown search -->
                     <div
                       class="dropdown is-up is-expanded ${classMap({
-                        'is-active': this._activateUserSearchDropDown,
+                      'is-active': this._activateUserSearchDropDown,
                       })}"
                     >
                       <div class="dropdown-trigger">
@@ -895,21 +887,21 @@ export class ProcForm extends LitElement {
                         <div class="dropdown-content">
                           ${this.users
                             ? this.users.map(
-                                u => html` <a
-                                  href="#"
+                              u => html` <a
+                                href="#"
                                   class="dropdown-item"
-                                  @click="${e => {
-                                    e.preventDefault();
-                                    this._userSelected(u);
-                                  }}"
-                                  @keydown="${e => {
-                                    e.preventDefault();
-                                    this._userSelected(u);
-                                  }}"
-                                >
-                                  ${u.name} - ${u.licenceNumber}
-                                </a>`
-                              )
+                                    @click="${e => {
+                                      e.preventDefault();
+                                        this._userSelected(u);
+                                          }}"
+                                            @keydown="${e => {
+                                              e.preventDefault();
+                                                this._userSelected(u);
+                                                  }}"
+                              >
+                                ${u.name} - ${u.licenceNumber}
+                              </a>`
+                            )
                             : html`<p></p>`}
                         </div>
                       </div>
@@ -917,46 +909,48 @@ export class ProcForm extends LitElement {
                     <div>
                       ${this._currentProcUsers
                         ? this._currentProcUsers.map(
-                            (u, i) =>
-                              html`
-                                <div
-                                  class="is-flex 
-              is-flex-direction-row
-              is-justify-content-space-between
-              is-align-items-center
-              has-background-light"
-                                >
-                                  <div class="pl-2">
-                                    ${u.name} - ${u.profBoardName} - n.:
-                                    ${u.licenceNumber}
-                                  </div>
-                                  <button
-                                    class="button is-light"
-                                    @click="${e => {
-                                      e.preventDefault();
-                                      this._removeProcUser(i);
-                                    }}"
-                                  >
-                                    <icon-trash></icon-trash>
-                                  </button>
+                          (u, i) =>
+                            html`
+                              <div
+                                class="is-flex 
+                                  is-flex-direction-row
+                                    is-justify-content-space-between
+                                      is-align-items-center
+                                        has-background-light"
+                              >
+                                <div class="pl-2">
+                                  ${u.name} - ${u.profBoardName} - n.:
+                                  ${u.licenceNumber}
                                 </div>
-                              `
-                          )
+                                <button
+                                  class="button is-light"
+                                  @click="${e => {
+                                  e.preventDefault();
+                                  this._removeProcUser(i);
+                                  }}"
+                                >
+                                  <icon-trash></icon-trash>
+                                </button>
+                              </div>
+                            `
+                        )
                         : html`<p></p> `}
                     </div>
                   </div>
                 </div>
               </div>
+              <br />
+              <div class="field is-flex is-flex-direction-row
+                is-justify-content-space-around">
+                  <button class="button is-success" @click="${this._saveForm}">
+                  Gravar
+                </button>
+                  <button class="button" @click="${this._closeForm}">Cancelar</button>
+                </div>              
             </form>
-          </section>
-          <footer class="modal-card-foot">
-            <button class="button is-success" @click="${this._saveForm}">
-              Gravar
-            </button>
-            <button class="button" @click="${this._closeForm}">Cancelar</button>
-          </footer>
+          </div>
         </div>
-      </div>
-    `;
-  }
-}
+      </section>
+              `;
+              }
+              }
