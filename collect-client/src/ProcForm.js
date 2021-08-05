@@ -771,8 +771,6 @@ export class ProcForm extends LitElement {
                 </div>
               </div>
 
-              <br />
-
               <!-- place of procedure execution -->
               <div
                 class="field
