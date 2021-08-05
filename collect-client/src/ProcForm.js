@@ -468,17 +468,19 @@ export class ProcForm extends LitElement {
       <section class="section">
         <div class="column is-6 is-offset-3">
           <div class="container">
-            <h1 class="subtitle has-text-centered is-3">Adicionar Procedimentos</h1>
+            <h1 class="subtitle has-text-centered is-3">
+              Adicionar Procedimentos
+            </h1>
             <form id="procedure-form">
               <!-- patients dropdown search -->
               <div
                 class="is-flex
-                is-flex-direction-row"
+                  is-flex-direction-row"
               >
                 <div
                   class="dropdown 
                   ${classMap({
-                  'is-active': this._activatePatientSearchDropDown,
+                    'is-active': this._activatePatientSearchDropDown,
                   })}"
                 >
                   <div class="field is-flex-grow-5 is-horizontal">
@@ -510,22 +512,22 @@ export class ProcForm extends LitElement {
                     <div class="dropdown-content">
                       ${this.patients
                         ? this.patients.map(
-                          p => html`
-                            <a
-                              href="#"
+                            p => html`
+                              <a
+                                href="#"
                                 class="dropdown-item"
-                                  @click="${e => {
-                                    e.preventDefault();
-                                      this._patientSelected(p);
-                                        }}"
-                                          @keydown="${e => {
-                                            e.preventDefault();
-                                              this._patientSelected(p);
-                                                }}"
-                            >${p.name} - Reg: ${p.recNumber}</a
-                    >
-                          `
-                        )
+                                @click="${e => {
+                                  e.preventDefault();
+                                  this._patientSelected(p);
+                                }}"
+                                @keydown="${e => {
+                                  e.preventDefault();
+                                  this._patientSelected(p);
+                                }}"
+                                >${p.name} - Reg: ${p.recNumber}</a
+                              >
+                            `
+                          )
                         : html`<p></p>`}
                     </div>
                   </div>
@@ -560,7 +562,7 @@ export class ProcForm extends LitElement {
                           name="ward"
                           .value="${this._ward}"
                           @blur="${e => {
-                          this._ward = e.target.value;
+                            this._ward = e.target.value;
                           }}"
                         >
                           <option value="CC">CC</option>
@@ -606,18 +608,19 @@ export class ProcForm extends LitElement {
                         type="text"
                         .value="${this._bed}"
                         @input="${e => {
-                        this._bed = e.target.value;
+                          this._bed = e.target.value;
                         }}"
                       />
                     </div>
                   </div>
                 </div>
               </div>
+              <br />
               <!-- procedure type dropdown search -->
               <div
                 class="dropdown is-expanded 
                 ${classMap({
-                'is-active': this._activateProcTypeSearchDropDown,
+                  'is-active': this._activateProcTypeSearchDropDown,
                 })}"
               >
                 <div class="dropdown-trigger">
@@ -646,29 +649,29 @@ export class ProcForm extends LitElement {
                   <div class="dropdown-content">
                     ${this.proctypes
                       ? this.proctypes.map(
-                        p => html`
-                          <a
-                            href="#"
+                          p => html`
+                            <a
+                              href="#"
                               class="dropdown-item"
-                                @click="${e => {
-                                  e.preventDefault();
-                                    this._procTypeSelected(p);
-                                      }}"
-                                        @keydown="${e => {
-                                          e.preventDefault();
-                                            this._procTypeSelected(p);
-                                              }}"
-                          >${p.descr}</a
-                  >
-                        `
-                      )
+                              @click="${e => {
+                                e.preventDefault();
+                                this._procTypeSelected(p);
+                              }}"
+                              @keydown="${e => {
+                                e.preventDefault();
+                                this._procTypeSelected(p);
+                              }}"
+                              >${p.descr}</a
+                            >
+                          `
+                        )
                       : html`<p></p>`}
                   </div>
                 </div>
               </div>
               <p
                 class="has-text-danger ${classMap({
-                'is-hidden': !this._showRequiredSurgReport,
+                  'is-hidden': !this._showRequiredSurgReport,
                 })}"
               >
                 Este procedimento necessita de ficha operatória no prontuário
@@ -690,7 +693,7 @@ export class ProcForm extends LitElement {
                         type="date"
                         .value="${this._currentProcDate}"
                         @input="${e => {
-                        this._currentProcDate = e.target.value;
+                          this._currentProcDate = e.target.value;
                         }}"
                         required
                       />
@@ -709,7 +712,7 @@ export class ProcForm extends LitElement {
                           required
                           .value="${this._currentProcHour}"
                           @blur="${e => {
-                          this._currentProcHour = e.target.value;
+                            this._currentProcHour = e.target.value;
                           }}"
                           name="hours"
                         >
@@ -746,7 +749,7 @@ export class ProcForm extends LitElement {
                           required
                           .value="${this._currentProcMinute}"
                           @blur="${e => {
-                          this._currentProcMinute = e.target.value;
+                            this._currentProcMinute = e.target.value;
                           }}"
                         >
                           <option value="00">00</option>
@@ -773,8 +776,8 @@ export class ProcForm extends LitElement {
               <!-- place of procedure execution -->
               <div
                 class="field
-                is-flex is-flex-direction-row
-                is-justify-content-space-between"
+                  is-flex is-flex-direction-row
+                  is-justify-content-space-between"
               >
                 <div>
                   <div class="field is-horizontal">
@@ -790,7 +793,7 @@ export class ProcForm extends LitElement {
                             required
                             .value="${this._procExecPlace}"
                             @blur="${e => {
-                            this._procExecPlace = e.target.value;
+                              this._procExecPlace = e.target.value;
                             }}"
                           >
                             <option value="CC">CC</option>
@@ -819,7 +822,7 @@ export class ProcForm extends LitElement {
                             required
                             .value="${this._team}"
                             @blur="${e => {
-                            this._team = e.target.value;
+                              this._team = e.target.value;
                             }}"
                           >
                             <option value="Cirurgia Geral">
@@ -851,14 +854,13 @@ export class ProcForm extends LitElement {
                 </div>
               </div>
 
-
               <div class="card">
                 <div class="card-content">
                   <div class="content">
                     <!-- users dropdown search -->
                     <div
                       class="dropdown is-up is-expanded ${classMap({
-                      'is-active': this._activateUserSearchDropDown,
+                        'is-active': this._activateUserSearchDropDown,
                       })}"
                     >
                       <div class="dropdown-trigger">
@@ -887,21 +889,21 @@ export class ProcForm extends LitElement {
                         <div class="dropdown-content">
                           ${this.users
                             ? this.users.map(
-                              u => html` <a
-                                href="#"
+                                u => html` <a
+                                  href="#"
                                   class="dropdown-item"
-                                    @click="${e => {
-                                      e.preventDefault();
-                                        this._userSelected(u);
-                                          }}"
-                                            @keydown="${e => {
-                                              e.preventDefault();
-                                                this._userSelected(u);
-                                                  }}"
-                              >
-                                ${u.name} - ${u.licenceNumber}
-                              </a>`
-                            )
+                                  @click="${e => {
+                                    e.preventDefault();
+                                    this._userSelected(u);
+                                  }}"
+                                  @keydown="${e => {
+                                    e.preventDefault();
+                                    this._userSelected(u);
+                                  }}"
+                                >
+                                  ${u.name} - ${u.licenceNumber}
+                                </a>`
+                              )
                             : html`<p></p>`}
                         </div>
                       </div>
@@ -909,48 +911,52 @@ export class ProcForm extends LitElement {
                     <div>
                       ${this._currentProcUsers
                         ? this._currentProcUsers.map(
-                          (u, i) =>
-                            html`
-                              <div
-                                class="is-flex 
-                                  is-flex-direction-row
-                                    is-justify-content-space-between
-                                      is-align-items-center
-                                        has-background-light"
-                              >
-                                <div class="pl-2">
-                                  ${u.name} - ${u.profBoardName} - n.:
-                                  ${u.licenceNumber}
-                                </div>
-                                <button
-                                  class="button is-light"
-                                  @click="${e => {
-                                  e.preventDefault();
-                                  this._removeProcUser(i);
-                                  }}"
+                            (u, i) =>
+                              html`
+                                <div
+                                  class="is-flex 
+                                is-flex-direction-row
+                                  is-justify-content-space-between
+                                    is-align-items-center
+                                      has-background-light"
                                 >
-                                  <icon-trash></icon-trash>
-                                </button>
-                              </div>
-                            `
-                        )
+                                  <div class="pl-2">
+                                    ${u.name} - ${u.profBoardName} - n.:
+                                    ${u.licenceNumber}
+                                  </div>
+                                  <button
+                                    class="button is-light"
+                                    @click="${e => {
+                                      e.preventDefault();
+                                      this._removeProcUser(i);
+                                    }}"
+                                  >
+                                    <icon-trash></icon-trash>
+                                  </button>
+                                </div>
+                              `
+                          )
                         : html`<p></p> `}
                     </div>
                   </div>
                 </div>
               </div>
               <br />
-              <div class="field is-flex is-flex-direction-row
-                is-justify-content-space-around">
-                  <button class="button is-success" @click="${this._saveForm}">
+              <div
+                class="field is-flex is-flex-direction-row
+                is-justify-content-space-around"
+              >
+                <button class="button is-success" @click="${this._saveForm}">
                   Gravar
                 </button>
-                  <button class="button" @click="${this._closeForm}">Cancelar</button>
-                </div>              
+                <button class="button" @click="${this._closeForm}">
+                  Cancelar
+                </button>
+              </div>
             </form>
           </div>
         </div>
       </section>
-              `;
-              }
-              }
+    `;
+  }
+}
