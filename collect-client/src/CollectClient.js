@@ -18,7 +18,7 @@ export class CollectClient extends LitElement {
       _procedures: { type: Array, state: true },
       _currentProcedure: { type: Object, state: true },
       _currentProceduresDate: { type: String, state: true },
-      _showProcedureForm: { type: Boolean, state: true },
+      _showProcedureEdit: { type: Boolean, state: true },
       // procedures types
       _proceduresTypes: { type: Array, state: true },
       _procTypesRes: { type: Object, state: true },
@@ -106,12 +106,16 @@ export class CollectClient extends LitElement {
     // Procedures
     this.addEventListener('update-procedures-list', this._updateProceduresList);
     this.addEventListener('edit-procedure', this._editProcedure);
-    this.addEventListener('add-procedure', this._loadShowProcForm);
+    // this.addEventListener('add-procedure', this._loadShowProcEdit);
     this.addEventListener('remove-procedure', this._removeProcedure);
     this.addEventListener('save-procedure-form', this._saveProcedure);
+    this.addEventListener('close-procedure-edit', () => {
+      this._currentProcedure = null;
+      this._showProcedureEdit = false;
+    });
     this.addEventListener('close-procedure-form', () => {
       this._currentProcedure = null;
-      this._showProcedureForm = false;
+      this._showProcedureEdit = false;
     });
 
     // Users
@@ -190,7 +194,7 @@ export class CollectClient extends LitElement {
       const auth = await this._login(data.username, data.password);
       this._timestamp = DateTime.fromMillis(
         (await this.client.service('sys').get('timestamp')).timestamp
-      ).setZone('America/Bahia');
+      );
       this._user = { ...auth.user };
       if (!this._user.isEnabled) {
         // show msg and call logout
@@ -263,14 +267,27 @@ export class CollectClient extends LitElement {
           });
         }
         break;
+      // case 'procedit':
+      // if (typeof customElements.get('proc-edit') === 'undefined') {
+      // import('./proc-edit.js').then(() => {
+      // this._showProcedureEdit = true;
+      // });
+      // }
+      // break;
       case 'procform':
         if (typeof customElements.get('proc-form') === 'undefined') {
           import('./proc-form.js').then(() => {
-            this._showProcedureForm = true;
+            // this._showProcedureEdit = true;
           });
         }
         break;
       case 'procsview':
+        this.dispatchEvent(
+          new CustomEvent('close-procedure-form', {
+            bubbles: true,
+            composed: true,
+          })
+        );
         if (typeof customElements.get('procs-view') === 'undefined') {
           import('./procs-view.js').catch(e => {
             // eslint-disable-next-line no-console
@@ -323,15 +340,14 @@ export class CollectClient extends LitElement {
   //
   // Procedures
   //
-  _loadShowProcForm() {
+  _loadShowProcEdit() {
     // dynamically load proc-form if neccessary
-    if (typeof customElements.get('proc-form') === 'undefined') {
-      import('./proc-form.js').then(() => {
-        this._showProcedureForm = true;
-      });
-    } else {
-      this._showProcedureForm = true;
+    if (typeof customElements.get('proc-edit') === 'undefined') {
+      import('./proc-edit.js').then(() => {});
     }
+    this._showProcedureEdit = true;
+    // window.history.pushState({}, '', '/procedit');
+    // this._locationChanged(window.location);
   }
 
   async _updateProceduresList(e) {
@@ -448,11 +464,12 @@ export class CollectClient extends LitElement {
 
   _editProcedure(e) {
     // eslint-disable-next-line no-console
+    console.log('entering edit procedure...');
     // console.log(JSON.stringify(e.detail, null, 2));
     this._currentProcedure = { ...e.detail };
     // eslint-disable-next-line no-console
-    // console.log(this._currentProcedure);
-    this._loadShowProcForm();
+    console.log(this._currentProcedure);
+    this._loadShowProcEdit();
   }
 
   _removeProcedure(e) {
@@ -1358,7 +1375,6 @@ export class CollectClient extends LitElement {
           class="${classMap({ 'is-hidden': this._page !== 'procform' })}"
           .user="${this._user}"
           .users="${this._users}"
-          .procedure="${this._currentProcedure}"
           .patients="${this._patients}"
           .proctypes="${this._proceduresTypes}"
         ></proc-form>
@@ -1370,6 +1386,7 @@ export class CollectClient extends LitElement {
           .users="${this._users}"
           .user="${this._user}"
           .procsres="${this._procsres}"
+          .timestamp="${this._timestamp}"
         ></procs-view>
         <patients-view
           id="ptsview"
@@ -1402,6 +1419,15 @@ export class CollectClient extends LitElement {
       </footer>
 
       <!-- dynamic elements -->
+      <proc-edit
+        class="${classMap({ 'is-hidden': !this._showProcedureEdit })}"
+        ?activate="${this._showProcedureEdit}"
+        .user="${this._user}"
+        .users="${this._users}"
+        .procedure="${this._currentProcedure}"
+        .patients="${this._patients}"
+        .proctypes="${this._proceduresTypes}"
+      ></proc-edit>
       <user-form
         class="${classMap({ 'is-hidden': !this._showUserForm })}"
         ?activate="${this._showUserForm}"
