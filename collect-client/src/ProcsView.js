@@ -17,6 +17,7 @@ export class ProcsView extends LitElement {
 
   static get properties() {
     return {
+      timestamp: { type: Object },
       procsres: { type: Object },
       _procedures: { type: Array, state: true },
       user: { type: Object },
@@ -469,7 +470,16 @@ export class ProcsView extends LitElement {
                               is-flex-grow-1
                               is-flex-direction-column"
                               >
-                                <div
+                                <button
+                                  ?disabled=${!this.user ||
+                                  !(
+                                    this.user.isAdmin ||
+                                    (this.user.id.toString() ===
+                                      p.createdByUserID &&
+                                      this.timestamp
+                                        .diff(DateTime.fromSQL(p.createdAt))
+                                        .as('hours') < 48)
+                                  )}
                                   class="button is-white
                                 is-align-self-flex-end
                                 has-tooltip-arrow
@@ -492,21 +502,21 @@ export class ProcsView extends LitElement {
                                   }}"
                                 >
                                   <icon-edit></icon-edit>
-                                </div>
-                                <div
+                                </button>
+                                <button
+                                  ?disabled=${!this.user ||
+                                  !(
+                                    this.user.isAdmin ||
+                                    (this.user.id.toString() ===
+                                      p.createdByUserID &&
+                                      this.timestamp
+                                        .diff(DateTime.fromSQL(p.createdAt))
+                                        .as('hours') < 48)
+                                  )}
                                   class="button is-white
                                 is-align-self-flex-end
                                 has-tooltip-arrow
-                                has-tooltip-bottom
-                                ${classMap({
-                                    'is-hidden':
-                                      !this.user ||
-                                      !(
-                                        this.user.isAdmin ||
-                                        this.user.id.toString() ===
-                                          p.createdByUserID
-                                      ),
-                                  })}"
+                                has-tooltip-bottom"
                                   data-tooltip="Remover"
                                   @click="${() => {
                                     this._remove(p);
@@ -516,7 +526,7 @@ export class ProcsView extends LitElement {
                                   }}"
                                 >
                                   <icon-trash></icon-trash>
-                                </div>
+                                </button>
                               </div>
                             </div>
                           </div>
