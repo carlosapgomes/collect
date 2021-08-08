@@ -12,7 +12,7 @@ export class ProcForm extends LitElement {
 
   static get properties() {
     return {
-      procedure: { type: Object },
+      // procedure: {type: Object},
       _procExecPlace: { type: String, state: true },
       activate: { type: Boolean },
       _currentProcDate: { type: String, state: true },
@@ -42,7 +42,6 @@ export class ProcForm extends LitElement {
 
   constructor() {
     super();
-    this.procedure = {};
     this._procExecPlace = '';
     this._patientName = '';
     this._currentPatient = {};
@@ -75,124 +74,112 @@ export class ProcForm extends LitElement {
   /**
    * @param {{ has: (arg0: string) => any; }} changedProperties
    */
-  updated(changedProperties) {
-    if (changedProperties.has('procedure')) {
-      // eslint-disable-next-line no-console
-      // console.log('entering updated');
-      if (this.procedure && this.procedure.procDateTime) {
-        // eslint-disable-next-line no-console
-        // console.log('procedure changed and is defined');
-        // eslint-disable-next-line no-console
-        // console.log(JSON.stringify(this.procedure, null, 2));
-        const procDateTime = DateTime.fromSQL(this.procedure.procDateTime);
-        this._currentProcDate = procDateTime.toISODate();
-        // eslint-disable-next-line no-console
-        this._currentProcHour = procDateTime.hour.toLocaleString('pt-BR', {
-          minimumIntegerDigits: 2,
-        });
-        this._currentProcMinute = procDateTime.minute.toLocaleString('pt-BR', {
-          minimumIntegerDigits: 2,
-        });
+  // updated(changedProperties) {
+  // if (changedProperties.has('procedure')) {
+  // if (this.procedure && this.procedure.procDateTime) {
+  // this._createEditLabel = "Editar";
+  // const procDateTime = DateTime.fromSQL(this.procedure.procDateTime);
+  // this._currentProcDate = procDateTime.toISODate();
+  // this._currentProcHour = procDateTime.hour.toLocaleString('pt-BR', {
+  // minimumIntegerDigits: 2,
+  // });
+  // this._currentProcMinute = procDateTime.minute.toLocaleString('pt-BR', {
+  // minimumIntegerDigits: 2,
+  // });
 
-        this._currentProcType = {
-          descr: this.procedure.descr,
-          code: this.procedure.code,
-        };
-        this.proctypes = [{ ...this._currentProcType }];
-        this._procTypeDescr = this.procedure.descr;
-        // eslint-disable-next-line no-console
-        // console.log(`this._procTypeDescr: ${this._procTypeDescr}`);
+  // this._currentProcType = {
+  // descr: this.procedure.descr,
+  // code: this.procedure.code,
+  // };
+  // this.proctypes = [{...this._currentProcType}];
+  // this._procTypeDescr = this.procedure.descr;
 
-        this._currentPatient = {
-          name: this.procedure.ptName,
-          recNumber: this.procedure.ptRecN,
-          id: this.procedure.ptID,
-          dateOfBirth: this.procedure.ptDateOfBirth,
-          gender: this.procedure.ptGender,
-        };
-        // eslint-disable-next-line no-console
-        // console.log(`this._currentPatient:\n
-        // ${JSON.stringify(this._currentPatient, null, 2)}`);
-        this.patients = [{ ...this._currentPatient }];
-        this._patientName = this._currentPatient.name;
+  // this._currentPatient = {
+  // name: this.procedure.ptName,
+  // recNumber: this.procedure.ptRecN,
+  // id: this.procedure.ptID,
+  // dateOfBirth: this.procedure.ptDateOfBirth,
+  // gender: this.procedure.ptGender,
+  // };
+  // this.patients = [{...this._currentPatient}];
+  // this._patientName = this._currentPatient.name;
 
-        this._currentUser = {
-          name: this.procedure.userName,
-          id: this.procedure.userID,
-          licenceNumber: this.procedure.userLicenceNumber,
-        };
-        // this._userName = this.procedure.userName;
-        this.users = [{ ...this._currentUser }];
+  // this._currentUser = {
+  // name: this.procedure.userName,
+  // id: this.procedure.userID,
+  // licenceNumber: this.procedure.userLicenceNumber,
+  // };
+  // this.users = [{...this._currentUser}];
 
-        this._currentProcUsers = [];
-        this._currentProcUsers.push({
-          name: this.procedure.user1Name,
-          id: this.procedure.user1ID,
-          licenceNumber: this.procedure.user1LicenceNumber,
-        });
+  // this._currentProcUsers = [];
+  // this._currentProcUsers.push({
+  // name: this.procedure.user1Name,
+  // id: this.procedure.user1ID,
+  // licenceNumber: this.procedure.user1LicenceNumber,
+  // });
 
-        if (
-          this.procedure.user2Name !== '' &&
-          this.procedure.user2ID !== '' &&
-          this.procedure.user2LicenceNumber !== ''
-        ) {
-          this._currentProcUsers.push({
-            name: this.procedure.user2Name,
-            id: this.procedure.user2ID,
-            licenceNumber: this.procedure.user2LicenceNumber,
-          });
-        }
-        if (
-          this.procedure.user3Name !== '' &&
-          this.procedure.user3ID !== '' &&
-          this.procedure.user3LicenceNumber !== ''
-        ) {
-          this._currentProcUsers.push({
-            name: this.procedure.user3Name,
-            id: this.procedure.user3ID,
-            licenceNumber: this.procedure.user3LicenceNumber,
-          });
-        }
-        if (
-          this.procedure.user4Name !== '' &&
-          this.procedure.user4ID !== '' &&
-          this.procedure.user4LicenceNumber !== ''
-        ) {
-          this._currentProcUsers.push({
-            name: this.procedure.user4Name,
-            id: this.procedure.user4ID,
-            licenceNumber: this.procedure.user4LicenceNumber,
-          });
-        }
-        if (
-          this.procedure.user5Name !== '' &&
-          this.procedure.user5ID !== '' &&
-          this.procedure.user5LicenceNumber !== ''
-        ) {
-          this._currentProcUsers.push({
-            name: this.procedure.user5Name,
-            id: this.procedure.user5ID,
-            licenceNumber: this.procedure.user5LicenceNumber,
-          });
-        }
-        if (
-          this.procedure.user6Name !== '' &&
-          this.procedure.user6ID !== '' &&
-          this.procedure.user6LicenceNumber !== ''
-        ) {
-          this._currentProcUsers.push({
-            name: this.procedure.user6Name,
-            id: this.procedure.user6ID,
-            licenceNumber: this.procedure.user6LicenceNumber,
-          });
-        }
-        this._bed = this.procedure.ptBed;
-        this._ward = this.procedure.ptWard;
-        this._procExecPlace = this.procedure.execPlace;
-        this._team = this.procedure.team;
-      }
-    }
-  }
+  // if (
+  // this.procedure.user2Name !== '' &&
+  // this.procedure.user2ID !== '' &&
+  // this.procedure.user2LicenceNumber !== ''
+  // ) {
+  // this._currentProcUsers.push({
+  // name: this.procedure.user2Name,
+  // id: this.procedure.user2ID,
+  // licenceNumber: this.procedure.user2LicenceNumber,
+  // });
+  // }
+  // if (
+  // this.procedure.user3Name !== '' &&
+  // this.procedure.user3ID !== '' &&
+  // this.procedure.user3LicenceNumber !== ''
+  // ) {
+  // this._currentProcUsers.push({
+  // name: this.procedure.user3Name,
+  // id: this.procedure.user3ID,
+  // licenceNumber: this.procedure.user3LicenceNumber,
+  // });
+  // }
+  // if (
+  // this.procedure.user4Name !== '' &&
+  // this.procedure.user4ID !== '' &&
+  // this.procedure.user4LicenceNumber !== ''
+  // ) {
+  // this._currentProcUsers.push({
+  // name: this.procedure.user4Name,
+  // id: this.procedure.user4ID,
+  // licenceNumber: this.procedure.user4LicenceNumber,
+  // });
+  // }
+  // if (
+  // this.procedure.user5Name !== '' &&
+  // this.procedure.user5ID !== '' &&
+  // this.procedure.user5LicenceNumber !== ''
+  // ) {
+  // this._currentProcUsers.push({
+  // name: this.procedure.user5Name,
+  // id: this.procedure.user5ID,
+  // licenceNumber: this.procedure.user5LicenceNumber,
+  // });
+  // }
+  // if (
+  // this.procedure.user6Name !== '' &&
+  // this.procedure.user6ID !== '' &&
+  // this.procedure.user6LicenceNumber !== ''
+  // ) {
+  // this._currentProcUsers.push({
+  // name: this.procedure.user6Name,
+  // id: this.procedure.user6ID,
+  // licenceNumber: this.procedure.user6LicenceNumber,
+  // });
+  // }
+  // this._bed = this.procedure.ptBed;
+  // this._ward = this.procedure.ptWard;
+  // this._procExecPlace = this.procedure.execPlace;
+  // this._team = this.procedure.team;
+  // }
+  // }
+  // }
 
   _closeForm() {
     // clear form
@@ -203,11 +190,14 @@ export class ProcForm extends LitElement {
     );
   }
 
-  _clearFields() {
+  async _clearFields() {
     this.procedure = {};
+    // this._createEditLabel = "Adicionar";
     this._procExecPlace = '';
     // @ts-ignore
-    document.getElementById('procedure-form').reset();
+    await document.getElementById('procedure-form').reset();
+    this._currentProcHour = '00';
+    this._currentProcMinute = '00';
     this._procedureName = '';
     this._procTypeDescr = '';
     this._activateProcTypeSearchDropDown = false;
@@ -387,18 +377,20 @@ export class ProcForm extends LitElement {
     this._userName = u.name;
     // eslint-disable-next-line no-console
     // console.log(JSON.stringify(u, null, 2));
-    if(!u.licenceNumber){
+    if (!u.licenceNumber) {
       this.dispatchEvent(
         new CustomEvent('show-modal-message', {
-          detail: { msg: 'Selecione um executante que tenha registro profissional (CRM)' },
+          detail: {
+            msg: 'Selecione um executante que tenha registro profissional (CRM)',
+          },
           bubbles: true,
           composed: true,
         })
       );
     } else if (this._maxUsersCount >= 0) {
-        this._currentProcUsers.push({...u});
-        this._maxUsersCount -= 1;
-      }
+      this._currentProcUsers.push({ ...u });
+      this._maxUsersCount -= 1;
+    }
     this._activateUserSearchDropDown = false;
   }
 
@@ -476,7 +468,7 @@ export class ProcForm extends LitElement {
         <div class="column is-6 is-offset-3">
           <div class="container">
             <h1 class="subtitle has-text-centered is-3">
-              Adicionar Procedimentos
+              Adicionar Procedimento
             </h1>
             <form id="procedure-form">
               <!-- patients dropdown search -->
@@ -487,7 +479,7 @@ export class ProcForm extends LitElement {
                 <div
                   class="dropdown 
                   ${classMap({
-                  'is-active': this._activatePatientSearchDropDown,
+                    'is-active': this._activatePatientSearchDropDown,
                   })}"
                 >
                   <div class="field is-flex-grow-5 is-horizontal">
@@ -519,22 +511,22 @@ export class ProcForm extends LitElement {
                     <div class="dropdown-content">
                       ${this.patients
                         ? this.patients.map(
-                          p => html`
-                            <a
-                              href="#"
+                            p => html`
+                              <a
+                                href="#"
                                 class="dropdown-item"
-                                  @click="${e => {
-                                    e.preventDefault();
-                                      this._patientSelected(p);
-                                        }}"
-                                          @keydown="${e => {
-                                            e.preventDefault();
-                                              this._patientSelected(p);
-                                                }}"
-                            >${p.name} - Reg: ${p.recNumber}</a
-                    >
-                          `
-                        )
+                                @click="${e => {
+                                  e.preventDefault();
+                                  this._patientSelected(p);
+                                }}"
+                                @keydown="${e => {
+                                  e.preventDefault();
+                                  this._patientSelected(p);
+                                }}"
+                                >${p.name} - Reg: ${p.recNumber}</a
+                              >
+                            `
+                          )
                         : html`<p></p>`}
                     </div>
                   </div>
@@ -569,7 +561,7 @@ export class ProcForm extends LitElement {
                           name="ward"
                           .value="${this._ward}"
                           @blur="${e => {
-                          this._ward = e.target.value;
+                            this._ward = e.target.value;
                           }}"
                         >
                           <option value="CC">CC</option>
@@ -615,7 +607,7 @@ export class ProcForm extends LitElement {
                         type="text"
                         .value="${this._bed}"
                         @input="${e => {
-                        this._bed = e.target.value;
+                          this._bed = e.target.value;
                         }}"
                       />
                     </div>
@@ -627,7 +619,7 @@ export class ProcForm extends LitElement {
               <div
                 class="dropdown is-expanded 
                 ${classMap({
-                'is-active': this._activateProcTypeSearchDropDown,
+                  'is-active': this._activateProcTypeSearchDropDown,
                 })}"
               >
                 <div class="dropdown-trigger">
@@ -656,29 +648,29 @@ export class ProcForm extends LitElement {
                   <div class="dropdown-content">
                     ${this.proctypes
                       ? this.proctypes.map(
-                        p => html`
-                          <a
-                            href="#"
+                          p => html`
+                            <a
+                              href="#"
                               class="dropdown-item"
-                                @click="${e => {
-                                  e.preventDefault();
-                                    this._procTypeSelected(p);
-                                      }}"
-                                        @keydown="${e => {
-                                          e.preventDefault();
-                                            this._procTypeSelected(p);
-                                              }}"
-                          >${p.descr}</a
-                  >
-                        `
-                      )
+                              @click="${e => {
+                                e.preventDefault();
+                                this._procTypeSelected(p);
+                              }}"
+                              @keydown="${e => {
+                                e.preventDefault();
+                                this._procTypeSelected(p);
+                              }}"
+                              >${p.descr}</a
+                            >
+                          `
+                        )
                       : html`<p></p>`}
                   </div>
                 </div>
               </div>
               <p
                 class="has-text-danger ${classMap({
-                'is-hidden': !this._showRequiredSurgReport,
+                  'is-hidden': !this._showRequiredSurgReport,
                 })}"
               >
                 Este procedimento necessita de ficha operatória no prontuário
@@ -700,7 +692,7 @@ export class ProcForm extends LitElement {
                         type="date"
                         .value="${this._currentProcDate}"
                         @input="${e => {
-                        this._currentProcDate = e.target.value;
+                          this._currentProcDate = e.target.value;
                         }}"
                         required
                       />
@@ -719,7 +711,7 @@ export class ProcForm extends LitElement {
                           required
                           .value="${this._currentProcHour}"
                           @blur="${e => {
-                          this._currentProcHour = e.target.value;
+                            this._currentProcHour = e.target.value;
                           }}"
                           name="hours"
                         >
@@ -756,7 +748,7 @@ export class ProcForm extends LitElement {
                           required
                           .value="${this._currentProcMinute}"
                           @blur="${e => {
-                          this._currentProcMinute = e.target.value;
+                            this._currentProcMinute = e.target.value;
                           }}"
                         >
                           <option value="00">00</option>
@@ -798,7 +790,7 @@ export class ProcForm extends LitElement {
                             required
                             .value="${this._procExecPlace}"
                             @blur="${e => {
-                            this._procExecPlace = e.target.value;
+                              this._procExecPlace = e.target.value;
                             }}"
                           >
                             <option value="CC">CC</option>
@@ -827,7 +819,7 @@ export class ProcForm extends LitElement {
                             required
                             .value="${this._team}"
                             @blur="${e => {
-                            this._team = e.target.value;
+                              this._team = e.target.value;
                             }}"
                           >
                             <option value="Cirurgia Geral">
@@ -865,7 +857,7 @@ export class ProcForm extends LitElement {
                     <!-- users dropdown search -->
                     <div
                       class="dropdown is-up is-expanded ${classMap({
-                      'is-active': this._activateUserSearchDropDown,
+                        'is-active': this._activateUserSearchDropDown,
                       })}"
                     >
                       <div class="dropdown-trigger">
@@ -894,21 +886,21 @@ export class ProcForm extends LitElement {
                         <div class="dropdown-content">
                           ${this.users
                             ? this.users.map(
-                              u => html` <a
-                                href="#"
+                                u => html` <a
+                                  href="#"
                                   class="dropdown-item"
-                                    @click="${e => {
-                                      e.preventDefault();
-                                        this._userSelected(u);
-                                          }}"
-                                            @keydown="${e => {
-                                              e.preventDefault();
-                                                this._userSelected(u);
-                                                  }}"
-                              >
-                                ${u.name} - ${u.licenceNumber}
-                              </a>`
-                            )
+                                  @click="${e => {
+                                    e.preventDefault();
+                                    this._userSelected(u);
+                                  }}"
+                                  @keydown="${e => {
+                                    e.preventDefault();
+                                    this._userSelected(u);
+                                  }}"
+                                >
+                                  ${u.name} - ${u.licenceNumber}
+                                </a>`
+                              )
                             : html`<p></p>`}
                         </div>
                       </div>
@@ -916,31 +908,31 @@ export class ProcForm extends LitElement {
                     <div>
                       ${this._currentProcUsers
                         ? this._currentProcUsers.map(
-                          (u, i) =>
-                            html`
-                              <div
-                                class="is-flex 
+                            (u, i) =>
+                              html`
+                                <div
+                                  class="is-flex 
                                   is-flex-direction-row
                                     is-justify-content-space-between
                                       is-align-items-center
                                         has-background-light"
-                              >
-                                <div class="pl-2">
-                                  ${u.name} - ${u.profBoardName} - n.:
-                                  ${u.licenceNumber}
-                                </div>
-                                <button
-                                  class="button is-light"
-                                  @click="${e => {
-                                  e.preventDefault();
-                                  this._removeProcUser(i);
-                                  }}"
                                 >
-                                  <icon-trash></icon-trash>
-                                </button>
-                              </div>
-                            `
-                        )
+                                  <div class="pl-2">
+                                    ${u.name} - ${u.profBoardName} - n.:
+                                    ${u.licenceNumber}
+                                  </div>
+                                  <button
+                                    class="button is-light"
+                                    @click="${e => {
+                                      e.preventDefault();
+                                      this._removeProcUser(i);
+                                    }}"
+                                  >
+                                    <icon-trash></icon-trash>
+                                  </button>
+                                </div>
+                              `
+                          )
                         : html`<p></p> `}
                     </div>
                   </div>
@@ -955,7 +947,7 @@ export class ProcForm extends LitElement {
                   Gravar
                 </button>
                 <button class="button" @click="${this._closeForm}">
-                  Cancelar
+                  Cancelar/Limpar
                 </button>
               </div>
             </form>
