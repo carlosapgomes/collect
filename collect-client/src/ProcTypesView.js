@@ -65,12 +65,15 @@ export class ProcTypesView extends LitElement {
 
   _paginate(e) {
     e.stopPropagation();
+    const detail = { skip: e.detail.skip };
+    let eventName = 'update-procedures-types-list';
+    if (this._searchFor.length > 2) {
+      detail.search = this._searchFor;
+      eventName = 'search-procedure-type';
+    }
     this.dispatchEvent(
-      new CustomEvent('update-procedures-types-list', {
-        detail: {
-          search: this._searchFor,
-          skip: e.detail.skip,
-        },
+      new CustomEvent(eventName, {
+        detail,
         bubbles: true,
         composed: true,
       })
