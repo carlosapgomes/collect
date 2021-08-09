@@ -1010,18 +1010,27 @@ export class CollectClient extends LitElement {
       // eslint-disable-next-line no-console
       // console.log(`searching for procedures types: ${e.detail}`);
       this._spinnerHidden = false;
+      let skip = 0;
+      if (e.detail && e.detail.skip) {
+        skip = e.detail.skip;
+      }
+      let search = '';
+      if (e.detail && e.detail.search) {
+        search = e.detail.search;
+      }
       try {
         const procTypesList = await this.client.service('proctypes').find({
           query: {
+            $skip: skip,
             $or: [
               {
                 descr: {
-                  $like: `%${e.detail}%`,
+                  $like: `%${search}%`,
                 },
               },
               {
                 code: {
-                  $like: `%${e.detail}%`,
+                  $like: `%${search}%`,
                 },
               },
             ],
@@ -1030,6 +1039,7 @@ export class CollectClient extends LitElement {
         // eslint-disable-next-line no-console
         // console.log(procTypesList.data);
         if (procTypesList.data.length > 0) {
+          this._procTypesRes = { ...procTypesList };
           this._proceduresTypes = [...procTypesList.data];
         }
         this._spinnerHidden = true;

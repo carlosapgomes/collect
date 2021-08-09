@@ -1,8 +1,10 @@
 import { html, LitElement } from 'lit-element';
+import { classMap } from 'lit-html/directives/class-map.js';
 import './btn-fab.js';
 import './page-nav.js';
 import './icons/icon-edit.js';
 import './icons/icon-trash.js';
+import './icons/icon-reload.js';
 
 export class ProcTypesView extends LitElement {
   createRenderRoot() {
@@ -16,7 +18,13 @@ export class ProcTypesView extends LitElement {
       _total: { type: Number, state: true },
       _limit: { type: Number, state: true },
       _skip: { type: Number, state: true },
+      _searchFor: { type: String, state: true },
     };
+  }
+
+  constructor() {
+    super();
+    this._searchFor = '';
   }
 
   firstUpdated() {
@@ -60,6 +68,7 @@ export class ProcTypesView extends LitElement {
     this.dispatchEvent(
       new CustomEvent('update-procedures-types-list', {
         detail: {
+          search: this._searchFor,
           skip: e.detail.skip,
         },
         bubbles: true,
@@ -86,6 +95,49 @@ export class ProcTypesView extends LitElement {
     );
   }
 
+  _searchProcType(e) {
+    // eslint-disable-next-line no-console
+    // console.log(`searching for: ${e.target.value}`);
+    if (e.target.value.length > 2) {
+      this.dispatchEvent(
+        new CustomEvent('search-procedure-type', {
+          detail: {
+            search: e.target.value,
+            skip: 0,
+          },
+          bubbles: true,
+          composed: true,
+        })
+      );
+    }
+  }
+
+  _refreshSearch() {
+    if (this._searchFor.length === 0) {
+      // just update patients list
+      this.dispatchEvent(
+        new CustomEvent('update-procedures-types-list', {
+          detail: {
+            skip: 0,
+          },
+          bubbles: true,
+          composed: true,
+        })
+      );
+    } else if (this._searchFor.length > 2) {
+      this.dispatchEvent(
+        new CustomEvent('search-procedure-type', {
+          detail: {
+            search: this._searchFor,
+            skip: 0,
+          },
+          bubbles: true,
+          composed: true,
+        })
+      );
+    }
+  }
+
   render() {
     return html`
       <style>
@@ -99,10 +151,53 @@ export class ProcTypesView extends LitElement {
       </style>
       <section id="procedures-types" class="section">
         <div class="column is-6 is-offset-3">
-          <div class="container">
-            <h1 class="subtitle has-text-centered is-3">
-              Tipos de Procedimentos
-            </h1>
+          <h1 class="subtitle has-text-centered is-3">
+            Tipos de Procedimentos
+          </h1>
+          <div
+            class="is-flex
+                is-flex-direction-row"
+          >
+            <div
+              class="control is-expanded has-icons-right
+                is-flex-grow-5"
+            >
+              <input
+                class="input"
+                type="search"
+                @keyup="${this._searchProcType}"
+                @changed=${e => {
+                  this._searchFor = e.target.value;
+                }}
+                placeholder="buscar pelo nome ou registro"
+                required
+              />
+              <icon-search></icon-search>
+            </div>
+            <div class="">
+              <button
+                class="button 
+                    is-ghost
+                    has-tooltip-arrow
+                    has-tooltip-top"
+                data-tooltip="Atualizar"
+                @click="${this._refreshSearch}"
+                @keydown="${this._refreshSearch}"
+              >
+                <icon-reload></icon-reload>
+              </button>
+            </div>
+          </div>
+
+          <br />
+          <div
+            class="container
+            is-flex
+              ${classMap({
+              'is-flex-direction-column-reverse': window.screen.width < 769,
+              'is-flex-direction-column': window.screen.width >= 769,
+            })}"
+          >
             <br />
             ${this._procedures
               ? this._procedures.map(
