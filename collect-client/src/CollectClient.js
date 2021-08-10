@@ -744,23 +744,31 @@ export class CollectClient extends LitElement {
 
   async _searchUser(e) {
     if (this._user.isEnabled) {
-      // clear doctors list
       this._users = [];
       // eslint-disable-next-line no-console
-      // console.log(`searching for users: ${e.detail}`);
+      console.log(`searching for users: ${e.detail}`);
       this._spinnerHidden = false;
+      let skip = 0;
+      if (e.detail && e.detail.skip) {
+        skip = e.detail.skip;
+      }
+      let search = '';
+      if (e.detail && e.detail.search) {
+        search = e.detail.search;
+      }
       try {
         const usersList = await this.client.service('users').find({
           query: {
+            $skip: skip,
             $or: [
               {
                 name: {
-                  $like: `${e.detail}%`,
+                  $like: `${search}%`,
                 },
               },
               {
                 licenceNumber: {
-                  $like: `${e.detail}%`,
+                  $like: `${search}%`,
                 },
               },
             ],
@@ -769,6 +777,7 @@ export class CollectClient extends LitElement {
         // eslint-disable-next-line no-console
         // console.log(usersList.data);
         if (usersList.data.length > 0) {
+          this._usersres = { ...usersList };
           this._users = [...usersList.data];
         }
         this._spinnerHidden = true;
