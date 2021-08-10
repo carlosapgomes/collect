@@ -99,8 +99,21 @@ export class ProcTypesView extends LitElement {
   }
 
   _searchProcType(e) {
+    this._searchFor = e.target.value;
     // eslint-disable-next-line no-console
     // console.log(`searching for: ${e.target.value}`);
+    // eslint-disable-next-line no-console
+    if (e.target.value.length === 0) {
+      this.dispatchEvent(
+        new CustomEvent('update-procedures-types-list', {
+          detail: {
+            skip: 0,
+          },
+          bubbles: true,
+          composed: true,
+        })
+      );
+    }
     if (e.target.value.length > 2) {
       this.dispatchEvent(
         new CustomEvent('search-procedure-type', {
