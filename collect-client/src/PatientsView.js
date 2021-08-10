@@ -101,9 +101,21 @@ export class PatientsView extends LitElement {
   }
 
   _searchPatient(e) {
+    this._searchFor = e.target.value;
     // eslint-disable-next-line no-console
     // console.log(`searching for: ${e.target.value}`);
     // fire event to hide procedure form from parent's view
+    if (e.target.value.length === 0) {
+      this.dispatchEvent(
+        new CustomEvent('update-patients-list', {
+          detail: {
+            skip: 0,
+          },
+          bubbles: true,
+          composed: true,
+        })
+      );
+    }
 
     if (e.target.value.length > 2) {
       this.dispatchEvent(
