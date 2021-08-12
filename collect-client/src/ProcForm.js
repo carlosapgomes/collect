@@ -666,7 +666,7 @@ export class ProcForm extends LitElement {
                                 e.preventDefault();
                                 this._procTypeSelected(p);
                               }}"
-                              >${p.descr}</a
+                              ><small>${p.descr}</small></a
                             >
                           `
                         )
