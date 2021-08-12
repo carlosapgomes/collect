@@ -7,6 +7,14 @@
     owner: root
     group: root
     mode: 0700
+    
+- name: Create a folder for the backup files
+  file: 
+    path: /opt/backup/files
+    state: directory
+    owner: root
+    group: root
+    mode: 0600
 
 - name: Copy backup script
   template:
