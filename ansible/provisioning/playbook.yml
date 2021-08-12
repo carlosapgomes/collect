@@ -8,6 +8,7 @@
     - role: frontend
     - role: nginx
     - role: dataseeding
+    - role: backup
 
   tasks:
     - name: display post install message
