@@ -675,7 +675,11 @@ export class ProcEdit extends LitElement {
                                 e.preventDefault();
                                 this._procTypeSelected(p);
                               }}"
-                              >${p.descr}</a
+                              ><small
+                                >${p.descr.length < 80
+                                  ? p.descr
+                                  : `${p.descr.substring(0, 77)}...`}</small
+                              ></a
                             >
                           `
                         )
@@ -794,7 +798,7 @@ export class ProcEdit extends LitElement {
                 <div>
                   <div class="field is-horizontal">
                     <div class="field-label is-normal">
-                      <label><b>Local</b></label>
+                      <label><b>Setor</b></label>
                     </div>
                     <div class="field-body">
                       <div class="field">
@@ -846,8 +850,14 @@ export class ProcEdit extends LitElement {
                             <option value="Cirurgia Pediátrica">
                               Cirurgia Pediátrica
                             </option>
+                            <option value="Cirurgia Torácica">
+                              Cirurgia Torácica
+                            </option>
                             <option value="Cirurgia Vascular">
                               Cirurgia Vascular
+                            </option>
+                            <option value="Clínica Médica">
+                              Clínica Médica
                             </option>
                             <option value="Ginecologia Obstetrícia">
                               Ginecologia Obstetrícia

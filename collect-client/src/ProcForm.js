@@ -666,7 +666,11 @@ export class ProcForm extends LitElement {
                                 e.preventDefault();
                                 this._procTypeSelected(p);
                               }}"
-                              ><small>${p.descr}</small></a
+                              ><small
+                                >${p.descr.length < 80
+                                  ? p.descr
+                                  : `${p.descr.substring(0, 77)}...`}</small
+                              ></a
                             >
                           `
                         )
@@ -836,6 +840,9 @@ export class ProcForm extends LitElement {
                             </option>
                             <option value="Cirurgia Pediátrica">
                               Cirurgia Pediátrica
+                            </option>
+                            <option value="Cirurgia Torácica">
+                              Cirurgia Torácica
                             </option>
                             <option value="Cirurgia Vascular">
                               Cirurgia Vascular
