@@ -437,10 +437,7 @@ export class CollectClient extends LitElement {
         // eslint-disable-next-line no-console
         // console.log(JSON.stringify(procsList, null, 2));
         this._spinnerHidden = true;
-        if (
-          typeof procsList.data !== 'undefined' &&
-          procsList.data.length > 0
-        ) {
+        if (typeof procsList.data !== 'undefined') {
           // we got some data
           this._procsres = { ...procsList };
           // this._procedures = [...procsList.data];
