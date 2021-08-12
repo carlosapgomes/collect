@@ -37,6 +37,9 @@ export class PageNav extends LitElement {
   _updatePages() {
     this._currentPage = parseInt(this.skip / this.limit, 10) + 1;
     this._lastPage = parseInt(this.total / this.limit, 10);
+    if (this.total === 0) {
+      this._lastPage = 1;
+    }
     if (this.total % this.limit !== 0) {
       this._lastPage += 1;
     }
