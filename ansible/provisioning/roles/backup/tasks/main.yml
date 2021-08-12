@@ -1,0 +1,27 @@
+---
+# Configure matrix postgres db backups
+- name: Create a folder for the backup script
+  file: 
+    path: /opt/backup
+    state: directory
+    owner: root
+    group: root
+    mode: 0700
+
+- name: Copy backup script
+  template:
+    src: opt/backup/bkpscript.sh.j2
+    dest: /opt/backup/bkpscript.sh
+    owner: root
+    group: root
+    mode: 0700
+
+- name: Creates a cron file under /etc/cron.d
+  ansible.builtin.cron:
+    name: backup sqlite3 data
+    weekday: "*"
+    minute: "0"
+    hour: "6,14,22"
+    user: root
+    job: "/opt/backup/bkpscript.sh"
+    cron_file: collect-bkp

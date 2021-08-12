@@ -1,0 +1,18 @@
+#!/bin/sh
+
+date=`date "+%Y-%m-%dT%H_%M_%S"`
+
+dest="/home/root/temp/"
+
+file_name=collect-$date
+
+full_dest=$dest$file_name.sqlite
+
+/usr/bin/sqlite3  /opt/collect/collect.sqlite ".backup '$full_dest'" 
+
+chown "root.root" $full_dest
+
+chmod 0400 $full_dest
+
+exit
+
