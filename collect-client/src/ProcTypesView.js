@@ -181,10 +181,7 @@ export class ProcTypesView extends LitElement {
               <input
                 class="input"
                 type="search"
-                @keyup="${this._searchProcType}"
-                @changed=${e => {
-                  this._searchFor = e.target.value;
-                }}
+                @input="${this._searchProcType}"
                 placeholder="buscar pelo nome ou registro"
                 required
               />

@@ -182,10 +182,7 @@ export class PatientsView extends LitElement {
               <input
                 class="input"
                 type="search"
-                @keyup="${this._searchPatient}"
-                @changed=${e => {
-                  this._searchFor = e.target.value;
-                }}
+                @input="${this._searchPatient}"
                 placeholder="buscar pelo nome ou registro"
                 required
               />

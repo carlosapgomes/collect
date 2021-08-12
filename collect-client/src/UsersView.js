@@ -166,10 +166,7 @@ export class UsersView extends LitElement {
               <input
                 class="input"
                 type="search"
-                @keyup="${this._searchUser}"
-                @changed=${e => {
-                  this._searchFor = e.target.value;
-                }}
+                @input="${this._searchUser}"
                 placeholder="buscar pelo nome ou registro profissional"
                 required
               />

@@ -502,7 +502,7 @@ export class ProcForm extends LitElement {
                             <input
                               class="input"
                               type="search"
-                              @keyup="${this._searchPatient}"
+                              @input="${this._searchPatient}"
                               .value="${this._patientName}"
                               placeholder="buscar pelo nome ou registro"
                               required
@@ -639,7 +639,7 @@ export class ProcForm extends LitElement {
                           <input
                             class="input"
                             type="search"
-                            @keyup="${this._searchProcType}"
+                            @input="${this._searchProcType}"
                             .value="${this._procTypeDescr}"
                             placeholder="buscar pelo nome"
                             required
@@ -785,7 +785,7 @@ export class ProcForm extends LitElement {
                 <div>
                   <div class="field is-horizontal">
                     <div class="field-label is-normal">
-                      <label><b>Local</b></label>
+                      <label><b>Setor</b></label>
                     </div>
                     <div class="field-body">
                       <div class="field">
@@ -840,6 +840,9 @@ export class ProcForm extends LitElement {
                             <option value="Cirurgia Vascular">
                               Cirurgia Vascular
                             </option>
+                            <option value="Clínica Médica">
+                              Clínica Médica
+                            </option>
                             <option value="Ginecologia Obstetrícia">
                               Ginecologia Obstetrícia
                             </option>
@@ -878,7 +881,7 @@ export class ProcForm extends LitElement {
                                   id="procusers"
                                   class="input"
                                   type="search"
-                                  @keyup="${this._searchUser}"
+                                  @input="${this._searchUser}"
                                   .value="${this._userName}"
                                   placeholder="buscar pelo nome ou registro de classe"
                                 />
