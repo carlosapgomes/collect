@@ -25,7 +25,7 @@
     mode: 0700
 
 - name: Creates a cron file under /etc/cron.d
-  ansible.builtin.cron:
+  cron:
     name: backup sqlite3 data
     weekday: "*"
     minute: "0"
