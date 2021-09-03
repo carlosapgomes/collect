@@ -476,7 +476,7 @@ export class ProcForm extends LitElement {
             <h1 class="subtitle has-text-centered is-3">
               Adicionar Procedimento
             </h1>
-            <form id="procedure-form">
+            <form autocomplete="off" id="procedure-form">
               <!-- patients dropdown search -->
               <div
                 class="is-flex

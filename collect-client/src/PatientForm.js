@@ -112,7 +112,7 @@ export class PatientForm extends LitElement {
             ></button>
           </header>
           <section class="modal-card-body">
-            <form id="patient-form">
+            <form autocomplete="off" id="patient-form">
               <div class="field">
                 <label class="label">Nome:</label>
                 <input

@@ -485,7 +485,7 @@ export class ProcEdit extends LitElement {
             ></button>
           </header>
           <section class="modal-card-body">
-            <form id="procedure-edit">
+            <form autocomplete="off" id="procedure-edit">
               <!-- patients dropdown search -->
               <div
                 class="is-flex

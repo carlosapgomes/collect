@@ -164,7 +164,7 @@ export class UserForm extends LitElement {
             ></button>
           </header>
           <section class="modal-card-body">
-            <form id="user-form">
+            <form autocomplete="off" id="user-form">
               <div class="field is-horizontal">
                 <div class="field-label is-normal">
                   <label class="lable">Nome</label>

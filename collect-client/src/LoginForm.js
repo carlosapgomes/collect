@@ -64,7 +64,7 @@ export class LoginForm extends LitElement {
           <h1 class="title">Faça o login:</h1>
           <br />
           <br />
-          <form id="login-form">
+          <form autocomplete="off" id="login-form">
             <div class="field">
               <label class="label has-text-left" for="username"
                 >Username:</label
