@@ -3,6 +3,7 @@ import { classMap } from 'lit-html/directives/class-map.js';
 import { DateTime } from 'luxon';
 import './icons/icon-search.js';
 import './icons/icon-plus.js';
+import './icons/icon-trash.js';
 
 export class ProcForm extends LitElement {
   // use lightDOM
