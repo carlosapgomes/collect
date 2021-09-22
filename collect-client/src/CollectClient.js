@@ -1431,7 +1431,7 @@ export class CollectClient extends LitElement {
         class="navbar is-fixed-bottom has-background-light
               has-text-centered is-vcentered"
       >
-        <div class="column">&copy; <small>CG 2021</small></div>
+        <div class="column"><small>2021</small></div>
       </footer>
 
       <!-- dynamic elements -->
