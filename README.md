@@ -57,7 +57,3 @@ comando:
 
 Tente acessar o sistema remotamente navegando no browser para o endereço
 `http://ip_do_servidor` utilizando `admin` como login e `1234` como senha.
-
-
-
-
